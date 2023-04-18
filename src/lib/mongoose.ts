@@ -1,4 +1,4 @@
-import { CachedConnection } from "@/interfaces/mongoose/CachedConnection";
+import { cachedConnection } from "@/interfaces/mongoose/cachedConnection";
 import mongoose, { ConnectOptions, Mongoose } from "mongoose";
 
 const { DATABASE_URL } = process.env;
@@ -14,7 +14,7 @@ if (!DATABASE_URL) {
  * in development. This prevents connections growing exponentially
  * during API Route usage.
  */
-let cashedConnection: CachedConnection = global.mongoose;
+let cashedConnection: cachedConnection = global.mongoose;
 
 if (!cashedConnection) {
   cashedConnection = global.mongoose = { conn: null, promise: null };

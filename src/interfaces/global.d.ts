@@ -1,10 +1,10 @@
 import { Mongoose } from "mongoose";
-import { CachedConnection } from "./mongoose/CachedConnection";
+import { cachedConnection } from "./mongoose/cachedConnection";
 import { MongoClient } from "mongodb";
 
 /* eslint-disable no-var */
 
 declare global {
-  var mongoose: CachedConnection;
+  var mongoose: cachedConnection;
   var _mongoClientPromise: Promise<MongoClient>;
 }

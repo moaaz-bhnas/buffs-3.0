@@ -1,4 +1,4 @@
-import { cachedConnection } from "@/interfaces/mongoose/cachedConnection";
+import { CachedConnection } from "@/interfaces/mongoose/CachedConnection";
 import mongoose, { ConnectOptions, Mongoose } from "mongoose";
 
 const { DATABASE_URL } = process.env;
@@ -14,18 +14,18 @@ if (!DATABASE_URL) {
  * in development. This prevents connections growing exponentially
  * during API Route usage.
  */
-let cashedConnection: cachedConnection = global.mongoose;
+let cachedConnection: CachedConnection = global.mongoose;
 
-if (!cashedConnection) {
-  cashedConnection = global.mongoose = { conn: null, promise: null };
+if (!cachedConnection) {
+  cachedConnection = global.mongoose = { conn: null, promise: null };
 }
 
 async function dbConnect(): Promise<Mongoose> {
-  if (cashedConnection.conn) {
-    return cashedConnection.conn;
+  if (cachedConnection.conn) {
+    return cachedConnection.conn;
   }
 
-  if (!cashedConnection.promise) {
+  if (!cachedConnection.promise) {
     const opts: ConnectOptions = {
       /**
        * All collection actions (insert, remove, queries, etc.) are queued until Mongoose successfully connects to MongoDB. It is likely you haven't called Mongoose's connect() or createConnection() function yet.
@@ -35,7 +35,7 @@ async function dbConnect(): Promise<Mongoose> {
       bufferCommands: false,
     };
 
-    cashedConnection.promise = mongoose
+    cachedConnection.promise = mongoose
       .connect(DATABASE_URL, opts)
       .then((mongoose) => {
         return mongoose;
@@ -43,13 +43,13 @@ async function dbConnect(): Promise<Mongoose> {
   }
 
   try {
-    cashedConnection.conn = await cashedConnection.promise;
+    cachedConnection.conn = await cachedConnection.promise;
   } catch (error) {
-    cashedConnection.promise = null;
+    cachedConnection.promise = null;
     throw error;
   }
 
-  return cashedConnection.conn;
+  return cachedConnection.conn;
 }
 
 export default dbConnect;

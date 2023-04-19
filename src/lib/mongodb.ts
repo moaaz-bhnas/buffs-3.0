@@ -1,4 +1,4 @@
-// Why we use separate mongodb connection for next-auth: https://github.com/nextauthjs/adapters/pull/355#issuecomment-1002305580
+// why we use separate mongodb connection for next-auth: https://github.com/nextauthjs/adapters/pull/355#issuecomment-1002305580
 
 // This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
 import { MongoClient, MongoClientOptions } from "mongodb";

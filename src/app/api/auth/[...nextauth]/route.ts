@@ -3,8 +3,6 @@ import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
-console.log("env", process.env);
-
 const handler = NextAuth({
   providers: [
     GoogleProvider({

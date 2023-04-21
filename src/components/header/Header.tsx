@@ -1,5 +1,6 @@
 import Container from "../container/Container";
 import Logo from "../logo/Logo";
+import DesktopNavigation from "./DesktopNavigation";
 import MobileNavigation from "./MobileNavigation";
 
 type Props = {};
@@ -16,6 +17,11 @@ function Header({}: Props) {
           {/* Mobile navigation */}
           <div className="sm:hidden">
             <MobileNavigation />
+          </div>
+
+          {/* Desktop navigation */}
+          <div className="hidden sm:block">
+            <DesktopNavigation />
           </div>
         </nav>
       </Container>

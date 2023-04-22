@@ -20,7 +20,7 @@ function Header({}: Props) {
           </div>
 
           {/* Desktop navigation */}
-          <div className="hidden sm:block">
+          <div className="hidden sm:block flex-1 ms-6">
             <DesktopNavigation />
           </div>
         </nav>

@@ -2,23 +2,14 @@ import {
   BellIcon,
   ChevronDownIcon,
   PaperAirplaneIcon,
-  UserIcon,
 } from "@heroicons/react/24/outline";
 import SearchForm from "./SearchForm";
-import { authOptions, getCurrentUser } from "@/lib/next-auth";
-import { redirect } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
+import Avatar from "../avatar/Avatar";
 
 type Props = {};
 
 async function DesktopNavigation({}: Props) {
-  const user = await getCurrentUser();
-
-  if (!user) {
-    redirect(authOptions?.pages?.signIn || "/login");
-  }
-
   return (
     <div className="flex items-center gap-x-3">
       {/* Search bar */}
@@ -56,14 +47,8 @@ async function DesktopNavigation({}: Props) {
             className="flex h-12 w-12 items-center justify-center rounded-full duration-75 hover:bg-gray-200 focus:bg-gray-200"
             aria-label="Your profile page"
           >
-            <Image
-              className="w-7 rounded-full"
-              src={user.image ? user.image : "Placeholder"}
-              alt=""
-              width={0}
-              height={0}
-              sizes="2rem"
-            />
+            {/* @ts-expect-error Async Server Component */}
+            <Avatar />
           </Link>
         </li>
 

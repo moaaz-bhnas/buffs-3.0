@@ -9,7 +9,7 @@ import Avatar from "../avatar/Avatar";
 
 type Props = {};
 
-async function DesktopNavigation({}: Props) {
+function DesktopNavigation({}: Props) {
   return (
     <div className="flex items-center gap-x-3">
       {/* Search bar */}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import classNames from "@/utils/style/classNames";
@@ -46,17 +46,26 @@ function SearchForm({}: Props) {
             />
           </Combobox.Button>
           <Transition
-            enter="transition duration-100 ease-out"
+            enter="transition duration-100 ease-oudoppler"
             enterFrom="transform scale-95 opacity-0"
             enterTo="transform scale-100 opacity-100"
             leave="transition duration-75 ease-out"
             leaveFrom="transform scale-100 opacity-100"
             leaveTo="transform scale-95 opacity-0"
           >
-            <Combobox.Options className="absolute  w-full rounded shadow-lg top-3 bg-white">
+            <Combobox.Options className="absolute w-full rounded shadow-lg border top-3 bg-white">
               {filteredSearchResults.map((result) => (
-                <Combobox.Option key={result} value={result}>
-                  {result}
+                <Combobox.Option key={result} value={result} as={Fragment}>
+                  {({ active }) => (
+                    <li
+                      className={classNames(
+                        "p-3 border-b flex justify-between",
+                        active ? "bg-gray-100 cursor-pointer" : ""
+                      )}
+                    >
+                      {result}
+                    </li>
+                  )}
                 </Combobox.Option>
               ))}
             </Combobox.Options>

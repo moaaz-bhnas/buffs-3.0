@@ -6,6 +6,8 @@ import {
 import SearchForm from "./SearchForm";
 import Link from "next/link";
 import Avatar from "../avatar/Avatar";
+import { Suspense } from "react";
+import AvatarSkeleton from "../avatar/AvatarSkeleton";
 
 type Props = {};
 
@@ -47,8 +49,10 @@ function DesktopNavigation({}: Props) {
             className="flex h-12 w-12 items-center justify-center rounded-full duration-75 hover:bg-gray-200 focus:bg-gray-200"
             aria-label="Your profile page"
           >
-            {/* @ts-expect-error Async Server Component */}
-            <Avatar />
+            <Suspense fallback={<AvatarSkeleton />}>
+              {/* @ts-expect-error Async Server Component */}
+              <Avatar />
+            </Suspense>
           </Link>
         </li>
 

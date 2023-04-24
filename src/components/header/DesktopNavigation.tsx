@@ -2,52 +2,68 @@ import {
   BellIcon,
   ChevronDownIcon,
   PaperAirplaneIcon,
-  UserIcon,
 } from "@heroicons/react/24/outline";
 import SearchForm from "./SearchForm";
+import Link from "next/link";
+import Avatar from "../avatar/Avatar";
+import { Suspense } from "react";
+import AvatarSkeleton from "../avatar/AvatarSkeleton";
 
 type Props = {};
 
 function DesktopNavigation({}: Props) {
   return (
-    <div className="flex items-center gap-x-3.5">
+    <div className="flex items-center gap-x-3">
       {/* Search bar */}
       <div className="flex-1">
         <SearchForm />
       </div>
 
-      <ul className="flex gap-x-1 -me-2.5">
+      <ul className="-me-2.5 flex gap-x-1">
         {/* Notifications */}
         <li>
           <button
-            className="w-12 h-12 flex"
+            className="flex h-12 w-12 items-center justify-center rounded-full duration-75 hover:bg-gray-200 focus:bg-gray-200"
             type="button"
             aria-label="Toggle notifications panel"
           >
-            <BellIcon className="w-7 m-auto" />
+            <BellIcon className="w-7" />
           </button>
         </li>
 
         {/* Inbox */}
         <li>
           <button
-            className="w-12 h-12 flex"
+            className="flex h-12 w-12 items-center justify-center rounded-full duration-75 hover:bg-gray-200 focus:bg-gray-200"
             type="button"
             aria-label="Toggle messages panel"
           >
-            <PaperAirplaneIcon className="w-7 m-auto" />
+            <PaperAirplaneIcon className="w-7" />
           </button>
         </li>
 
         {/* Profile */}
         <li>
-          <button
-            className="w-12 h-12 flex items-center justify-center"
-            type="button"
-            aria-label="Toggle profile settings"
+          <Link
+            href="/profile"
+            className="flex h-12 w-12 items-center justify-center rounded-full duration-75 hover:bg-gray-200 focus:bg-gray-200"
+            aria-label="Your profile page"
           >
-            <UserIcon className="w-7" />
-            <ChevronDownIcon className="w-3.5" />
+            <Suspense fallback={<AvatarSkeleton />}>
+              {/* @ts-expect-error Async Server Component */}
+              <Avatar />
+            </Suspense>
+          </Link>
+        </li>
+
+        {/* Settings */}
+        <li>
+          <button
+            className="flex h-12 w-12 items-center justify-center rounded-full duration-75 hover:bg-gray-200 focus:bg-gray-200"
+            type="button"
+            aria-label="Toggle settings panel"
+          >
+            <ChevronDownIcon className="w-7" />
           </button>
         </li>
       </ul>

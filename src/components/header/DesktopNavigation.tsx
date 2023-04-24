@@ -60,13 +60,6 @@ function DesktopNavigation({}: Props) {
         {/* Settings */}
         <li>
           <SettingsPopover />
-          {/* <button
-            className="flex h-12 w-12 items-center justify-center rounded-full duration-75 hover:bg-gray-200 focus:bg-gray-200"
-            type="button"
-            aria-label="Toggle settings panel"
-          >
-            <ChevronDownIcon className="w-7" />
-          </button> */}
         </li>
       </ul>
     </div>

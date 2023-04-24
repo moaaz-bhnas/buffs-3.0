@@ -8,6 +8,7 @@ import Link from "next/link";
 import Avatar from "../avatar/Avatar";
 import { Suspense } from "react";
 import AvatarSkeleton from "../avatar/AvatarSkeleton";
+import SettingsPopover from "./SettingsPopover";
 
 type Props = {};
 
@@ -58,13 +59,7 @@ function DesktopNavigation({}: Props) {
 
         {/* Settings */}
         <li>
-          <button
-            className="flex h-12 w-12 items-center justify-center rounded-full duration-75 hover:bg-gray-200 focus:bg-gray-200"
-            type="button"
-            aria-label="Toggle settings panel"
-          >
-            <ChevronDownIcon className="w-7" />
-          </button>
+          <SettingsPopover />
         </li>
       </ul>
     </div>

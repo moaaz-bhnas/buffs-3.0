@@ -4,12 +4,13 @@ import getFirstWord from "@/utils/string/getFirstWord";
 import { Dialog, Transition } from "@headlessui/react";
 import { Session } from "next-auth";
 import { Fragment, useState } from "react";
+import AddReviewForm from "./AddReviewForm";
 
 type Props = {
   user: Session["user"];
 };
 
-function ReviewModal({ user }: Props) {
+function AddReviewModal({ user }: Props) {
   const [isOpen, setIsOpen] = useState(true);
 
   function closeModal() {
@@ -45,7 +46,7 @@ function ReviewModal({ user }: Props) {
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <div className="flex min-h-full items-center justify-center p-3 text-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -55,29 +56,8 @@ function ReviewModal({ user }: Props) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-md bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
-                  >
-                    Payment successful
-                  </Dialog.Title>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      Your payment has been successfully submitted. We’ve sent
-                      you an email with all of the details of your order.
-                    </p>
-                  </div>
-
-                  <div className="mt-4">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
-                    >
-                      Got it, thanks!
-                    </button>
-                  </div>
+                <Dialog.Panel className="w-full max-w-md transform rounded-md bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <AddReviewForm />
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -88,4 +68,4 @@ function ReviewModal({ user }: Props) {
   );
 }
 
-export default ReviewModal;
+export default AddReviewModal;

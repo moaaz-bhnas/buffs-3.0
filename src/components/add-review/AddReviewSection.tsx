@@ -1,11 +1,11 @@
 import { getCurrentUser } from "@/lib/next-auth";
 import Avatar from "../avatar/Avatar";
-import ReviewModal from "./ReviewModal";
+import ReviewModal from "./AddReviewModal";
 import Link from "next/link";
 
 type Props = {};
 
-async function AddReview({}: Props) {
+async function AddReviewSection({}: Props) {
   const user = await getCurrentUser();
 
   return (
@@ -24,4 +24,4 @@ async function AddReview({}: Props) {
   );
 }
 
-export default AddReview;
+export default AddReviewSection;

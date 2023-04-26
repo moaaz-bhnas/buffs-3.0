@@ -7,7 +7,7 @@ type Props = {};
 
 function Header({}: Props) {
   return (
-    <header className="border-b py-1">
+    <header className="border-b bg-white py-1 shadow-sm">
       <h1 className="sr-only">Buffs</h1>
 
       <Container className="!py-0">
@@ -20,7 +20,7 @@ function Header({}: Props) {
           </div>
 
           {/* Desktop navigation */}
-          <div className="hidden sm:block flex-1 ms-6">
+          <div className="ms-6 hidden flex-1 sm:block">
             <DesktopNavigation />
           </div>
         </nav>

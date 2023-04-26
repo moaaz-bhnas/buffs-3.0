@@ -19,7 +19,7 @@ async function Avatar({ className = "" }: Props) {
       alt=""
       width={0}
       height={0}
-      sizes="2rem"
+      sizes="3rem"
     />
   );
 }

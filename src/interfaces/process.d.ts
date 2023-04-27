@@ -7,5 +7,6 @@ declare namespace NodeJS {
     GOOGLE_ID: string;
     GOOGLE_SECRET: string;
     DATABASE_URL: string;
+    TMDB_API_KEY: string;
   }
 }

@@ -11,7 +11,7 @@ type Props = {
 };
 
 function AddReviewModal({ user }: Props) {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   function closeModal() {
     setIsOpen(false);

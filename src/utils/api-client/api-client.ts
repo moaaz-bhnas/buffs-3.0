@@ -9,9 +9,7 @@ import { Result, ok } from "neverthrow";
 export default class ApiClient implements IApiClient {
   private client: AxiosInstance;
 
-  protected createAxiosClient(
-    apiConfiguration: ApiConfiguration
-  ): AxiosInstance {
+  private createAxiosClient(apiConfiguration: ApiConfiguration): AxiosInstance {
     return axios.create({
       responseType: "json",
       headers: {

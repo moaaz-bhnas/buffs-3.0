@@ -1,24 +1,48 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import classNames from "@/utils/style/classNames";
+import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
+import { MovieApiClient } from "@/api/movie-api-client";
+
+const movieApiClient = new MovieApiClient();
+
+function filterSearchResults(
+  searchQuery: string,
+  searchResults: MovieSearchResult[]
+): MovieSearchResult[] {
+  let filteredSearchResults: MovieSearchResult[];
+  if (searchQuery === "") {
+    filteredSearchResults = searchResults;
+  } else {
+    filteredSearchResults = searchResults.filter((result) =>
+      result.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }
+  return filteredSearchResults;
+}
 
 type Props = {};
 
-const searchResults = ["Gone Girl", "The Perks of Being a Walflower"];
-
 function MoviesSearchInput({}: Props) {
+  const [searchResults, setSearchResults] = useState<MovieSearchResult[]>([]);
   const [selectedSearchResult, setSelectedSearchResult] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredSearchResults =
-    searchQuery === ""
-      ? searchResults
-      : searchResults.filter((person) => {
-          return person.toLowerCase().includes(searchQuery.toLowerCase());
-        });
+  const searchAndSetResults = async (searchQuery: string): Promise<void> => {
+    const searchResults = await movieApiClient.searchMovies(searchQuery);
+    if (searchResults) {
+      setSearchResults(searchResults);
+    }
+  };
+
+  useEffect(() => {
+    searchAndSetResults(searchQuery);
+  }, [searchQuery]);
+
+  const filteredSearchResults = filterSearchResults(searchQuery, searchResults);
 
   return (
     <Combobox
@@ -55,7 +79,11 @@ function MoviesSearchInput({}: Props) {
           >
             <Combobox.Options className="panel top-3">
               {filteredSearchResults.map((result) => (
-                <Combobox.Option key={result} value={result} as={Fragment}>
+                <Combobox.Option
+                  key={result.id}
+                  value={result.id}
+                  as={Fragment}
+                >
                   {({ active }) => (
                     <li
                       className={classNames(
@@ -63,7 +91,7 @@ function MoviesSearchInput({}: Props) {
                         active ? "cursor-pointer bg-gray-100" : ""
                       )}
                     >
-                      {result}
+                      {result.title}
                     </li>
                   )}
                 </Combobox.Option>

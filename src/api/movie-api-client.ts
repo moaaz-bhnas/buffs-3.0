@@ -5,7 +5,7 @@ import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
 import ApiClient from "@/utils/api-client/api-client";
 
 export class MovieApiClient implements IMovieApiClient {
-  private apiKey = process.env.TMDB_API_KEY;
+  private apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
   private apiBaseUrl = "https://api.themoviedb.org";
   private apiVersion = 3;
   private apiResultsLanguage = "en-US";

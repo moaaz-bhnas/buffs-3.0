@@ -1,3 +1,3 @@
-export class ApiConfiguration {
+export interface ApiConfiguration {
   accessToken?: string;
 }

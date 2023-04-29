@@ -6,6 +6,9 @@ import {
 import SearchForm from "./SearchForm";
 import Link from "next/link";
 import Avatar from "../avatar/Avatar";
+import { Suspense } from "react";
+import AvatarSkeleton from "../avatar/AvatarSkeleton";
+import SettingsPopover from "./SettingsPopover";
 
 type Props = {};
 
@@ -47,20 +50,16 @@ function DesktopNavigation({}: Props) {
             className="flex h-12 w-12 items-center justify-center rounded-full duration-75 hover:bg-gray-200 focus:bg-gray-200"
             aria-label="Your profile page"
           >
-            {/* @ts-expect-error Async Server Component */}
-            <Avatar />
+            <Suspense fallback={<AvatarSkeleton />}>
+              {/* @ts-expect-error Async Server Component */}
+              <Avatar />
+            </Suspense>
           </Link>
         </li>
 
         {/* Settings */}
         <li>
-          <button
-            className="flex h-12 w-12 items-center justify-center rounded-full duration-75 hover:bg-gray-200 focus:bg-gray-200"
-            type="button"
-            aria-label="Toggle settings panel"
-          >
-            <ChevronDownIcon className="w-7" />
-          </button>
+          <SettingsPopover />
         </li>
       </ul>
     </div>

@@ -18,10 +18,9 @@ export const authOptions: AuthOptions = {
 };
 
 export const getCurrentUser = cache(async function getCurrentUser(): Promise<
-  Session["user"] | null
+  Session["user"] | undefined
 > {
   const session: Session | null = await getServerSession(authOptions);
 
-  if (session?.user) return session.user;
-  else return null;
+  return session?.user;
 });

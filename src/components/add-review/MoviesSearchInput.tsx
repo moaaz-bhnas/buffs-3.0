@@ -9,7 +9,7 @@ type Props = {};
 
 const searchResults = ["Gone Girl", "The Perks of Being a Walflower"];
 
-function SearchForm({}: Props) {
+function MoviesSearchInput({}: Props) {
   const [selectedSearchResult, setSelectedSearchResult] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -22,7 +22,7 @@ function SearchForm({}: Props) {
 
   return (
     <Combobox
-      as="form"
+      as="div"
       className="relative"
       value={selectedSearchResult}
       onChange={setSelectedSearchResult}
@@ -76,4 +76,4 @@ function SearchForm({}: Props) {
   );
 }
 
-export default SearchForm;
+export default MoviesSearchInput;

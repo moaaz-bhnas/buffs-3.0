@@ -8,6 +8,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { ImageType } from "@/interfaces/movies/ImageType";
 import { ImageSize } from "@/interfaces/movies/ImageSize";
 import MovieResultItem from "./MovieResultItem";
+import AnimateHeight from "react-animate-height";
 
 type Props = {};
 
@@ -18,6 +19,16 @@ function AddReviewForm({}: Props) {
   const [searchResults, setSearchResults] = useState<MovieSearchResult[]>([]);
   const [selectedSearchResult, setSelectedSearchResult] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+
+  // grid height status
+  const [gridHeight, setGridHeight] = useState<number | "auto">(0);
+  useEffect(() => {
+    if (searchResults.length > 0) {
+      setGridHeight("auto");
+    } else {
+      setGridHeight(0);
+    }
+  }, [searchResults]);
 
   // search icon visibility
   const [searchIconVisible, setSearchIconVisible] = useState(true);
@@ -53,7 +64,7 @@ function AddReviewForm({}: Props) {
             searchIconVisible ? "ps-8" : "ps-3"
           )}
           aria-label="Search for reviews, movies, and other film buffs"
-          placeholder="Search"
+          placeholder="Search for a movie .."
           onChange={(event) => setSearchQuery(event.target.value)}
           onFocus={() => setSearchIconVisible(false)}
           onBlur={() => setSearchIconVisible(true)}
@@ -61,13 +72,15 @@ function AddReviewForm({}: Props) {
       </div>
 
       {/* Movie result grid */}
-      <ul className="flex">
-        {searchResults.map((movie) => (
-          <li key={movie.id}>
-            <MovieResultItem movie={movie} />
-          </li>
-        ))}
-      </ul>
+      <AnimateHeight height={gridHeight} duration={1000}>
+        <ul className="grid grid-cols-3 gap-x-2 gap-y-4">
+          {searchResults.map((movie) => (
+            <li key={movie.id}>
+              <MovieResultItem movie={movie} />
+            </li>
+          ))}
+        </ul>
+      </AnimateHeight>
     </form>
   );
 }

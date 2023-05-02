@@ -57,6 +57,10 @@ export class MovieApiClient implements IMovieApiClient {
     let movies = result.value.results;
 
     if (imagesConfig) {
+      // Filter out movies without images
+      movies = this.filterOutMoviesWithoutImage(movies);
+
+      // Get complete paths for movies images
       switch (imagesConfig.imageType) {
         case ImageType.backdrop: {
           movies = await this.mapCompleteBackdropPathsToMovies(
@@ -69,6 +73,16 @@ export class MovieApiClient implements IMovieApiClient {
     }
 
     return movies;
+  }
+
+  private filterOutMoviesWithoutImage(
+    movies: MovieSearchResult[]
+  ): MovieSearchResult[] {
+    const moviesWithImages = movies.filter(
+      (movie) => movie.backdrop_path && movie.poster_path
+    );
+
+    return moviesWithImages;
   }
 
   private async getCompleteBackdropPath(

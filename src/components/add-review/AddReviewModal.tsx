@@ -56,7 +56,7 @@ function AddReviewModal({ user }: Props) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform rounded-md bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-2xl transform rounded-md bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <AddReviewForm />
                 </Dialog.Panel>
               </Transition.Child>

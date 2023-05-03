@@ -111,19 +111,18 @@ export class MovieApiClient implements IMovieApiClient {
     movies: MovieSearchResult[],
     imageSize: ImageSize
   ): Promise<MovieSearchResult[]> {
-    const results = await Promise.all(
-      movies.map(async (movie) => {
-        if (!movie.backdrop_path) {
-          return movie;
-        }
+    const results: MovieSearchResult[] = [];
+
+    for (const movie of movies) {
+      if (movie.backdrop_path) {
         const completeBackdropPath = await this.getCompleteBackdropPath(
           movie.backdrop_path,
           imageSize
         );
         movie.backdrop_path = completeBackdropPath;
-        return movie;
-      })
-    );
+      }
+      results.push(movie);
+    }
 
     return results;
   }

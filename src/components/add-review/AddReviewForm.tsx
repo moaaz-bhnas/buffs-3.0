@@ -4,17 +4,19 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
 import { MovieApiClient } from "@/api/movie-api-client";
 import classNames from "@/utils/style/classNames";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { ImageType } from "@/interfaces/movies/ImageType";
 import { ImageSize } from "@/interfaces/movies/ImageSize";
 import MovieResultItem from "./MovieResultItem";
 import AnimateHeight from "react-animate-height";
 
-type Props = {};
+type Props = {
+  closeModal?: () => void;
+};
 
 const movieApiClient = new MovieApiClient();
 
-function AddReviewForm({}: Props) {
+function AddReviewForm({ closeModal = () => {} }: Props) {
   // Search logic
   const [_, startTransition] = useTransition();
   const [searchResults, setSearchResults] = useState<MovieSearchResult[]>([]);
@@ -68,8 +70,17 @@ function AddReviewForm({}: Props) {
   const [searchIconVisible, setSearchIconVisible] = useState(true);
 
   return (
-    <form className="space-y-3">
-      <h2 className="font-semibold">Write a review</h2>
+    <form className="space-y-4">
+      <header className="flex items-center justify-between">
+        <h2 className="font-semibold">Write a review</h2>
+        <button
+          className="bg-gray-20 flex h-10 w-10 rounded-full transition hover:bg-gray-300 focus:bg-gray-300"
+          type="button"
+          onClick={closeModal}
+        >
+          <XMarkIcon className="m-auto w-6" />
+        </button>
+      </header>
 
       {/* Search input */}
       <div className="relative">
@@ -79,7 +90,7 @@ function AddReviewForm({}: Props) {
         <input
           type="search"
           className={classNames(
-            "w-full rounded-2xl bg-gray-200 py-2 transition placeholder:text-gray-500 ",
+            "w-full rounded-2xl bg-gray-200 py-2 pe-3 transition-all placeholder:text-gray-500",
             searchIconVisible ? "ps-8" : "ps-3"
           )}
           aria-label="Search for reviews, movies, and other film buffs"

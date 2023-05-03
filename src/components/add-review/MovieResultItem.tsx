@@ -8,8 +8,11 @@ type Props = {
 
 function MovieResultItem({ movie }: Props) {
   return (
-    <div>
-      <button type="button" className="flex w-full">
+    <div className="space-y-1">
+      <button
+        type="button"
+        className="flex w-full transition-all hover:ring-4 hover:ring-teal-400"
+      >
         <Image
           className="aspect-[300/169] w-full animate-load rounded-sm bg-gray-300"
           src={
@@ -23,7 +26,7 @@ function MovieResultItem({ movie }: Props) {
         />
       </button>
 
-      <p className="text-sm font-semibold">
+      <p className="text-sm font-normal">
         {movie.title} ({DateTime.fromISO(movie.release_date).year})
       </p>
     </div>

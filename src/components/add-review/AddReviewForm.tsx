@@ -96,7 +96,10 @@ function AddReviewForm({}: Props) {
         duration={300}
         onHeightAnimationEnd={handleHeightAnimationEnd}
       >
-        <ul ref={gridRef} className="grid grid-cols-3 gap-x-2 gap-y-4">
+        <ul
+          ref={gridRef}
+          className="-mx-1 grid grid-cols-3 gap-x-2 gap-y-4 p-1"
+        >
           {searchResults.map((movie) => (
             <li key={movie.id}>
               <MovieResultItem movie={movie} />

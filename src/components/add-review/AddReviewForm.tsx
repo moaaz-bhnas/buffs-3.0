@@ -29,13 +29,13 @@ function AddReviewForm({ closeModal = () => {} }: Props) {
     if (searchQuery === "") return;
 
     setIsLoading(true);
-    const searchResults = await movieApiClient.searchMovies(searchQuery, {
+    const searchResult = await movieApiClient.searchMovies(searchQuery, {
       imageType: ImageType.backdrop,
       imageSize: ImageSize.sm,
     });
-    if (searchResults) {
+    if (searchResult.isOk()) {
       startTransition(() => {
-        setSearchResults(searchResults);
+        setSearchResults(searchResult.value);
         setIsLoading(false);
       });
     } else {

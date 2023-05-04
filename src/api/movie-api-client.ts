@@ -1,3 +1,4 @@
+import { APIError } from "@/interfaces/api-client/Error";
 import { IApiClient } from "@/interfaces/api-client/IApiClient";
 import { IMovieApiClient } from "@/interfaces/movies/IMovieApiClient";
 import { ImageSize } from "@/interfaces/movies/ImageSize";
@@ -5,7 +6,8 @@ import { ImageType } from "@/interfaces/movies/ImageType";
 import { MovieSearchResponse } from "@/interfaces/movies/MovieSearchResponse";
 import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
 import { MoviesApiConfiguration } from "@/interfaces/movies/MoviesApiConfiguration";
-import ApiClient from "@/utils/api-client/api-client";
+import ApiClient from "@/utils/api-client/apiClient";
+import { Result, err, ok } from "neverthrow";
 
 export class MovieApiClient implements IMovieApiClient {
   private apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
@@ -15,7 +17,9 @@ export class MovieApiClient implements IMovieApiClient {
   private movieApiClient: IApiClient = new ApiClient({});
   private moviesApiConfiguration: MoviesApiConfiguration | null = null;
 
-  private async getMoviesApiConfiguration(): Promise<MoviesApiConfiguration | null> {
+  private async getMoviesApiConfiguration(): Promise<
+    Result<MoviesApiConfiguration, APIError>
+  > {
     const result = await this.movieApiClient.get<MoviesApiConfiguration>(
       `${this.apiBaseUrl}/${this.apiVersion}/configuration?api_key=${this.apiKey}`
     );
@@ -24,17 +28,17 @@ export class MovieApiClient implements IMovieApiClient {
       console.error(`Failed to get movies API configuration`, {
         error: result.error,
       });
-      return null;
+      return err(result.error);
     }
 
-    return result.value;
+    return ok(result.value);
   }
 
   private async setMoviesApiConfiguration(): Promise<void> {
     if (!this.moviesApiConfiguration) {
       const configuration = await this.getMoviesApiConfiguration();
-      if (configuration) {
-        this.moviesApiConfiguration = configuration;
+      if (configuration.isOk()) {
+        this.moviesApiConfiguration = configuration.value;
       }
     }
   }
@@ -42,7 +46,7 @@ export class MovieApiClient implements IMovieApiClient {
   async searchMovies(
     query: string,
     imagesConfig?: { imageType: ImageType; imageSize: ImageSize }
-  ): Promise<MovieSearchResult[] | null> {
+  ): Promise<Result<MovieSearchResult[], APIError>> {
     const result = await this.movieApiClient.get<MovieSearchResponse>(
       `${this.apiBaseUrl}/${this.apiVersion}/search/movie?api_key=${this.apiKey}&query=${query}&language=${this.apiResultsLanguage}&page=1`
     );
@@ -51,7 +55,7 @@ export class MovieApiClient implements IMovieApiClient {
       console.error(`Failed to search for movies with query: ${query}`, {
         error: result.error,
       });
-      return null;
+      return err(result.error);
     }
 
     let movies = result.value.results;
@@ -72,7 +76,7 @@ export class MovieApiClient implements IMovieApiClient {
       }
     }
 
-    return movies;
+    return ok(movies);
   }
 
   private filterOutMoviesWithoutImage(

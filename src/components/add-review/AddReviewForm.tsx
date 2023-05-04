@@ -9,6 +9,7 @@ import { ImageType } from "@/interfaces/movies/ImageType";
 import { ImageSize } from "@/interfaces/movies/ImageSize";
 import MovieResultItem from "./MovieResultItem";
 import AnimateHeight from "react-animate-height";
+import { useUpdateEffect } from "usehooks-ts";
 
 type Props = {
   closeModal?: () => void;
@@ -22,8 +23,12 @@ function AddReviewForm({ closeModal = () => {} }: Props) {
   const [searchResults, setSearchResults] = useState<MovieSearchResult[]>([]);
   const [selectedSearchResult, setSelectedSearchResult] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const searchAndSetResults = async (searchQuery: string): Promise<void> => {
+    if (searchQuery === "") return;
+
+    setIsLoading(true);
     const searchResults = await movieApiClient.searchMovies(searchQuery, {
       imageType: ImageType.backdrop,
       imageSize: ImageSize.sm,
@@ -31,13 +36,27 @@ function AddReviewForm({ closeModal = () => {} }: Props) {
     if (searchResults) {
       startTransition(() => {
         setSearchResults(searchResults);
+        setIsLoading(false);
       });
+    } else {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     searchAndSetResults(searchQuery);
   }, [searchQuery]);
+
+  useUpdateEffect(
+    function clearResultsAfterLastAsyncFinishes() {
+      if (!isLoading && searchQuery === "") {
+        startTransition(() => {
+          setSearchResults([]);
+        });
+      }
+    },
+    [isLoading, searchQuery]
+  );
 
   // Animating grid height
   const gridRef = useRef<HTMLUListElement>(null);
@@ -95,7 +114,7 @@ function AddReviewForm({ closeModal = () => {} }: Props) {
           )}
           aria-label="Search for reviews, movies, and other film buffs"
           placeholder="Search for a movie .."
-          onChange={(event) => setSearchQuery(event.target.value)}
+          onChange={(event) => setSearchQuery(event.target.value.trim())}
           onFocus={() => setSearchIconVisible(false)}
           onBlur={() => setSearchIconVisible(true)}
         />

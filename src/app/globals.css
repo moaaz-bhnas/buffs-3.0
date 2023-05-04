@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  * {
+    box-sizing: border-box;
+  }
+
   body {
     @apply bg-gray-100 text-gray-950;
   }

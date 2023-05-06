@@ -3,7 +3,7 @@
 import getFirstWord from "@/utils/string/getFirstWord";
 import { Dialog, Transition } from "@headlessui/react";
 import { Session } from "next-auth";
-import { Fragment, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import AddReviewForm from "./AddReviewForm";
 
 type Props = {
@@ -11,6 +11,7 @@ type Props = {
 };
 
 function AddReviewModal({ user }: Props) {
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   function closeModal() {
@@ -32,7 +33,12 @@ function AddReviewModal({ user }: Props) {
       </button>
 
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+        <Dialog
+          as="div"
+          className="relative z-10"
+          initialFocus={searchInputRef}
+          onClose={closeModal}
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -56,8 +62,8 @@ function AddReviewModal({ user }: Props) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-2xl transform rounded-md bg-white px-6 py-4 text-left align-middle shadow-xl transition-all">
-                  <AddReviewForm closeModal={closeModal} />
+                <Dialog.Panel className="w-full max-w-lg transform rounded-md bg-white px-6 py-2 text-left align-middle shadow-xl transition-all">
+                  <AddReviewForm closeModal={closeModal} ref={searchInputRef} />
                 </Dialog.Panel>
               </Transition.Child>
             </div>

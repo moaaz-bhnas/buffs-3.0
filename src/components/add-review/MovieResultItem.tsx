@@ -1,22 +1,25 @@
 import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
 import { DateTime } from "luxon";
 import Image from "next/image";
+import { Dispatch, SetStateAction } from "react";
 
 type Props = {
   movie: MovieSearchResult;
+  setSelectedSearchResult: Dispatch<SetStateAction<MovieSearchResult | null>>;
 };
 
-function MovieResultItem({ movie }: Props) {
+function MovieResultItem({ movie, setSelectedSearchResult }: Props) {
   return (
     <div className="space-y-1">
       <button
-        type="button"
         className="flex w-full transition-all hover:ring-4 hover:ring-teal-400"
+        type="button"
+        onClick={() => setSelectedSearchResult(movie)}
       >
         <Image
-          className="aspect-[300/169] w-full animate-load rounded-sm bg-gray-300"
+          className="aspect-[185/278] w-full animate-load rounded-sm bg-gray-300"
           src={
-            movie.backdrop_path ||
+            movie.complete_poster_path ||
             "images/placeholders/backdrop-placeholder.svg"
           }
           alt={`Select ${movie.title}`}

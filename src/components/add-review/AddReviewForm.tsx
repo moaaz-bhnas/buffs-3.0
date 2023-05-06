@@ -1,11 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import {
+  ForwardedRef,
+  forwardRef,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
 import { MovieApiClient } from "@/api/movie-api-client";
 import classNames from "@/utils/style/classNames";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { ImageType } from "@/interfaces/movies/ImageType";
 import { ImageSize } from "@/interfaces/movies/ImageSize";
 import MovieResultItem from "./MovieResultItem";
 import AnimateHeight from "react-animate-height";
@@ -17,21 +23,26 @@ type Props = {
 
 const movieApiClient = new MovieApiClient();
 
-function AddReviewForm({ closeModal = () => {} }: Props) {
+function AddReviewForm(
+  { closeModal = () => {} }: Props,
+  searchInputRef: ForwardedRef<HTMLInputElement>
+) {
   // Search logic
   const [_, startTransition] = useTransition();
   const [searchResults, setSearchResults] = useState<MovieSearchResult[]>([]);
-  const [selectedSearchResult, setSelectedSearchResult] = useState("");
+  const [selectedSearchResult, setSelectedSearchResult] =
+    useState<MovieSearchResult | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  console.log({ searchResults });
 
   const searchAndSetResults = async (searchQuery: string): Promise<void> => {
     if (searchQuery === "") return;
 
     setIsLoading(true);
     const searchResult = await movieApiClient.searchMovies(searchQuery, {
-      imageType: ImageType.backdrop,
-      imageSize: ImageSize.sm,
+      withImages: true,
+      imageSize: ImageSize.lg,
     });
     if (searchResult.isOk()) {
       startTransition(() => {
@@ -107,6 +118,7 @@ function AddReviewForm({ closeModal = () => {} }: Props) {
           <MagnifyingGlassIcon className="absolute left-2 top-1/2 w-4 -translate-y-1/2 text-gray-500" />
         )}
         <input
+          ref={searchInputRef}
           type="search"
           className={classNames(
             "w-full rounded-2xl bg-gray-200 py-2 pe-3 transition-all placeholder:text-gray-500",
@@ -114,6 +126,7 @@ function AddReviewForm({ closeModal = () => {} }: Props) {
           )}
           aria-label="Search for reviews, movies, and other film buffs"
           placeholder="Search for a movie .."
+          value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value.trim())}
           onFocus={() => setSearchIconVisible(false)}
           onBlur={() => setSearchIconVisible(true)}
@@ -126,10 +139,13 @@ function AddReviewForm({ closeModal = () => {} }: Props) {
         duration={300}
         onHeightAnimationEnd={handleHeightAnimationEnd}
       >
-        <ul ref={gridRef} className="grid grid-cols-3 gap-x-2 gap-y-4 p-1">
+        <ul ref={gridRef} className="grid grid-cols-3 gap-x-2.5 gap-y-4 p-1">
           {searchResults.map((movie) => (
             <li key={movie.id}>
-              <MovieResultItem movie={movie} />
+              <MovieResultItem
+                movie={movie}
+                setSelectedSearchResult={setSelectedSearchResult}
+              />
             </li>
           ))}
         </ul>
@@ -138,4 +154,4 @@ function AddReviewForm({ closeModal = () => {} }: Props) {
   );
 }
 
-export default AddReviewForm;
+export default forwardRef(AddReviewForm);

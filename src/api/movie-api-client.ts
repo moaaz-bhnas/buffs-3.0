@@ -34,18 +34,27 @@ export class MovieApiClient implements IMovieApiClient {
     return ok(result.value);
   }
 
-  private async setMoviesApiConfiguration(): Promise<void> {
-    if (!this.moviesApiConfiguration) {
-      const configuration = await this.getMoviesApiConfiguration();
-      if (configuration.isOk()) {
-        this.moviesApiConfiguration = configuration.value;
-      }
+  private async setMoviesApiConfiguration(): Promise<
+    Result<MoviesApiConfiguration, APIError>
+  > {
+    if (this.moviesApiConfiguration) return ok(this.moviesApiConfiguration);
+
+    const configuration = await this.getMoviesApiConfiguration();
+
+    if (configuration.isErr()) {
+      return err(configuration.error);
     }
+
+    this.moviesApiConfiguration = configuration.value;
+    return ok(this.moviesApiConfiguration);
   }
 
   async searchMovies(
     query: string,
-    imagesConfig?: { imageType: ImageType; imageSize: ImageSize }
+    config: { withImages: boolean; imageSize: ImageSize } = {
+      withImages: false,
+      imageSize: ImageSize.sm,
+    }
   ): Promise<Result<MovieSearchResult[], APIError>> {
     const result = await this.movieApiClient.get<MovieSearchResponse>(
       `${this.apiBaseUrl}/${this.apiVersion}/search/movie?api_key=${this.apiKey}&query=${query}&language=${this.apiResultsLanguage}&page=1`
@@ -60,19 +69,17 @@ export class MovieApiClient implements IMovieApiClient {
 
     let movies = result.value.results;
 
-    if (imagesConfig) {
+    if (config.withImages) {
       // Filter out movies without images
       movies = this.filterOutMoviesWithoutImage(movies);
 
       // Get complete paths for movies images
-      switch (imagesConfig.imageType) {
-        case ImageType.backdrop: {
-          movies = await this.mapCompleteBackdropPathsToMovies(
-            movies,
-            imagesConfig.imageSize
-          );
-          break;
-        }
+      const moviesWithCompleteImagesPaths = await this.mapCompleteImagePaths(
+        movies,
+        config.imageSize
+      );
+      if (moviesWithCompleteImagesPaths.isOk()) {
+        movies = moviesWithCompleteImagesPaths.value;
       }
     }
 
@@ -89,45 +96,42 @@ export class MovieApiClient implements IMovieApiClient {
     return moviesWithImages;
   }
 
-  private async getCompleteBackdropPath(
-    filePath: string,
-    imageSize: ImageSize
-  ): Promise<string | null> {
-    await this.setMoviesApiConfiguration();
-
-    if (!this.moviesApiConfiguration) {
-      return null;
-    }
-
-    const { secure_base_url, backdrop_sizes } =
-      this.moviesApiConfiguration.images;
-
-    // If passed image size > largest available size from the API, get the largest size
-    if (imageSize > backdrop_sizes.length - 1) {
-      imageSize = backdrop_sizes.length - 1;
-    }
-
-    const backdropPath = `${secure_base_url}${backdrop_sizes[imageSize]}${filePath}`;
-    return backdropPath;
-  }
-
-  private async mapCompleteBackdropPathsToMovies(
+  private async mapCompleteImagePaths(
     movies: MovieSearchResult[],
     imageSize: ImageSize
-  ): Promise<MovieSearchResult[]> {
-    const results: MovieSearchResult[] = [];
+  ): Promise<Result<MovieSearchResult[], APIError>> {
+    const configuration = await this.setMoviesApiConfiguration();
+
+    if (configuration.isErr()) {
+      return err(configuration.error);
+    }
+
+    const { secure_base_url, backdrop_sizes, poster_sizes } =
+      configuration.value.images;
+
+    // If passed image size > largest available size from the API, get the largest size
+    let backdropSize = imageSize;
+    let posterSize = imageSize;
+    if (imageSize > backdrop_sizes.length - 1) {
+      backdropSize = backdrop_sizes.length - 1;
+    }
+    if (imageSize > poster_sizes.length - 1) {
+      posterSize = poster_sizes.length - 1;
+    }
+
+    // Let's go
+    const updatedMovies: MovieSearchResult[] = [];
 
     for (const movie of movies) {
       if (movie.backdrop_path) {
-        const completeBackdropPath = await this.getCompleteBackdropPath(
-          movie.backdrop_path,
-          imageSize
-        );
-        movie.backdrop_path = completeBackdropPath;
+        movie.complete_backdrop_path = `${secure_base_url}${backdrop_sizes[backdropSize]}${movie.backdrop_path}`;
       }
-      results.push(movie);
+      if (movie.poster_path) {
+        movie.complete_poster_path = `${secure_base_url}${poster_sizes[posterSize]}${movie.poster_path}`;
+      }
+      updatedMovies.push(movie);
     }
 
-    return results;
+    return ok(updatedMovies);
   }
 }

@@ -7,6 +7,6 @@ import { APIError } from "../api-client/Error";
 export interface IMovieApiClient {
   searchMovies(
     query: string,
-    imagesConfig?: { imageType: ImageType; imageSize: ImageSize }
+    config?: { withImages: boolean; imageSize: ImageSize }
   ): Promise<Result<MovieSearchResult[], APIError>>;
 }

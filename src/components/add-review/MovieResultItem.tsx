@@ -25,11 +25,11 @@ function MovieResultItem({ movie, setSelectedSearchResult }: Props) {
           alt={`Select ${movie.title}`}
           width={0}
           height={0}
-          sizes="300px"
+          sizes="200px"
         />
       </button>
 
-      <p className="text-sm font-normal">
+      <p className="text-sm">
         {movie.title} ({DateTime.fromISO(movie.release_date).year})
       </p>
     </div>

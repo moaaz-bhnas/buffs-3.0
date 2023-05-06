@@ -62,7 +62,7 @@ function AddReviewModal({ user }: Props) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-lg transform rounded-md bg-white px-6 py-2 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-lg transform rounded-md bg-white p-4 pt-2 text-left align-middle shadow-xl transition-all">
                   <AddReviewForm closeModal={closeModal} ref={searchInputRef} />
                 </Dialog.Panel>
               </Transition.Child>

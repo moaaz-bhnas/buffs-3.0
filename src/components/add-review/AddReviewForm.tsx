@@ -14,8 +14,10 @@ import classNames from "@/utils/style/classNames";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { ImageSize } from "@/interfaces/movies/ImageSize";
 import MovieResultItem from "./MovieResultItem";
-import AnimateHeight from "react-animate-height";
 import { useUpdateEffect } from "usehooks-ts";
+import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
+import { DateTime } from "luxon";
 
 type Props = {
   closeModal?: () => void;
@@ -34,7 +36,6 @@ function AddReviewForm(
     useState<MovieSearchResult | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  console.log({ searchResults });
 
   const searchAndSetResults = async (searchQuery: string): Promise<void> => {
     if (searchQuery === "") return;
@@ -113,43 +114,68 @@ function AddReviewForm(
       </header>
 
       {/* Search input */}
-      <div className="relative">
-        {searchIconVisible && (
-          <MagnifyingGlassIcon className="absolute left-2 top-1/2 w-4 -translate-y-1/2 text-gray-500" />
-        )}
-        <input
-          ref={searchInputRef}
-          type="search"
-          className={classNames(
-            "w-full rounded-2xl bg-gray-200 py-2 pe-3 transition-all placeholder:text-gray-500",
-            searchIconVisible ? "ps-8" : "ps-3"
+      {!selectedSearchResult && (
+        <div className="relative">
+          {searchIconVisible && (
+            <MagnifyingGlassIcon className="absolute left-2 top-1/2 w-4 -translate-y-1/2 text-gray-500" />
           )}
-          aria-label="Search for reviews, movies, and other film buffs"
-          placeholder="Search for a movie .."
-          value={searchQuery}
-          onChange={(event) => setSearchQuery(event.target.value.trim())}
-          onFocus={() => setSearchIconVisible(false)}
-          onBlur={() => setSearchIconVisible(true)}
-        />
-      </div>
+          <input
+            ref={searchInputRef}
+            type="search"
+            className={classNames(
+              "w-full rounded-2xl bg-gray-200 py-2 pe-3 transition-all placeholder:text-gray-500",
+              searchIconVisible ? "ps-8" : "ps-3"
+            )}
+            aria-label="Search for reviews, movies, and other film buffs"
+            placeholder="Search for a movie .."
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value.trim())}
+            onFocus={() => setSearchIconVisible(false)}
+            onBlur={() => setSearchIconVisible(true)}
+          />
+        </div>
+      )}
+
+      {/* Selected movie data */}
+      <AnimatePresence>
+        {selectedSearchResult && (
+          <motion.div
+            className="flex gap-x-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <Image
+              className="aspect-[185/278] w-40 animate-load rounded-sm bg-gray-300"
+              src={
+                selectedSearchResult.complete_poster_path ||
+                "images/placeholders/backdrop-placeholder.svg"
+              }
+              alt={""}
+              width={0}
+              height={0}
+              sizes="200px"
+            />
+            <p className="text-lg font-light">
+              {selectedSearchResult.title} (
+              {DateTime.fromISO(selectedSearchResult.release_date).year})
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Movie result grid */}
-      <AnimateHeight
-        height={gridHeight}
-        duration={300}
-        onHeightAnimationEnd={handleHeightAnimationEnd}
-      >
+      {!selectedSearchResult && searchResults.length > 0 && (
         <ul ref={gridRef} className="grid grid-cols-3 gap-x-2.5 gap-y-4 p-1">
           {searchResults.map((movie) => (
-            <li key={movie.id}>
+            <motion.li key={movie.id}>
               <MovieResultItem
                 movie={movie}
                 setSelectedSearchResult={setSelectedSearchResult}
               />
-            </li>
+            </motion.li>
           ))}
         </ul>
-      </AnimateHeight>
+      )}
     </form>
   );
 }

@@ -17,7 +17,7 @@ type Props = {
 const movieApiClient = new MovieApiClient();
 
 const AddReviewForm = forwardRef<HTMLInputElement, Props>(
-  ({ closeModal = () => {} }, searchInputRef) => {
+  function AddReviewForm({ closeModal = () => {} }, searchInputRef) {
     // Search logic
     const [_, startTransition] = useTransition();
     const [searchResults, setSearchResults] = useState<MovieSearchResult[]>([]);

@@ -18,6 +18,7 @@ import { useUpdateEffect } from "usehooks-ts";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { DateTime } from "luxon";
+import SelectedMovieView from "./SelectedMovieView";
 
 type Props = {
   closeModal?: () => void;
@@ -139,26 +140,8 @@ function AddReviewForm(
       {/* Selected movie data */}
       <AnimatePresence>
         {selectedSearchResult && (
-          <motion.div
-            className="flex gap-x-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <Image
-              className="aspect-[185/278] w-40 animate-load rounded-sm bg-gray-300"
-              src={
-                selectedSearchResult.complete_poster_path ||
-                "images/placeholders/backdrop-placeholder.svg"
-              }
-              alt={""}
-              width={0}
-              height={0}
-              sizes="200px"
-            />
-            <p className="text-lg font-light">
-              {selectedSearchResult.title} (
-              {DateTime.fromISO(selectedSearchResult.release_date).year})
-            </p>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <SelectedMovieView movie={selectedSearchResult} />
           </motion.div>
         )}
       </AnimatePresence>

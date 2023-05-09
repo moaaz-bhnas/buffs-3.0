@@ -8,7 +8,7 @@ export default function handleApiError<TResponse>(
 ): Err<TResponse, APIError> {
   return err({
     errorMessage: error?.message,
-    errorStatus: error?.response.status,
-    errorResponse: error?.response,
+    errorStatus: error?.response?.status,
+    errorResponse: error?.response?.data,
   });
 }

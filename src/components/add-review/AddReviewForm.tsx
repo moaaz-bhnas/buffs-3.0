@@ -11,13 +11,16 @@ import {
 import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
 import { MovieApiClient } from "@/api/movie-api-client";
 import classNames from "@/utils/style/classNames";
-import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowLeftIcon,
+  ArrowLongLeftIcon,
+  MagnifyingGlassIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { ImageSize } from "@/interfaces/movies/ImageSize";
 import MovieResultItem from "./MovieResultItem";
 import { useUpdateEffect } from "usehooks-ts";
 import { AnimatePresence, motion } from "framer-motion";
-import Image from "next/image";
-import { DateTime } from "luxon";
 import SelectedMovieView from "./SelectedMovieView";
 
 type Props = {
@@ -30,6 +33,9 @@ function AddReviewForm(
   { closeModal = () => {} }: Props,
   searchInputRef: ForwardedRef<HTMLInputElement>
 ) {
+  // review data
+  const [rating, setRating] = useState(0);
+
   // Search logic
   const [_, startTransition] = useTransition();
   const [searchResults, setSearchResults] = useState<MovieSearchResult[]>([]);
@@ -71,32 +77,21 @@ function AddReviewForm(
     [isLoading, searchQuery]
   );
 
-  // Animating grid height
-  const gridRef = useRef<HTMLUListElement>(null);
-  const [gridHeight, setGridHeight] = useState<number | "auto">(0);
-  /**
-   * For the grid height to be animated with movie results are generated
-   * it needs to switch between two values
-   * 1. The grid height starts with 0 (inital value of state)
-   * 2. User types and results appear in the UI
-   * 3. grid height is changed to "auto" (in useEffect) with animation
-   * 4. After animation ends we calculate the current height
-   * of the grid and set it.
-   * 5. Repeat from 2
-   */
-  const handleHeightAnimationEnd = () => {
-    if (!gridRef.current) return;
+  useEffect(
+    function clearQueryAfterMovieSelect() {
+      if (selectedSearchResult) {
+        setSearchQuery("");
+      }
+    },
+    [selectedSearchResult]
+  );
 
-    const gridHeight = gridRef.current.clientHeight;
-    setGridHeight(gridHeight);
-  };
-  useEffect(() => {
-    if (searchResults.length > 0) {
-      setGridHeight("auto");
-    } else {
-      setGridHeight(0);
-    }
-  }, [searchResults]);
+  useEffect(
+    function resetRatingOnMovieChange() {
+      setRating(0);
+    },
+    [selectedSearchResult]
+  );
 
   // search icon visibility
   const [searchIconVisible, setSearchIconVisible] = useState(true);
@@ -113,6 +108,18 @@ function AddReviewForm(
           <XMarkIcon className="m-auto w-6" />
         </button>
       </header>
+
+      {/* Back to search */}
+      {selectedSearchResult && (
+        <button
+          className="flex items-center gap-x-2 underline"
+          type="button"
+          onClick={() => setSelectedSearchResult(null)}
+        >
+          <ArrowLeftIcon className="w-4" />
+          Review another movie
+        </button>
+      )}
 
       {/* Search input */}
       {!selectedSearchResult && (
@@ -141,14 +148,18 @@ function AddReviewForm(
       <AnimatePresence>
         {selectedSearchResult && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <SelectedMovieView movie={selectedSearchResult} />
+            <SelectedMovieView
+              movie={selectedSearchResult}
+              rating={rating}
+              setRating={setRating}
+            />
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Movie result grid */}
       {!selectedSearchResult && searchResults.length > 0 && (
-        <ul ref={gridRef} className="grid grid-cols-3 gap-x-2.5 gap-y-4 p-1">
+        <ul className="grid grid-cols-3 gap-x-2.5 gap-y-4 p-1">
           {searchResults.map((movie) => (
             <motion.li key={movie.id}>
               <MovieResultItem

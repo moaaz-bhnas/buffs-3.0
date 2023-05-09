@@ -1,15 +1,27 @@
 import classNames from "@/utils/style/classNames";
 import { StarIcon } from "@heroicons/react/24/outline";
-import { KeyboardEventHandler, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  KeyboardEventHandler,
+  SetStateAction,
+  useEffect,
+  useRef,
+} from "react";
 
 type Props = {
+  editable?: boolean;
+  rating: number;
+  setRating?: Dispatch<SetStateAction<number>>;
   starsCount?: number;
 };
 
-function RatingStars({ starsCount = 5 }: Props) {
+function RatingStars({
+  starsCount = 5,
+  rating,
+  setRating = () => {},
+  editable = true,
+}: Props) {
   const starsRefs = useRef<HTMLLIElement[]>(Array(starsCount));
-
-  const [rating, setRating] = useState(0);
 
   useEffect(
     function focusActiveStar() {
@@ -36,7 +48,12 @@ function RatingStars({ starsCount = 5 }: Props) {
   };
 
   return (
-    <ul role="radiogroup" className="flex" onKeyDown={handleKeyDown}>
+    <ul
+      role="radiogroup"
+      aria-label="Rating"
+      className="flex"
+      onKeyDown={editable ? handleKeyDown : () => {}}
+    >
       {Array.from(Array(starsCount).keys()).map((index) => {
         let active: boolean;
         if (rating) {
@@ -58,7 +75,7 @@ function RatingStars({ starsCount = 5 }: Props) {
             key={index}
             tabIndex={active ? 0 : -1}
             className="hover:cursor-pointer focus:cursor-pointer"
-            onClick={() => setRating(index + 1)}
+            onClick={editable ? () => setRating(index + 1) : () => {}}
           >
             <StarIcon
               className={classNames(

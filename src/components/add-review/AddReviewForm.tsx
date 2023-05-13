@@ -11,11 +11,16 @@ import {
 import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
 import { MovieApiClient } from "@/api/movie-api-client";
 import classNames from "@/utils/style/classNames";
-import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowLeftIcon,
+  MagnifyingGlassIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { ImageSize } from "@/interfaces/movies/ImageSize";
 import MovieResultItem from "./MovieResultItem";
-import AnimateHeight from "react-animate-height";
 import { useUpdateEffect } from "usehooks-ts";
+import { AnimatePresence, motion } from "framer-motion";
+import SelectedMovieView from "./SelectedMovieView";
 
 type Props = {
   closeModal?: () => void;
@@ -27,6 +32,10 @@ function AddReviewForm(
   { closeModal = () => {} }: Props,
   searchInputRef: ForwardedRef<HTMLInputElement>
 ) {
+  // review data
+  const [rating, setRating] = useState(0);
+  const [review, setReview] = useState("");
+
   // Search logic
   const [_, startTransition] = useTransition();
   const [searchResults, setSearchResults] = useState<MovieSearchResult[]>([]);
@@ -34,7 +43,12 @@ function AddReviewForm(
     useState<MovieSearchResult | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  console.log({ searchResults });
+
+  const handleSelectMovie = (movie: MovieSearchResult) => {
+    setSelectedSearchResult(movie);
+    setSearchQuery("");
+    setRating(0);
+  };
 
   const searchAndSetResults = async (searchQuery: string): Promise<void> => {
     if (searchQuery === "") return;
@@ -69,38 +83,16 @@ function AddReviewForm(
     [isLoading, searchQuery]
   );
 
-  // Animating grid height
-  const gridRef = useRef<HTMLUListElement>(null);
-  const [gridHeight, setGridHeight] = useState<number | "auto">(0);
-  /**
-   * For the grid height to be animated with movie results are generated
-   * it needs to switch between two values
-   * 1. The grid height starts with 0 (inital value of state)
-   * 2. User types and results appear in the UI
-   * 3. grid height is changed to "auto" (in useEffect) with animation
-   * 4. After animation ends we calculate the current height
-   * of the grid and set it.
-   * 5. Repeat from 2
-   */
-  const handleHeightAnimationEnd = () => {
-    if (!gridRef.current) return;
-
-    const gridHeight = gridRef.current.clientHeight;
-    setGridHeight(gridHeight);
-  };
-  useEffect(() => {
-    if (searchResults.length > 0) {
-      setGridHeight("auto");
-    } else {
-      setGridHeight(0);
-    }
-  }, [searchResults]);
-
   // search icon visibility
   const [searchIconVisible, setSearchIconVisible] = useState(true);
 
   return (
-    <form className="space-y-4">
+    <form
+      className={classNames(
+        "space-y-4",
+        selectedSearchResult ? "w-[50rem]" : "w-[32rem]"
+      )}
+    >
       <header className="flex items-center justify-between">
         <h2 className="font-semibold">Write a review</h2>
         <button
@@ -112,44 +104,66 @@ function AddReviewForm(
         </button>
       </header>
 
+      {/* Back to search */}
+      {selectedSearchResult && (
+        <button
+          className="flex items-center gap-x-2 underline"
+          type="button"
+          onClick={() => setSelectedSearchResult(null)}
+        >
+          <ArrowLeftIcon className="w-4" />
+          Review another movie
+        </button>
+      )}
+
       {/* Search input */}
-      <div className="relative">
-        {searchIconVisible && (
-          <MagnifyingGlassIcon className="absolute left-2 top-1/2 w-4 -translate-y-1/2 text-gray-500" />
-        )}
-        <input
-          ref={searchInputRef}
-          type="search"
-          className={classNames(
-            "w-full rounded-2xl bg-gray-200 py-2 pe-3 transition-all placeholder:text-gray-500",
-            searchIconVisible ? "ps-8" : "ps-3"
+      {!selectedSearchResult && (
+        <div className="relative">
+          {searchIconVisible && (
+            <MagnifyingGlassIcon className="absolute left-2 top-1/2 w-4 -translate-y-1/2 text-gray-500" />
           )}
-          aria-label="Search for reviews, movies, and other film buffs"
-          placeholder="Search for a movie .."
-          value={searchQuery}
-          onChange={(event) => setSearchQuery(event.target.value.trim())}
-          onFocus={() => setSearchIconVisible(false)}
-          onBlur={() => setSearchIconVisible(true)}
-        />
-      </div>
+          <input
+            ref={searchInputRef}
+            type="search"
+            className={classNames(
+              "w-full rounded-2xl bg-gray-200 py-2 pe-3 transition-all placeholder:text-gray-500",
+              searchIconVisible ? "ps-8" : "ps-3"
+            )}
+            aria-label="Search for reviews, movies, and other film buffs"
+            placeholder="Search for a movie .."
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value.trim())}
+            onFocus={() => setSearchIconVisible(false)}
+            onBlur={() => setSearchIconVisible(true)}
+          />
+        </div>
+      )}
+
+      {/* Selected movie data */}
+      <AnimatePresence>
+        {selectedSearchResult && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <SelectedMovieView
+              movie={selectedSearchResult}
+              rating={rating}
+              setRating={setRating}
+              review={review}
+              setReview={setReview}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Movie result grid */}
-      <AnimateHeight
-        height={gridHeight}
-        duration={300}
-        onHeightAnimationEnd={handleHeightAnimationEnd}
-      >
-        <ul ref={gridRef} className="grid grid-cols-3 gap-x-2.5 gap-y-4 p-1">
+      {!selectedSearchResult && searchResults.length > 0 && (
+        <ul className="grid grid-cols-3 gap-x-2.5 gap-y-4 p-1">
           {searchResults.map((movie) => (
-            <li key={movie.id}>
-              <MovieResultItem
-                movie={movie}
-                setSelectedSearchResult={setSelectedSearchResult}
-              />
-            </li>
+            <motion.li key={movie.id}>
+              <MovieResultItem movie={movie} onClick={handleSelectMovie} />
+            </motion.li>
           ))}
         </ul>
-      </AnimateHeight>
+      )}
     </form>
   );
 }

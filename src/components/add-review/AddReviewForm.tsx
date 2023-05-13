@@ -36,8 +36,6 @@ function AddReviewForm(
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
 
-  console.log({ review });
-
   // Search logic
   const [_, startTransition] = useTransition();
   const [searchResults, setSearchResults] = useState<MovieSearchResult[]>([]);

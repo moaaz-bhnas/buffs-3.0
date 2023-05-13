@@ -5,16 +5,25 @@ import { DateTime } from "luxon";
 import Image from "next/image";
 import RatingStars from "../rating-stars/RatingStars";
 import { Dispatch, SetStateAction } from "react";
+import MDEditor from "@uiw/react-md-editor";
 
 type Props = {
   movie: MovieSearchResult;
   rating: number;
   setRating: Dispatch<SetStateAction<number>>;
+  review: string;
+  setReview: Dispatch<SetStateAction<string>>;
 };
 
-function SelectedMovieView({ movie, rating, setRating }: Props) {
+function SelectedMovieView({
+  movie,
+  rating,
+  setRating,
+  review,
+  setReview,
+}: Props) {
   return (
-    <div className="flex gap-x-4">
+    <div className="flex items-start gap-x-4">
       {/* Poster */}
       <Image
         className="aspect-[185/278] w-40 animate-load rounded-sm bg-gray-300"
@@ -29,15 +38,24 @@ function SelectedMovieView({ movie, rating, setRating }: Props) {
       />
 
       {/* Review details */}
-      <div className="space-y-4">
+      <div className="flex flex-1 flex-col gap-y-4">
         <p className="text-lg font-light leading-6">
           {movie.title} ({DateTime.fromISO(movie.release_date).year})
         </p>
-        <div>
-          <p className="space-y-2 font-semibold">Your rating:</p>
+        <div className="space-y-1">
+          <p className="font-semibold">Your rating:</p>
           <RatingStars starsCount={10} rating={rating} setRating={setRating} />
         </div>
-        <textarea />
+        <div className="container">
+          <MDEditor
+            value={review}
+            onChange={(review) => setReview(review || "")}
+          />
+          <MDEditor.Markdown
+            source={review}
+            style={{ whiteSpace: "pre-wrap" }}
+          />
+        </div>
       </div>
     </div>
   );

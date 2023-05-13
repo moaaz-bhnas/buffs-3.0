@@ -13,7 +13,6 @@ import { MovieApiClient } from "@/api/movie-api-client";
 import classNames from "@/utils/style/classNames";
 import {
   ArrowLeftIcon,
-  ArrowLongLeftIcon,
   MagnifyingGlassIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -27,14 +26,25 @@ type Props = {
   closeModal?: () => void;
 };
 
+enum AddReviewFormMode {
+  search,
+  review,
+}
+
 const movieApiClient = new MovieApiClient();
 
 function AddReviewForm(
   { closeModal = () => {} }: Props,
   searchInputRef: ForwardedRef<HTMLInputElement>
 ) {
+  // form mode: search | review
+  const [addReviewFormMode, setAddReviewFormMode] = useState<AddReviewFormMode>(
+    AddReviewFormMode.search
+  );
+
   // review data
   const [rating, setRating] = useState(0);
+  const [review, setReview] = useState("**Prrrrrrrrrr**");
 
   // Search logic
   const [_, startTransition] = useTransition();
@@ -43,6 +53,12 @@ function AddReviewForm(
     useState<MovieSearchResult | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleSelectMovie = (movie: MovieSearchResult) => {
+    setSelectedSearchResult(movie);
+    setSearchQuery("");
+    setRating(0);
+  };
 
   const searchAndSetResults = async (searchQuery: string): Promise<void> => {
     if (searchQuery === "") return;
@@ -77,27 +93,16 @@ function AddReviewForm(
     [isLoading, searchQuery]
   );
 
-  useEffect(
-    function clearQueryAfterMovieSelect() {
-      if (selectedSearchResult) {
-        setSearchQuery("");
-      }
-    },
-    [selectedSearchResult]
-  );
-
-  useEffect(
-    function resetRatingOnMovieChange() {
-      setRating(0);
-    },
-    [selectedSearchResult]
-  );
-
   // search icon visibility
   const [searchIconVisible, setSearchIconVisible] = useState(true);
 
   return (
-    <form className="space-y-4">
+    <form
+      className={classNames(
+        "space-y-4",
+        selectedSearchResult ? "w-[50rem]" : "w-[32rem]"
+      )}
+    >
       <header className="flex items-center justify-between">
         <h2 className="font-semibold">Write a review</h2>
         <button
@@ -152,6 +157,8 @@ function AddReviewForm(
               movie={selectedSearchResult}
               rating={rating}
               setRating={setRating}
+              review={review}
+              setReview={setReview}
             />
           </motion.div>
         )}
@@ -162,10 +169,7 @@ function AddReviewForm(
         <ul className="grid grid-cols-3 gap-x-2.5 gap-y-4 p-1">
           {searchResults.map((movie) => (
             <motion.li key={movie.id}>
-              <MovieResultItem
-                movie={movie}
-                setSelectedSearchResult={setSelectedSearchResult}
-              />
+              <MovieResultItem movie={movie} onClick={handleSelectMovie} />
             </motion.li>
           ))}
         </ul>

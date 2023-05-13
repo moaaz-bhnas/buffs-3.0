@@ -79,7 +79,7 @@ function RatingStars({
           >
             <StarIcon
               className={classNames(
-                "w-7 transition-all duration-[25ms]",
+                "w-8 transition-all duration-[25ms]",
                 index < rating ? "fill-teal-500" : "fill-white"
               )}
             />

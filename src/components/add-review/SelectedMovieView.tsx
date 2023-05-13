@@ -6,6 +6,7 @@ import Image from "next/image";
 import RatingStars from "../rating-stars/RatingStars";
 import { Dispatch, SetStateAction } from "react";
 import MDEditor from "@uiw/react-md-editor";
+import rehypeSanitize from "rehype-sanitize";
 
 type Props = {
   movie: MovieSearchResult;
@@ -50,10 +51,17 @@ function SelectedMovieView({
           <MDEditor
             value={review}
             onChange={(review) => setReview(review || "")}
-          />
-          <MDEditor.Markdown
-            source={review}
-            style={{ whiteSpace: "pre-wrap" }}
+            previewOptions={{
+              rehypePlugins: [[rehypeSanitize]],
+            }}
+            commandsFilter={(cmd) =>
+              cmd.name &&
+              /(code|comment|image|strikethrough|title|link|divider)/.test(
+                cmd.name
+              )
+                ? false
+                : cmd
+            }
           />
         </div>
       </div>

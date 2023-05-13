@@ -26,25 +26,17 @@ type Props = {
   closeModal?: () => void;
 };
 
-enum AddReviewFormMode {
-  search,
-  review,
-}
-
 const movieApiClient = new MovieApiClient();
 
 function AddReviewForm(
   { closeModal = () => {} }: Props,
   searchInputRef: ForwardedRef<HTMLInputElement>
 ) {
-  // form mode: search | review
-  const [addReviewFormMode, setAddReviewFormMode] = useState<AddReviewFormMode>(
-    AddReviewFormMode.search
-  );
-
   // review data
   const [rating, setRating] = useState(0);
-  const [review, setReview] = useState("**Prrrrrrrrrr**");
+  const [review, setReview] = useState("");
+
+  console.log({ review });
 
   // Search logic
   const [_, startTransition] = useTransition();

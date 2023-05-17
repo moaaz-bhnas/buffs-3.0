@@ -88,17 +88,18 @@ function AddReviewForm(
   const [searchIconVisible, setSearchIconVisible] = useState(true);
 
   // height transition
-  const [resultsRef, resultsBound] = useMeasure();
+  const [formRef, formBounds] = useMeasure();
 
   return (
     <motion.div
       animate={{
-        height: resultsBound.height > 0 ? resultsBound.height : "auto",
+        height: formBounds.height > 0 ? formBounds.height : "auto",
+        width: formBounds.width > 0 ? formBounds.width : "auto",
       }}
       transition={{ duration: 0.4, bounce: 0 }}
     >
       <form
-        ref={resultsRef}
+        ref={formRef}
         className={classNames(
           "space-y-4",
           selectedSearchResult ? "w-[50rem]" : "w-[30rem]"

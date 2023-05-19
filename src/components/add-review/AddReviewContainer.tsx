@@ -5,7 +5,7 @@ import Link from "next/link";
 
 type Props = {};
 
-async function AddReviewSection({}: Props) {
+async function AddReviewContainer({}: Props) {
   const user = await getCurrentUser();
 
   return (
@@ -24,4 +24,4 @@ async function AddReviewSection({}: Props) {
   );
 }
 
-export default AddReviewSection;
+export default AddReviewContainer;

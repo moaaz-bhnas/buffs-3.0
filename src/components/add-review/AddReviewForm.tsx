@@ -2,6 +2,7 @@
 
 import {
   ForwardedRef,
+  SetStateAction,
   forwardRef,
   useEffect,
   useRef,
@@ -22,6 +23,7 @@ import { useUpdateEffect } from "usehooks-ts";
 import { AnimatePresence, motion } from "framer-motion";
 import SelectedMovieView from "./SelectedMovieView";
 import useMeasure from "react-use-measure";
+import SearchMovieView from "./SearchMovieView";
 
 type Props = {
   closeModal?: () => void;
@@ -116,65 +118,28 @@ function AddReviewForm(
           </button>
         </header>
 
-        {/* Back to search */}
-        {selectedSearchResult && (
-          <button
-            className="flex items-center gap-x-2 underline"
-            type="button"
-            onClick={() => setSelectedSearchResult(null)}
-          >
-            <ArrowLeftIcon className="w-4" />
-            Review another movie
-          </button>
-        )}
-
-        {/* Search input */}
+        {/* 1. Search view */}
         {!selectedSearchResult && (
-          <div className="relative">
-            {searchIconVisible && (
-              <MagnifyingGlassIcon className="absolute left-2 top-1/2 w-4 -translate-y-1/2 text-gray-500" />
-            )}
-            <input
-              ref={searchInputRef}
-              type="search"
-              className={classNames(
-                "w-full rounded-2xl bg-gray-200 py-2 pe-3 transition-all placeholder:text-gray-500",
-                searchIconVisible ? "ps-8" : "ps-3"
-              )}
-              aria-label="Search for reviews, movies, and other film buffs"
-              placeholder="Search for a movie .."
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
-              onFocus={() => setSearchIconVisible(false)}
-              onBlur={() => setSearchIconVisible(true)}
-            />
-          </div>
+          <SearchMovieView
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            searchResults={searchResults}
+            onSelectMovie={handleSelectMovie}
+          />
         )}
 
-        {/* Selected movie data */}
-        <AnimatePresence>
-          {selectedSearchResult && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <SelectedMovieView
-                movie={selectedSearchResult}
-                rating={rating}
-                setRating={setRating}
-                review={review}
-                setReview={setReview}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Movie result grid */}
-        {!selectedSearchResult && searchResults.length > 0 && (
-          <motion.ul className="grid grid-cols-3 gap-x-2.5 gap-y-4 p-1" layout>
-            {searchResults.map((movie, index) => (
-              <motion.li key={movie.id} layout>
-                <MovieResultItem movie={movie} onClick={handleSelectMovie} />
-              </motion.li>
-            ))}
-          </motion.ul>
+        {/* 2. Selected view */}
+        {selectedSearchResult && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <SelectedMovieView
+              movie={selectedSearchResult}
+              rating={rating}
+              setRating={setRating}
+              review={review}
+              setReview={setReview}
+              setSelectedSearchResult={setSelectedSearchResult}
+            />
+          </motion.div>
         )}
       </form>
     </motion.div>

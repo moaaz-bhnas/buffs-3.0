@@ -1,5 +1,5 @@
 import Container from "@/components/container/Container";
-import AddReview from "@/components/add-review/AddReviewSection";
+import AddReviewContainer from "@/components/add-review/AddReviewContainer";
 import { Inter } from "next/font/google";
 import { Metadata } from "next/types";
 
@@ -18,7 +18,7 @@ export default function Home() {
         <div className="flex">
           <div className="w-full sm:w-3/5">
             {/* @ts-expect-error Async Server Component */}
-            <AddReview />
+            <AddReviewContainer />
           </div>
         </div>
       </Container>

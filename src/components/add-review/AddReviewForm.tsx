@@ -88,13 +88,13 @@ function AddReviewForm(
   const [searchIconVisible, setSearchIconVisible] = useState(true);
 
   // height transition
-  const [formRef, formBounds] = useMeasure();
+  const [formRef, formBounds] = useMeasure({ offsetSize: true });
 
   return (
     <motion.div
       animate={{
-        height: formBounds.height > 0 ? formBounds.height : "auto",
-        width: formBounds.width > 0 ? formBounds.width : "auto",
+        height: formBounds.height,
+        width: formBounds.width,
       }}
       transition={{ duration: 0.4, bounce: 0 }}
     >
@@ -168,13 +168,13 @@ function AddReviewForm(
 
         {/* Movie result grid */}
         {!selectedSearchResult && searchResults.length > 0 && (
-          <ul className="grid grid-cols-3 gap-x-2.5 gap-y-4 p-1">
-            {searchResults.map((movie) => (
-              <motion.li key={movie.id}>
+          <motion.ul className="grid grid-cols-3 gap-x-2.5 gap-y-4 p-1" layout>
+            {searchResults.map((movie, index) => (
+              <motion.li key={movie.id} layout>
                 <MovieResultItem movie={movie} onClick={handleSelectMovie} />
               </motion.li>
             ))}
-          </ul>
+          </motion.ul>
         )}
       </form>
     </motion.div>

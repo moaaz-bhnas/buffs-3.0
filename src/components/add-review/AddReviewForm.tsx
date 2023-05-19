@@ -93,7 +93,6 @@ function AddReviewForm(
   return (
     <motion.div
       animate={{
-        // height: formBounds.height > 0 ? formBounds.height : "auto",
         height: formBounds.height,
         width: formBounds.width,
       }}

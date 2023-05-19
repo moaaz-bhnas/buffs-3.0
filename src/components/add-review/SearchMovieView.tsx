@@ -1,7 +1,7 @@
 import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
 import classNames from "@/utils/style/classNames";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   Dispatch,
   ForwardedRef,
@@ -28,9 +28,13 @@ function SearchMovieView(
   return (
     <div className="space-y-2">
       <div className="relative">
-        {searchIconVisible && (
-          <MagnifyingGlassIcon className="absolute left-2 top-1/2 w-4 -translate-y-1/2 text-gray-500" />
-        )}
+        <AnimatePresence>
+          {searchIconVisible && (
+            <motion.span exit={{ opacity: 0 }}>
+              <MagnifyingGlassIcon className="absolute left-2 top-1/2 w-4 -translate-y-1/2 text-gray-500" />
+            </motion.span>
+          )}
+        </AnimatePresence>
         <input
           ref={searchInputRef}
           type="search"

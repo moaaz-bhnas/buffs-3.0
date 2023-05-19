@@ -1,8 +1,8 @@
 import { APIError } from "@/interfaces/api-client/Error";
 import { IApiClient } from "@/interfaces/api-client/IApiClient";
+import { Genre } from "@/interfaces/movies/Genre";
 import { IMovieApiClient } from "@/interfaces/movies/IMovieApiClient";
 import { ImageSize } from "@/interfaces/movies/ImageSize";
-import { ImageType } from "@/interfaces/movies/ImageType";
 import { MovieSearchResponse } from "@/interfaces/movies/MovieSearchResponse";
 import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
 import { MoviesApiConfiguration } from "@/interfaces/movies/MoviesApiConfiguration";
@@ -16,10 +16,17 @@ export class MovieApiClient implements IMovieApiClient {
   private apiResultsLanguage = "en-US";
   private movieApiClient: IApiClient = new ApiClient({});
   private moviesApiConfiguration: MoviesApiConfiguration | null = null;
+  private allGenresList: Genre[] | null = null;
+
+  constructor() {
+    this.setMoviesApiConfiguration();
+  }
 
   private async getMoviesApiConfiguration(): Promise<
     Result<MoviesApiConfiguration, APIError>
   > {
+    if (this.moviesApiConfiguration) return ok(this.moviesApiConfiguration);
+
     const result = await this.movieApiClient.get<MoviesApiConfiguration>(
       `${this.apiBaseUrl}/${this.apiVersion}/configuration?api_key=${this.apiKey}`
     );
@@ -37,8 +44,6 @@ export class MovieApiClient implements IMovieApiClient {
   private async setMoviesApiConfiguration(): Promise<
     Result<MoviesApiConfiguration, APIError>
   > {
-    if (this.moviesApiConfiguration) return ok(this.moviesApiConfiguration);
-
     const configuration = await this.getMoviesApiConfiguration();
 
     if (configuration.isErr()) {
@@ -100,7 +105,7 @@ export class MovieApiClient implements IMovieApiClient {
     movies: MovieSearchResult[],
     imageSize: ImageSize
   ): Promise<Result<MovieSearchResult[], APIError>> {
-    const configuration = await this.setMoviesApiConfiguration();
+    const configuration = await this.getMoviesApiConfiguration();
 
     if (configuration.isErr()) {
       return err(configuration.error);

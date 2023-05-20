@@ -4,13 +4,18 @@ import { IApiClient } from "@/interfaces/api-client/IApiClient";
 import { RequestConfig } from "@/interfaces/api-client/RequestConfig";
 import handleApiError from "@/utils/api-client/handleApiError";
 import axios, { AxiosInstance } from "axios";
+import axiosRetry, { IAxiosRetryConfig } from "axios-retry";
 import { Result, ok } from "neverthrow";
 
 export default class ApiClient implements IApiClient {
   private client: AxiosInstance;
 
+  constructor(apiConfiguration: ApiConfiguration) {
+    this.client = this.createAxiosClient(apiConfiguration);
+  }
+
   private createAxiosClient(apiConfiguration: ApiConfiguration): AxiosInstance {
-    return axios.create({
+    const axiosClient = axios.create({
       responseType: "json",
       headers: {
         "Content-Type": "application/json",
@@ -20,10 +25,28 @@ export default class ApiClient implements IApiClient {
       },
       timeout: 10 * 1000,
     });
+
+    this.setRetryConfiguration(axiosClient);
+
+    return axiosClient;
   }
 
-  constructor(apiConfiguration: ApiConfiguration) {
-    this.client = this.createAxiosClient(apiConfiguration);
+  private setRetryConfiguration(apiClient: AxiosInstance): void {
+    const retryConfig: IAxiosRetryConfig = {
+      retries: 3,
+      retryDelay: axiosRetry.exponentialDelay,
+      retryCondition: (error) => {
+        if (error.response) {
+          if (error.response.status === 500) {
+            return true;
+          }
+        }
+
+        return axiosRetry.isNetworkOrIdempotentRequestError(error);
+      },
+    };
+
+    axiosRetry(apiClient, retryConfig);
   }
 
   async get<TResponse>(path: string): Promise<Result<TResponse, ApiError>> {

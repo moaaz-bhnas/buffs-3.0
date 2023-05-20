@@ -40,8 +40,6 @@ function AddReviewForm(
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log({ searchResults });
-
   const handleSelectMovie = (movie: MovieSearchResult) => {
     setSelectedSearchResult(movie);
     setSearchQuery("");

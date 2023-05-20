@@ -1,16 +1,16 @@
 import { Result } from "neverthrow";
 import { RequestConfig } from "./RequestConfig";
-import { APIError } from "./Error";
+import { ApiError } from "./Error";
 
 export interface IApiClient {
-  get<TResponse>(path: string): Promise<Result<TResponse, APIError>>;
+  get<TResponse>(path: string): Promise<Result<TResponse, ApiError>>;
   post<TRequest, TResponse>(
     path: string,
     payload: TRequest,
     config?: RequestConfig
-  ): Promise<Result<TResponse, APIError>>;
+  ): Promise<Result<TResponse, ApiError>>;
   put<TRequest, TResponse>(
     path: string,
     payload: TRequest
-  ): Promise<Result<TResponse, APIError>>;
+  ): Promise<Result<TResponse, ApiError>>;
 }

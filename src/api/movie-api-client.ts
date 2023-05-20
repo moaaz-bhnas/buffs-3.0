@@ -1,8 +1,8 @@
-import { APIError } from "@/interfaces/api-client/Error";
+import { ApiError } from "@/interfaces/api-client/Error";
 import { IApiClient } from "@/interfaces/api-client/IApiClient";
+import { GenreDetails } from "@/interfaces/movies/GenreDetails";
 import { IMovieApiClient } from "@/interfaces/movies/IMovieApiClient";
 import { ImageSize } from "@/interfaces/movies/ImageSize";
-import { ImageType } from "@/interfaces/movies/ImageType";
 import { MovieSearchResponse } from "@/interfaces/movies/MovieSearchResponse";
 import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
 import { MoviesApiConfiguration } from "@/interfaces/movies/MoviesApiConfiguration";
@@ -16,10 +16,18 @@ export class MovieApiClient implements IMovieApiClient {
   private apiResultsLanguage = "en-US";
   private movieApiClient: IApiClient = new ApiClient({});
   private moviesApiConfiguration: MoviesApiConfiguration | null = null;
+  private allGenresDetails: GenreDetails[] | null = null;
+
+  constructor() {
+    this.setMoviesApiConfiguration();
+    this.setAllGenresDetails();
+  }
 
   private async getMoviesApiConfiguration(): Promise<
-    Result<MoviesApiConfiguration, APIError>
+    Result<MoviesApiConfiguration, ApiError>
   > {
+    if (this.moviesApiConfiguration) return ok(this.moviesApiConfiguration);
+
     const result = await this.movieApiClient.get<MoviesApiConfiguration>(
       `${this.apiBaseUrl}/${this.apiVersion}/configuration?api_key=${this.apiKey}`
     );
@@ -34,19 +42,39 @@ export class MovieApiClient implements IMovieApiClient {
     return ok(result.value);
   }
 
-  private async setMoviesApiConfiguration(): Promise<
-    Result<MoviesApiConfiguration, APIError>
-  > {
-    if (this.moviesApiConfiguration) return ok(this.moviesApiConfiguration);
-
+  private async setMoviesApiConfiguration(): Promise<void> {
     const configuration = await this.getMoviesApiConfiguration();
 
-    if (configuration.isErr()) {
-      return err(configuration.error);
+    if (configuration.isOk()) {
+      this.moviesApiConfiguration = configuration.value;
+    }
+  }
+
+  private async getAllGenresDetails(): Promise<
+    Result<GenreDetails[], ApiError>
+  > {
+    if (this.allGenresDetails) return ok(this.allGenresDetails);
+
+    const result = await this.movieApiClient.get<{ genres: GenreDetails[] }>(
+      `${this.apiBaseUrl}/${this.apiVersion}/genre/movie/list?api_key=${this.apiKey}`
+    );
+
+    if (result.isErr()) {
+      console.error(`Failed to get genres list`, {
+        error: result.error,
+      });
+      return err(result.error);
     }
 
-    this.moviesApiConfiguration = configuration.value;
-    return ok(this.moviesApiConfiguration);
+    return ok(result.value.genres);
+  }
+
+  private async setAllGenresDetails(): Promise<void> {
+    const result = await this.getAllGenresDetails();
+
+    if (result.isOk()) {
+      this.allGenresDetails = result.value;
+    }
   }
 
   async searchMovies(
@@ -55,7 +83,7 @@ export class MovieApiClient implements IMovieApiClient {
       withImages: false,
       imageSize: ImageSize.sm,
     }
-  ): Promise<Result<MovieSearchResult[], APIError>> {
+  ): Promise<Result<MovieSearchResult[], ApiError>> {
     const result = await this.movieApiClient.get<MovieSearchResponse>(
       `${this.apiBaseUrl}/${this.apiVersion}/search/movie?api_key=${this.apiKey}&query=${query}&language=${this.apiResultsLanguage}&page=1`
     );
@@ -83,6 +111,12 @@ export class MovieApiClient implements IMovieApiClient {
       }
     }
 
+    // map genres details
+    const moviesWithGenresDetails = await this.mapGenresDetailsToMovies(movies);
+    if (moviesWithGenresDetails.isOk()) {
+      movies = moviesWithGenresDetails.value;
+    }
+
     return ok(movies);
   }
 
@@ -99,8 +133,8 @@ export class MovieApiClient implements IMovieApiClient {
   private async mapCompleteImagePaths(
     movies: MovieSearchResult[],
     imageSize: ImageSize
-  ): Promise<Result<MovieSearchResult[], APIError>> {
-    const configuration = await this.setMoviesApiConfiguration();
+  ): Promise<Result<MovieSearchResult[], ApiError>> {
+    const configuration = await this.getMoviesApiConfiguration();
 
     if (configuration.isErr()) {
       return err(configuration.error);
@@ -129,6 +163,53 @@ export class MovieApiClient implements IMovieApiClient {
       if (movie.poster_path) {
         movie.complete_poster_path = `${secure_base_url}${poster_sizes[posterSize]}${movie.poster_path}`;
       }
+      updatedMovies.push(movie);
+    }
+
+    return ok(updatedMovies);
+  }
+
+  private getGenreDetailsById(
+    allGenresDetails: GenreDetails[],
+    genreId: number
+  ): GenreDetails | null {
+    const result = allGenresDetails.find(({ id }) => id === genreId);
+
+    if (result) {
+      return result;
+    } else {
+      console.error(
+        `couldn't find genre id in list of genres fetched from TMDB`,
+        { genreId, allGenresDetails }
+      );
+      return null;
+    }
+  }
+
+  private async mapGenresDetailsToMovies(
+    movies: MovieSearchResult[]
+  ): Promise<Result<MovieSearchResult[], ApiError>> {
+    const allGenresDetails = await this.getAllGenresDetails();
+
+    if (allGenresDetails.isErr()) {
+      return err(allGenresDetails.error);
+    }
+
+    const updatedMovies: MovieSearchResult[] = [];
+
+    // Let's go
+    for (const movie of movies) {
+      const genres: GenreDetails[] = [];
+      for (const genreId of movie.genre_ids) {
+        const genreDetails = this.getGenreDetailsById(
+          allGenresDetails.value,
+          genreId
+        );
+        if (genreDetails) {
+          genres.push(genreDetails);
+        }
+      }
+      movie.genres = genres;
       updatedMovies.push(movie);
     }
 

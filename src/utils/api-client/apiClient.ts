@@ -1,5 +1,5 @@
 import { ApiConfiguration } from "@/interfaces/api-client/ApiConfiguration";
-import { APIError } from "@/interfaces/api-client/Error";
+import { ApiError } from "@/interfaces/api-client/Error";
 import { IApiClient } from "@/interfaces/api-client/IApiClient";
 import { RequestConfig } from "@/interfaces/api-client/RequestConfig";
 import handleApiError from "@/utils/api-client/handleApiError";
@@ -26,7 +26,7 @@ export default class ApiClient implements IApiClient {
     this.client = this.createAxiosClient(apiConfiguration);
   }
 
-  async get<TResponse>(path: string): Promise<Result<TResponse, APIError>> {
+  async get<TResponse>(path: string): Promise<Result<TResponse, ApiError>> {
     try {
       const response = await this.client.get<TResponse>(path);
       return ok(response.data);
@@ -39,7 +39,7 @@ export default class ApiClient implements IApiClient {
     path: string,
     payload: TRequest,
     config: RequestConfig = { headers: {} }
-  ): Promise<Result<TResponse, APIError>> {
+  ): Promise<Result<TResponse, ApiError>> {
     try {
       const response = await this.client.post<TResponse>(path, payload, config);
       return ok(response.data);
@@ -51,7 +51,7 @@ export default class ApiClient implements IApiClient {
   async put<TRequest, TResponse>(
     path: string,
     payload: TRequest
-  ): Promise<Result<TResponse, APIError>> {
+  ): Promise<Result<TResponse, ApiError>> {
     try {
       const response = await this.client.put<TResponse>(path, payload);
       return ok(response.data);

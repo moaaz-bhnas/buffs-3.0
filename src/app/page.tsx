@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main>
-      <Motion />
+      {/* <Motion /> */}
       <Container>
         <div className="flex">
           <div className="w-full sm:w-3/5">

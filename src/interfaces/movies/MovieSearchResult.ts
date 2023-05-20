@@ -1,3 +1,5 @@
+import { GenreDetails } from "./GenreDetails";
+
 export interface MovieSearchResult {
   id: string;
   title: string;
@@ -24,5 +26,12 @@ export interface MovieSearchResult {
    */
   complete_backdrop_path?: string;
   release_date: string;
+  genre_ids: number[];
+  /**
+   * We fetch all genres list for TMDB API
+   * and search for genre_ids for this movie
+   * to generate "genres" which contains id, string of genre (list)
+   */
+  genres?: GenreDetails[];
   // other data we don't care about
 }

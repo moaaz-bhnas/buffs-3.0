@@ -2,25 +2,18 @@
 
 import {
   ForwardedRef,
-  SetStateAction,
   forwardRef,
   useEffect,
-  useRef,
   useState,
   useTransition,
 } from "react";
 import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
 import { MovieApiClient } from "@/api/movie-api-client";
 import classNames from "@/utils/style/classNames";
-import {
-  ArrowLeftIcon,
-  MagnifyingGlassIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import { ImageSize } from "@/interfaces/movies/ImageSize";
-import MovieResultItem from "./MovieResultItem";
 import { useUpdateEffect } from "usehooks-ts";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import SelectedMovieView from "./SelectedMovieView";
 import useMeasure from "react-use-measure";
 import SearchMovieView from "./SearchMovieView";
@@ -46,6 +39,8 @@ function AddReviewForm(
     useState<MovieSearchResult | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  console.log({ searchResults });
 
   const handleSelectMovie = (movie: MovieSearchResult) => {
     setSelectedSearchResult(movie);
@@ -86,9 +81,6 @@ function AddReviewForm(
     [isLoading, searchQuery]
   );
 
-  // search icon visibility
-  const [searchIconVisible, setSearchIconVisible] = useState(true);
-
   // height transition
   const [formRef, formBounds] = useMeasure({ offsetSize: true });
 
@@ -121,6 +113,7 @@ function AddReviewForm(
         {/* 1. Search view */}
         {!selectedSearchResult && (
           <SearchMovieView
+            ref={searchInputRef}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             searchResults={searchResults}

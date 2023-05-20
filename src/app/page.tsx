@@ -3,6 +3,7 @@ import AddReviewContainer from "@/components/add-review/AddReviewContainer";
 import { Inter } from "next/font/google";
 import { Metadata } from "next/types";
 import Motion from "@/components/framer-motion/Motion";
+import Examples from "@/components/framer-motion/Examples";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,7 +16,10 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main>
-      {/* <Motion /> */}
+      <Container>
+        {/* <Motion /> */}
+        <Examples />
+      </Container>
       <Container>
         <div className="flex">
           <div className="w-full sm:w-3/5">

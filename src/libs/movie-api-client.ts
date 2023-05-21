@@ -8,7 +8,6 @@ import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
 import { MoviesApiConfiguration } from "@/interfaces/movies/MoviesApiConfiguration";
 import ApiClient from "@/utils/api-client/apiClient";
 import { Result, err, ok } from "neverthrow";
-import { cache } from "react";
 
 export class MovieApiClient implements IMovieApiClient {
   private apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
@@ -24,24 +23,24 @@ export class MovieApiClient implements IMovieApiClient {
     this.setAllGenresDetails();
   }
 
-  private getMoviesApiConfiguration = cache(
-    async (): Promise<Result<MoviesApiConfiguration, ApiError>> => {
-      if (this.moviesApiConfiguration) return ok(this.moviesApiConfiguration);
+  private async getMoviesApiConfiguration(): Promise<
+    Result<MoviesApiConfiguration, ApiError>
+  > {
+    if (this.moviesApiConfiguration) return ok(this.moviesApiConfiguration);
 
-      const result = await this.movieApiClient.get<MoviesApiConfiguration>(
-        `${this.apiBaseUrl}/${this.apiVersion}/configuration?api_key=${this.apiKey}`
-      );
+    const result = await this.movieApiClient.get<MoviesApiConfiguration>(
+      `${this.apiBaseUrl}/${this.apiVersion}/configuration?api_key=${this.apiKey}`
+    );
 
-      if (result.isErr()) {
-        console.error(`Failed to get movies API configuration`, {
-          error: result.error,
-        });
-        return err(result.error);
-      }
-
-      return ok(result.value);
+    if (result.isErr()) {
+      console.error(`Failed to get movies API configuration`, {
+        error: result.error,
+      });
+      return err(result.error);
     }
-  );
+
+    return ok(result.value);
+  }
 
   private async setMoviesApiConfiguration(): Promise<void> {
     const configuration = await this.getMoviesApiConfiguration();
@@ -51,24 +50,24 @@ export class MovieApiClient implements IMovieApiClient {
     }
   }
 
-  private getAllGenresDetails = cache(
-    async (): Promise<Result<GenreDetails[], ApiError>> => {
-      if (this.allGenresDetails) return ok(this.allGenresDetails);
+  private async getAllGenresDetails(): Promise<
+    Result<GenreDetails[], ApiError>
+  > {
+    if (this.allGenresDetails) return ok(this.allGenresDetails);
 
-      const result = await this.movieApiClient.get<{ genres: GenreDetails[] }>(
-        `${this.apiBaseUrl}/${this.apiVersion}/genre/movie/list?api_key=${this.apiKey}`
-      );
+    const result = await this.movieApiClient.get<{ genres: GenreDetails[] }>(
+      `${this.apiBaseUrl}/${this.apiVersion}/genre/movie/list?api_key=${this.apiKey}`
+    );
 
-      if (result.isErr()) {
-        console.error(`Failed to get genres list`, {
-          error: result.error,
-        });
-        return err(result.error);
-      }
-
-      return ok(result.value.genres);
+    if (result.isErr()) {
+      console.error(`Failed to get genres list`, {
+        error: result.error,
+      });
+      return err(result.error);
     }
-  );
+
+    return ok(result.value.genres);
+  }
 
   private async setAllGenresDetails(): Promise<void> {
     const result = await this.getAllGenresDetails();

@@ -8,7 +8,7 @@ import {
   useTransition,
 } from "react";
 import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
-import { MovieApiClient } from "@/api/movie-api-client";
+import { MovieApiClient } from "@/libs/movie-api-client";
 import classNames from "@/utils/style/classNames";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { ImageSize } from "@/interfaces/movies/ImageSize";

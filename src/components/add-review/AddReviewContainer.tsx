@@ -1,4 +1,4 @@
-import { getCurrentUser } from "@/api/next-auth";
+import { getCurrentUser } from "@/libs/next-auth";
 import Avatar from "../avatar/Avatar";
 import ReviewModal from "./AddReviewModal";
 import Link from "next/link";

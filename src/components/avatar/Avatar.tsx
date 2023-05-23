@@ -1,4 +1,4 @@
-import { getCurrentUser } from "@/libs/next-auth";
+import getCurrentUser from "@/utils/auth/getCurrentUser";
 import classNames from "@/utils/style/classNames";
 import Image from "next/image";
 

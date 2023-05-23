@@ -5,7 +5,6 @@ import {
   ArrowLeftOnRectangleIcon,
   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
-import { signOut } from "next-auth/react";
 
 type Props = {};
 
@@ -25,7 +24,7 @@ function SettingsPopover({}: Props) {
             <button
               className="menu-item flex w-full items-center"
               type="button"
-              onClick={() => signOut()}
+              // onClick={() => signOut()}
             >
               <ArrowLeftOnRectangleIcon className="me-3 w-7 rounded-full bg-gray-200 p-1 text-gray-600" />
               <span className="font-medium">Log out</span>

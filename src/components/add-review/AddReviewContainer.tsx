@@ -1,4 +1,3 @@
-import { getCurrentUser } from "@/libs/next-auth";
 import Avatar from "../avatar/Avatar";
 import ReviewModal from "./AddReviewModal";
 import Link from "next/link";
@@ -6,8 +5,6 @@ import Link from "next/link";
 type Props = {};
 
 async function AddReviewContainer({}: Props) {
-  const user = await getCurrentUser();
-
   return (
     <section
       className="flex gap-x-2 rounded-md bg-white p-3 shadow-sm"
@@ -18,7 +15,9 @@ async function AddReviewContainer({}: Props) {
         <Avatar className="!w-10" />
       </Link>
       <div className="flex-1">
-        <ReviewModal user={user} />
+        <ReviewModal
+        // user={undefined}
+        />
       </div>
     </section>
   );

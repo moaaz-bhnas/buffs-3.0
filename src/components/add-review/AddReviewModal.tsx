@@ -2,15 +2,12 @@
 
 import getFirstWord from "@/utils/string/getFirstWord";
 import { Dialog, Transition } from "@headlessui/react";
-import { Session } from "next-auth";
 import { Fragment, useRef, useState } from "react";
 import AddReviewForm from "./AddReviewForm";
 
-type Props = {
-  user: Session["user"];
-};
+type Props = {};
 
-function AddReviewModal({ user }: Props) {
+function AddReviewModal({}: Props) {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -29,7 +26,8 @@ function AddReviewModal({ user }: Props) {
         onClick={openModal}
         className="h-full w-full rounded-2xl bg-gray-200 px-4 text-start text-gray-500"
       >
-        Want to review a movie, {user?.name ? getFirstWord(user.name) : ""}?
+        Want to review a movie,{" "}
+        {/* {user?.name ? getFirstWord(user.name) : ""} */}?
       </button>
 
       <Transition appear show={isOpen} as={Fragment}>

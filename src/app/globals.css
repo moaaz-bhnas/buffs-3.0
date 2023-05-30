@@ -21,6 +21,10 @@
 }
 
 @layer components {
+  .title-1 {
+    @apply text-xl font-semibold;
+  }
+
   .panel {
     @apply absolute w-full rounded border bg-white shadow-lg;
   }

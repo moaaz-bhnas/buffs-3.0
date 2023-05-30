@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Container from "../container/Container";
 import Logo from "../logo/Logo";
 import DesktopNavigation from "./DesktopNavigation";
@@ -12,7 +13,9 @@ function Header({}: Props) {
 
       <Container className="!py-0">
         <nav aria-label="main" className="flex items-center justify-between">
-          <Logo />
+          <Link href={"/"}>
+            <Logo />
+          </Link>
 
           {/* Mobile navigation */}
           <div className="sm:hidden">

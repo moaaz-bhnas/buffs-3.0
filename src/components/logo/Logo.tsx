@@ -1,20 +1,20 @@
+import classNames from "@/utils/style/classNames";
 import Image from "next/image";
-import Link from "next/link";
 
-type Props = {};
+type Props = {
+  className?: string;
+};
 
-function Logo({}: Props) {
+function Logo({ className = "" }: Props) {
   return (
-    <Link href="/">
-      <Image
-        className="w-14"
-        src="/images/logo/default.png"
-        alt=""
-        width={0}
-        height={0}
-        sizes="4rem"
-      />
-    </Link>
+    <Image
+      className={classNames("w-14", className)}
+      src="/images/logo/default.png"
+      alt=""
+      width={0}
+      height={0}
+      sizes="4rem"
+    />
   );
 }
 

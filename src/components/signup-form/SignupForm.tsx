@@ -30,7 +30,7 @@ function SignupForm({}: Props) {
 
   return (
     <form
-      className="space-y-8 sm:mx-auto sm:max-w-md sm:rounded-md lg:p-4"
+      className="space-y-8 sm:mx-auto sm:max-w-md sm:p-4"
       autoComplete="off"
       onSubmit={handleSubmit}
     >

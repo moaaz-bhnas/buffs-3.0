@@ -1,9 +1,7 @@
 "use client";
 
 import classNames from "@/utils/style/classNames";
-import { motion } from "framer-motion";
 import { useState } from "react";
-import useMeasure from "react-use-measure";
 
 type Props = {
   type: string;
@@ -20,25 +18,23 @@ function InlineInput({
 }: Props) {
   const [inputFocused, setInputFocused] = useState(false);
 
-  const [labelRef, labelBounds] = useMeasure({ offsetSize: true });
-
   return (
     <label className="relative flex">
-      <motion.span
-        ref={labelRef}
-        animate={{
-          top: inputFocused ? "-1rem" : "auto",
-        }}
-        transition={{ duration: 0.1, bounce: 0 }}
-        className={classNames("absolute left-2 self-center", labelClassName)}
+      <span
+        className={classNames(
+          "absolute left-1 self-center bg-white px-1 transition-all",
+          labelClassName,
+          inputFocused ? "-top-4 text-sm" : "top-1/2 -translate-y-1/2"
+        )}
       >
         {label}
-      </motion.span>
+      </span>
       <input
         className={classNames("w-full border", classname)}
         type={type}
         onFocus={() => setInputFocused(true)}
         onBlur={() => setInputFocused(false)}
+        autoComplete="new-password"
       />
     </label>
   );

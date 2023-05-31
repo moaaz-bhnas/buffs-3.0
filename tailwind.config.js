@@ -15,6 +15,9 @@ module.exports = {
       animation: {
         load: "load 2s linear infinite",
       },
+      fontFamily: {
+        open: ["var(--font-open-sans)"],
+      },
     },
   },
   plugins: [],

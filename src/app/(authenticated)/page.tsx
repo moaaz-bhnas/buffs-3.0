@@ -2,14 +2,13 @@ import Container from "@/components/container/Container";
 import AddReviewContainer from "@/components/add-review/AddReviewContainer";
 import { Inter } from "next/font/google";
 import { Metadata } from "next/types";
-import Motion from "@/components/framer-motion/Motion";
+import tagline from "@/config/content/tagline";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Buffs - Feed",
-  description:
-    "Wanna share your thoughts on movies with other buffs? This is the place for you.",
+  description: tagline,
 };
 
 export default function Home() {

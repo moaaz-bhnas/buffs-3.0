@@ -4,8 +4,11 @@ import { FormEventHandler, useState } from "react";
 import InlineInput from "../inline-input/InlineInput";
 import { RegisteringDBUser } from "@/interfaces/database/User";
 import tagline from "@/config/content/tagline";
+import { ServerApiClient } from "@/apis/server-api-client";
 
 type Props = {};
+
+const serverApiClient = new ServerApiClient();
 
 function SignupForm({}: Props) {
   const [email, setEmail] = useState("");
@@ -25,7 +28,7 @@ function SignupForm({}: Props) {
       role: "user",
     };
 
-    console.log({ user });
+    serverApiClient.signup(user);
   };
 
   return (

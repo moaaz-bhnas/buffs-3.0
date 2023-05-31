@@ -3,6 +3,7 @@
 import { FormEventHandler, useState } from "react";
 import InlineInput from "../inline-input/InlineInput";
 import { RegisteringDBUser } from "@/interfaces/database/User";
+import tagline from "@/config/content/tagline";
 
 type Props = {};
 
@@ -29,17 +30,20 @@ function SignupForm({}: Props) {
 
   return (
     <form
-      className="mx-auto max-w-md space-y-4 rounded-sm border bg-white p-8"
+      className="space-y-8 sm:mx-auto sm:max-w-md sm:rounded-md lg:p-4"
       autoComplete="off"
       onSubmit={handleSubmit}
     >
-      <h2 className="title-1 text-center">Join the club</h2>
-      <div className="space-y-2">
+      <header className="space-y-1.5">
+        <h2 className="title-1">Join the club</h2>
+        <p className="text-gray-500">{tagline}</p>
+      </header>
+      <div className="space-y-3">
         <InlineInput
           value={email}
           onChange={setEmail}
           type="email"
-          classname="rounded-sm p-2"
+          classname="rounded-md p-2"
           label="Email address"
           labelClassName="text-gray-500"
         />
@@ -47,7 +51,7 @@ function SignupForm({}: Props) {
           value={displayName}
           onChange={setDisplayName}
           type="text"
-          classname="rounded-sm p-2"
+          classname="rounded-md p-2"
           label="Full name"
           labelClassName="text-gray-500"
         />
@@ -55,7 +59,7 @@ function SignupForm({}: Props) {
           value={username}
           onChange={setUserName}
           type="text"
-          classname="rounded-sm p-2"
+          classname="rounded-md p-2"
           label="Username"
           labelClassName="text-gray-500"
         />
@@ -63,7 +67,7 @@ function SignupForm({}: Props) {
           value={password}
           onChange={setPassword}
           type="password"
-          classname="rounded-sm p-2"
+          classname="rounded-md p-2"
           label="Password"
           labelClassName="text-gray-500"
         />

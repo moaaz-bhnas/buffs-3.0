@@ -1,6 +1,17 @@
+import "@/app/globals.css";
+
 import Container from "@/components/container/Container";
 import Logo from "@/components/logo/Logo";
-import Tagline from "@/components/tagline/Tagline";
+import classNames from "@/utils/style/classNames";
+
+import { Open_Sans } from "next/font/google";
+
+// display: https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display
+const openSans = Open_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-open-sans",
+});
 
 export default function RootLayout({
   children,
@@ -8,15 +19,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className={classNames(openSans.variable)}>
+      <body className="font-open">
         <Container>
-          <div className="space-y-8">
-            <div className="flex justify-center">
-              <Logo className="w-20" />
-            </div>
-            <Tagline />
-          </div>
+          <Logo className="w-14" />
         </Container>
         {children}
       </body>

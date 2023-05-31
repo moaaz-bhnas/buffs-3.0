@@ -23,7 +23,6 @@ export class ServerApiClient {
       return err(result.error);
     }
 
-    console.log("😋", result.value);
     return ok(result.value);
   }
 }

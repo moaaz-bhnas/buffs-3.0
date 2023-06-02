@@ -28,7 +28,9 @@ function InlineInput({
         className={classNames(
           "absolute left-1 self-center bg-white px-1 transition-all",
           labelClassName,
-          inputFocused || value ? "-top-3 text-xs" : "top-1/2 -translate-y-1/2"
+          inputFocused || value
+            ? "-top-2.5 text-xs"
+            : "top-1/2 -translate-y-1/2"
         )}
       >
         {label}

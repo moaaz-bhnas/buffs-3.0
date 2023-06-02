@@ -1,12 +1,16 @@
 "use client";
 
-import { FormEventHandler, useState } from "react";
+import { FormEvent, useState } from "react";
 import InlineInput from "../inline-input/InlineInput";
 import { RegisteringDBUser } from "@/interfaces/database/User";
 import tagline from "@/config/content/tagline";
 import { ServerApiClient } from "@/apis/server-api-client";
+import { useAsyncFn } from "react-use";
+import ThemeButton from "../theme-button/ThemeButton";
 
 type Props = {};
+
+type THandleSubmit = (event: FormEvent<HTMLFormElement>) => Promise<void>;
 
 const serverApiClient = new ServerApiClient();
 
@@ -16,20 +20,23 @@ function SignupForm({}: Props) {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
-    event.preventDefault();
+  const [handleSubmitState, handleSubmit] = useAsyncFn<THandleSubmit>(
+    async (event) => {
+      event.preventDefault();
 
-    // collect user data
-    const user: RegisteringDBUser = {
-      username,
-      displayName,
-      email,
-      password,
-      role: "user",
-    };
+      // collect user data
+      const user: RegisteringDBUser = {
+        username,
+        displayName,
+        email,
+        password,
+        role: "user",
+      };
 
-    serverApiClient.signup(user);
-  };
+      await serverApiClient.signup(user);
+    },
+    [email, displayName, username, password]
+  );
 
   return (
     <form
@@ -76,12 +83,13 @@ function SignupForm({}: Props) {
         />
       </div>
 
-      <button
-        className="w-full rounded-md bg-teal-600 py-2 text-white"
+      <ThemeButton
         type="submit"
+        className="w-full"
+        loading={handleSubmitState.loading}
       >
         Sign Up
-      </button>
+      </ThemeButton>
     </form>
   );
 }

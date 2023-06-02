@@ -1,6 +1,7 @@
 import classNames from "@/utils/style/classNames";
 import Spinner from "../spinner/Spinner";
 import { ReactNode } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 type Props = {
   children: ReactNode;
@@ -19,7 +20,18 @@ function ThemeButton({ children, type, className = "", loading }: Props) {
       type={type}
     >
       {children}
-      {loading && <Spinner className="h-5 w-5 fill-teal-600" />}
+      <AnimatePresence>
+        {loading && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.1 }}
+          >
+            <Spinner className="h-5 w-5 fill-teal-600" />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </button>
   );
 }

@@ -1,48 +1,41 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { BaseSyntheticEvent } from "react";
 import InlineInput from "../inline-input/InlineInput";
 import { RegisteringDBUser } from "@/interfaces/database/User";
 import tagline from "@/config/content/tagline";
 import { ServerApiClient } from "@/apis/server-api-client";
 import { useAsyncFn } from "react-use";
 import ThemeButton from "../theme-button/ThemeButton";
+import { useForm } from "react-hook-form";
 
 type Props = {};
 
-type THandleSubmit = (event: FormEvent<HTMLFormElement>) => Promise<void>;
+type TOnSubmit = (
+  data: RegisteringDBUser,
+  event: BaseSyntheticEvent<object, any, any> | undefined
+) => Promise<void>;
 
 const serverApiClient = new ServerApiClient();
 
 function SignupForm({}: Props) {
-  const [email, setEmail] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [username, setUserName] = useState("");
-  const [password, setPassword] = useState("");
+  const { register, handleSubmit } = useForm<RegisteringDBUser>();
 
-  const [handleSubmitState, handleSubmit] = useAsyncFn<THandleSubmit>(
-    async (event) => {
-      event.preventDefault();
+  const [onSubmitState, onSubmit] = useAsyncFn<TOnSubmit>(async (data) => {
+    /**
+     * All users who sign up using this form are of role: user
+     * admins and other roles should be signed up manually in the database
+     */
+    data.role = "user";
 
-      // collect user data
-      const user: RegisteringDBUser = {
-        username,
-        displayName,
-        email,
-        password,
-        role: "user",
-      };
-
-      await serverApiClient.signup(user);
-    },
-    [email, displayName, username, password]
-  );
+    await serverApiClient.signup(data);
+  });
 
   return (
     <form
       className="space-y-8 sm:mx-auto sm:max-w-md sm:p-4"
       autoComplete="off"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <header className="space-y-1.5">
         <h2 className="title-1">Join the club</h2>
@@ -50,43 +43,39 @@ function SignupForm({}: Props) {
       </header>
       <div className="space-y-3">
         <InlineInput
-          value={email}
-          onChange={setEmail}
           type="email"
           classname="rounded-md p-2"
           label="Email address"
           labelClassName="text-gray-500"
+          {...register("email")}
         />
         <InlineInput
-          value={displayName}
-          onChange={setDisplayName}
           type="text"
           classname="rounded-md p-2"
           label="Full name"
           labelClassName="text-gray-500"
+          {...register("displayName")}
         />
         <InlineInput
-          value={username}
-          onChange={setUserName}
           type="text"
           classname="rounded-md p-2"
           label="Username"
           labelClassName="text-gray-500"
+          {...register("username")}
         />
         <InlineInput
-          value={password}
-          onChange={setPassword}
           type="password"
           classname="rounded-md p-2"
           label="Password"
           labelClassName="text-gray-500"
+          {...register("password")}
         />
       </div>
 
       <ThemeButton
         type="submit"
         className="w-full"
-        loading={handleSubmitState.loading}
+        loading={onSubmitState.loading}
       >
         Sign Up
       </ThemeButton>

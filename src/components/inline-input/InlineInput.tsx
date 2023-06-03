@@ -17,7 +17,16 @@ const InlineInput = forwardRef<
   Props & ReturnType<UseFormRegister<RegisteringDBUser>>
 >(
   (
-    { type, label, onChange, name, classname = "", labelClassName = "" },
+    {
+      type,
+      label,
+      onChange,
+      required,
+      minLength,
+      name,
+      classname = "",
+      labelClassName = "",
+    },
     inputRef
   ) => {
     const [inputValue, setInputValue] = useState("");
@@ -50,6 +59,8 @@ const InlineInput = forwardRef<
           onFocus={() => setInputFocused(true)}
           onBlur={() => setInputFocused(false)}
           autoComplete="new-password"
+          required={required}
+          minLength={minLength}
         />
       </label>
     );

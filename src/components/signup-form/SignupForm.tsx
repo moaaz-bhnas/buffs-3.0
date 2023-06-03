@@ -8,6 +8,7 @@ import { ServerApiClient } from "@/apis/server-api-client";
 import { useAsyncFn } from "react-use";
 import ThemeButton from "../theme-button/ThemeButton";
 import { useForm } from "react-hook-form";
+import emailRegex from "@/utils/regex/emailRegex";
 
 type Props = {};
 
@@ -22,12 +23,6 @@ function SignupForm({}: Props) {
   const { register, handleSubmit } = useForm<RegisteringDBUser>();
 
   const [onSubmitState, onSubmit] = useAsyncFn<TOnSubmit>(async (data) => {
-    /**
-     * All users who sign up using this form are of role: user
-     * admins and other roles should be signed up manually in the database
-     */
-    data.role = "user";
-
     await serverApiClient.signup(data);
   });
 
@@ -48,6 +43,8 @@ function SignupForm({}: Props) {
           label="Email address"
           labelClassName="text-gray-500"
           {...register("email")}
+          required
+          pattern={String(emailRegex)}
         />
         <InlineInput
           type="text"
@@ -55,6 +52,7 @@ function SignupForm({}: Props) {
           label="Full name"
           labelClassName="text-gray-500"
           {...register("displayName")}
+          required
         />
         <InlineInput
           type="text"
@@ -62,6 +60,7 @@ function SignupForm({}: Props) {
           label="Username"
           labelClassName="text-gray-500"
           {...register("username")}
+          required
         />
         <InlineInput
           type="password"
@@ -69,6 +68,8 @@ function SignupForm({}: Props) {
           label="Password"
           labelClassName="text-gray-500"
           {...register("password")}
+          required
+          minLength={6}
         />
       </div>
 

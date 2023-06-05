@@ -66,5 +66,6 @@ const InlineInput = forwardRef<
     );
   }
 );
+InlineInput.displayName = "InlineInput";
 
 export default InlineInput;

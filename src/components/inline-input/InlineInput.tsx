@@ -1,51 +1,76 @@
 "use client";
 
+import { RegisteringDBUser } from "@/interfaces/database/User";
 import classNames from "@/utils/style/classNames";
-import { Dispatch, SetStateAction, useState } from "react";
+import { ChangeEventHandler, forwardRef, useState } from "react";
+import { FieldError, UseFormRegister } from "react-hook-form";
 
 type Props = {
   type: string;
   label: string;
-  value: string;
-  onChange: Dispatch<SetStateAction<string>>;
   classname?: string;
   labelClassName?: string;
+  error?: FieldError;
 };
 
-function InlineInput({
-  type,
-  label,
-  value,
-  onChange,
-  classname = "",
-  labelClassName = "",
-}: Props) {
-  const [inputFocused, setInputFocused] = useState(false);
+const InlineInput = forwardRef<
+  HTMLInputElement,
+  Props & ReturnType<UseFormRegister<RegisteringDBUser>>
+>(
+  (
+    {
+      type,
+      label,
+      onChange,
+      required,
+      minLength,
+      name,
+      error,
+      classname = "",
+      labelClassName = "",
+    },
+    inputRef
+  ) => {
+    const [inputValue, setInputValue] = useState("");
+    const [inputFocused, setInputFocused] = useState(false);
 
-  return (
-    <label className="relative flex">
-      <span
-        className={classNames(
-          "absolute left-1 self-center bg-white px-1 transition-all",
-          labelClassName,
-          inputFocused || value
-            ? "-top-2.5 text-xs"
-            : "top-1/2 -translate-y-1/2"
-        )}
-      >
-        {label}
-      </span>
-      <input
-        className={classNames("w-full border", classname)}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        type={type}
-        onFocus={() => setInputFocused(true)}
-        onBlur={() => setInputFocused(false)}
-        autoComplete="new-password"
-      />
-    </label>
-  );
-}
+    const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+      setInputValue(event.target.value);
+      onChange(event);
+    };
+
+    return (
+      <div>
+        <label className="relative flex">
+          <span
+            className={classNames(
+              "absolute left-1 self-center bg-white px-1 transition-all",
+              labelClassName,
+              inputFocused || inputValue
+                ? "-top-2.5 text-xs"
+                : "top-1/2 -translate-y-1/2"
+            )}
+          >
+            {label}
+          </span>
+          <input
+            ref={inputRef}
+            name={name}
+            className={classNames("w-full border", classname)}
+            onChange={handleChange}
+            type={type}
+            onFocus={() => setInputFocused(true)}
+            onBlur={() => setInputFocused(false)}
+            autoComplete="new-password"
+            required={required}
+            minLength={minLength}
+          />
+        </label>
+        {error && <p>{error.message}</p>}
+      </div>
+    );
+  }
+);
+InlineInput.displayName = "InlineInput";
 
 export default InlineInput;

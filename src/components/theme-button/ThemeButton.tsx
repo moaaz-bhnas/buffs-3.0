@@ -8,14 +8,22 @@ type Props = {
   type: "button" | "submit" | "reset";
   className?: string;
   loading?: boolean;
+  disabled?: boolean;
 };
 
-function ThemeButton({ children, type, className = "", loading }: Props) {
+function ThemeButton({
+  children,
+  type,
+  className = "",
+  loading = false,
+  disabled = false,
+}: Props) {
   return (
     <button
       className={classNames(
         "flex items-center justify-center gap-2 rounded-md bg-teal-600 py-2 text-white",
-        className
+        className,
+        disabled ? "cursor-not-allowed opacity-50" : ""
       )}
       type={type}
     >

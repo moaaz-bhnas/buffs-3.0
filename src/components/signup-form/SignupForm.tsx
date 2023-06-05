@@ -8,7 +8,7 @@ import { ServerApiClient } from "@/apis/server-api-client";
 import { useAsyncFn } from "react-use";
 import ThemeButton from "../theme-button/ThemeButton";
 import { useForm } from "react-hook-form";
-import emailRegex from "@/utils/regex/emailRegex";
+import emailValidationRegex from "@/utils/regex/emailValidationRegex";
 
 type Props = {};
 
@@ -20,7 +20,11 @@ type TOnSubmit = (
 const serverApiClient = new ServerApiClient();
 
 function SignupForm({}: Props) {
-  const { register, handleSubmit } = useForm<RegisteringDBUser>();
+  const {
+    register,
+    formState: { errors, isValid },
+    handleSubmit,
+  } = useForm<RegisteringDBUser>();
 
   const [onSubmitState, onSubmit] = useAsyncFn<TOnSubmit>(async (data) => {
     await serverApiClient.signup(data);
@@ -42,34 +46,44 @@ function SignupForm({}: Props) {
           classname="rounded-md p-2"
           label="Email address"
           labelClassName="text-gray-500"
-          {...register("email")}
-          required
-          pattern={String(emailRegex)}
+          {...register("email", {
+            required: "Email is required",
+            pattern: {
+              value: emailValidationRegex,
+              message: "Please enter a valid email",
+            },
+          })}
+          error={errors.email}
         />
         <InlineInput
           type="text"
           classname="rounded-md p-2"
           label="Full name"
           labelClassName="text-gray-500"
-          {...register("displayName")}
-          required
+          {...register("displayName", { required: "Display name is required" })}
+          error={errors.displayName}
         />
         <InlineInput
           type="text"
           classname="rounded-md p-2"
           label="Username"
           labelClassName="text-gray-500"
-          {...register("username")}
-          required
+          {...register("username", { required: "Username is required" })}
+          error={errors.username}
         />
         <InlineInput
           type="password"
           classname="rounded-md p-2"
           label="Password"
           labelClassName="text-gray-500"
-          {...register("password")}
-          required
-          minLength={6}
+          {...register("password", {
+            required: "Password is required",
+            minLength: {
+              value: 6,
+              message: "Password must be at least 6 characters",
+            },
+          })}
+          error={errors.password}
         />
       </div>
 
@@ -77,6 +91,7 @@ function SignupForm({}: Props) {
         type="submit"
         className="w-full"
         loading={onSubmitState.loading}
+        disabled={!isValid}
       >
         Sign Up
       </ThemeButton>

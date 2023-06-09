@@ -4,6 +4,8 @@ import { RegisteringDBUser } from "@/interfaces/database/User";
 import classNames from "@/utils/style/classNames";
 import { ChangeEventHandler, forwardRef, useState } from "react";
 import { FieldError, UseFormRegister } from "react-hook-form";
+import ErrorMessage from "../error/ErrorMessage";
+import { AnimatePresence } from "framer-motion";
 
 type Props = {
   type: string;
@@ -40,7 +42,7 @@ const InlineInput = forwardRef<
     };
 
     return (
-      <div>
+      <div className="space-y-1">
         <label className="relative flex">
           <span
             className={classNames(
@@ -66,7 +68,9 @@ const InlineInput = forwardRef<
             minLength={minLength}
           />
         </label>
-        {error && <p>{error.message}</p>}
+        <AnimatePresence>
+          {error?.message && <ErrorMessage message={error.message} />}
+        </AnimatePresence>
       </div>
     );
   }

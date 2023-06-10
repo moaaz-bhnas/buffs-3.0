@@ -51,6 +51,15 @@ function SignupForm({}: Props) {
               value: emailValidationRegex,
               message: "Please enter a valid email",
             },
+            validate: {
+              emailAvailable: async (fieldValue) => {
+                const result = await serverApiClient.getUserByEmail(fieldValue);
+                if (result.isOk() && result.value.length > 0) {
+                  return "Email already exists. Signin instead?";
+                }
+                return true;
+              },
+            },
           })}
           error={errors.email}
         />
@@ -59,7 +68,9 @@ function SignupForm({}: Props) {
           classname="rounded-md p-2"
           label="Full name"
           labelClassName="text-gray-500"
-          {...register("displayName", { required: "Display name is required" })}
+          {...register("displayName", {
+            required: "Display name is required",
+          })}
           error={errors.displayName}
         />
         <InlineInput

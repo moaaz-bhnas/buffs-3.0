@@ -1,7 +1,8 @@
 import { ApiError } from "@/interfaces/api-client/Error";
 import { IApiClient } from "@/interfaces/api-client/IApiClient";
-import { RegisteringDBUser } from "@/interfaces/database/User";
+import { DBUser, RegisteringDBUser } from "@/interfaces/database/User";
 import { AuthResponse } from "@/interfaces/server/AuthResponse";
+import { GetUsersResponse } from "@/interfaces/server/GetUsersResponse";
 import ApiClient from "@/utils/api-client/apiClient";
 import { Result, err, ok } from "neverthrow";
 
@@ -24,5 +25,18 @@ export class ServerApiClient {
     }
 
     return ok(result.value);
+  }
+
+  async getUserByEmail(email: string): Promise<Result<DBUser[], ApiError>> {
+    const result = await this.serverApiClient.get<GetUsersResponse>(
+      `${this.apiBaseUrl}/v${this.apiVersion}/users?email=${email}`
+    );
+
+    if (result.isErr()) {
+      console.error(result.error.errorMessage, { error: result.error });
+      return err(result.error);
+    }
+
+    return ok(result.value.data);
   }
 }

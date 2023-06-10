@@ -9,7 +9,6 @@ import { useAsyncFn } from "react-use";
 import ThemeButton from "../theme-button/ThemeButton";
 import { useForm } from "react-hook-form";
 import emailValidationRegex from "@/utils/regex/emailValidationRegex";
-import { DevTool } from "@hookform/devtools";
 
 type Props = {};
 
@@ -23,8 +22,7 @@ const serverApiClient = new ServerApiClient();
 function SignupForm({}: Props) {
   const {
     register,
-    control,
-    formState: { errors, isValid, dirtyFields },
+    formState: { errors, isValid },
     handleSubmit,
   } = useForm<RegisteringDBUser>();
 
@@ -53,6 +51,15 @@ function SignupForm({}: Props) {
               value: emailValidationRegex,
               message: "Please enter a valid email",
             },
+            validate: {
+              emailAvailable: async (fieldValue) => {
+                const result = await serverApiClient.getUserByEmail(fieldValue);
+                if (result.isOk() && result.value.length > 0) {
+                  return "Email already exists. Signin instead?";
+                }
+                return true;
+              },
+            },
           })}
           error={errors.email}
         />
@@ -63,15 +70,6 @@ function SignupForm({}: Props) {
           labelClassName="text-gray-500"
           {...register("displayName", {
             required: "Display name is required",
-            validate: {
-              emailAvailable: async (fieldValue) => {
-                const result = await serverApiClient.getUserByEmail(fieldValue);
-                if (result.isOk() && result.value.length > 0) {
-                  return "Email already exists";
-                }
-                return true;
-              },
-            },
           })}
           error={errors.displayName}
         />
@@ -107,8 +105,6 @@ function SignupForm({}: Props) {
       >
         Sign Up
       </ThemeButton>
-
-      <DevTool control={control} />
     </form>
   );
 }

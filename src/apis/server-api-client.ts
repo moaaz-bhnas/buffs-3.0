@@ -2,6 +2,7 @@ import { ApiError } from "@/interfaces/api-client/Error";
 import { IApiClient } from "@/interfaces/api-client/IApiClient";
 import { DBUser, RegisteringDBUser } from "@/interfaces/database/User";
 import { AuthResponse } from "@/interfaces/server/AuthResponse";
+import { GetUsersResponse } from "@/interfaces/server/GetUsersResponse";
 import ApiClient from "@/utils/api-client/apiClient";
 import { Result, err, ok } from "neverthrow";
 
@@ -27,7 +28,7 @@ export class ServerApiClient {
   }
 
   async getUserByEmail(email: string): Promise<Result<DBUser[], ApiError>> {
-    const result = await this.serverApiClient.get<DBUser[]>(
+    const result = await this.serverApiClient.get<GetUsersResponse>(
       `${this.apiBaseUrl}/v${this.apiVersion}/users?email=${email}`
     );
 
@@ -36,6 +37,6 @@ export class ServerApiClient {
       return err(result.error);
     }
 
-    return ok(result.value);
+    return ok(result.value.data);
   }
 }

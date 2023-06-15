@@ -7,7 +7,7 @@ import tagline from "@/config/content/tagline";
 import { ServerApiClient } from "@/apis/server-api-client";
 import { useAsyncFn } from "react-use";
 import ThemeButton from "../theme-button/ThemeButton";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import emailValidationRegex from "@/utils/regex/emailValidationRegex";
 
 type Props = {};
@@ -23,8 +23,10 @@ function SignupForm({}: Props) {
   const {
     register,
     formState: { errors, isValid },
+    control,
     handleSubmit,
-  } = useForm<RegisteringDBUser>();
+  } = useForm<RegisteringDBUser>({ mode: "onBlur" });
+  const watcher = useWatch({ control });
 
   const [onSubmitState, onSubmit] = useAsyncFn<TOnSubmit>(async (data) => {
     await serverApiClient.signup(data);
@@ -41,6 +43,7 @@ function SignupForm({}: Props) {
       </header>
       <div className="space-y-3">
         <InlineInput
+          value={watcher.email || ""}
           type="email"
           classname="rounded-md p-2"
           label="Email address"
@@ -64,6 +67,7 @@ function SignupForm({}: Props) {
           error={errors.email}
         />
         <InlineInput
+          value={watcher.displayName || ""}
           type="text"
           classname="rounded-md p-2"
           label="Full name"
@@ -74,6 +78,7 @@ function SignupForm({}: Props) {
           error={errors.displayName}
         />
         <InlineInput
+          value={watcher.username || ""}
           type="text"
           classname="rounded-md p-2"
           label="Username"
@@ -82,6 +87,7 @@ function SignupForm({}: Props) {
           error={errors.username}
         />
         <InlineInput
+          value={watcher.password || ""}
           type="password"
           classname="rounded-md p-2"
           label="Password"

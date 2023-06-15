@@ -2,7 +2,12 @@
 
 import { RegisteringDBUser } from "@/interfaces/database/User";
 import classNames from "@/utils/style/classNames";
-import { ChangeEventHandler, forwardRef, useState } from "react";
+import {
+  ChangeEventHandler,
+  FocusEventHandler,
+  forwardRef,
+  useState,
+} from "react";
 import { FieldError, UseFormRegister } from "react-hook-form";
 import ErrorMessage from "../error/ErrorMessage";
 import { AnimatePresence } from "framer-motion";
@@ -10,6 +15,7 @@ import { AnimatePresence } from "framer-motion";
 type Props = {
   type: string;
   label: string;
+  value: string;
   classname?: string;
   labelClassName?: string;
   error?: FieldError;
@@ -23,7 +29,9 @@ const InlineInput = forwardRef<
     {
       type,
       label,
+      value,
       onChange,
+      onBlur,
       required,
       minLength,
       name,
@@ -33,12 +41,16 @@ const InlineInput = forwardRef<
     },
     inputRef
   ) => {
-    const [inputValue, setInputValue] = useState("");
     const [inputFocused, setInputFocused] = useState(false);
 
-    const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-      setInputValue(event.target.value);
-      onChange(event);
+    const handleFocus: FocusEventHandler<HTMLInputElement> = (event) => {
+      setInputFocused(true);
+    };
+
+    const handleBlur: FocusEventHandler<HTMLInputElement> = (event) => {
+      setInputFocused(false);
+      // onBlur from react-hook-form
+      onBlur(event);
     };
 
     return (
@@ -48,7 +60,7 @@ const InlineInput = forwardRef<
             className={classNames(
               "absolute left-1 self-center bg-white px-1 transition-all",
               labelClassName,
-              inputFocused || inputValue
+              inputFocused || value
                 ? "-top-2.5 text-xs"
                 : "top-1/2 -translate-y-1/2"
             )}
@@ -59,10 +71,10 @@ const InlineInput = forwardRef<
             ref={inputRef}
             name={name}
             className={classNames("w-full border", classname)}
-            onChange={handleChange}
+            onChange={onChange}
             type={type}
-            onFocus={() => setInputFocused(true)}
-            onBlur={() => setInputFocused(false)}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             autoComplete="new-password"
             required={required}
             minLength={minLength}

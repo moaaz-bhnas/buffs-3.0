@@ -5,11 +5,28 @@ import { AuthResponse } from "@/interfaces/server/AuthResponse";
 import { GetUsersResponse } from "@/interfaces/server/GetUsersResponse";
 import ApiClient from "@/helpers/api-client/apiClient";
 import { Result, err, ok } from "neverthrow";
+import { SigninRequest } from "@/interfaces/server/SigninRequest";
 
 export class ServerApiClient {
   private readonly apiBaseUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api`;
   private readonly apiVersion = 1;
   private serverApiClient: IApiClient = new ApiClient({});
+
+  async signin(
+    credenials: SigninRequest
+  ): Promise<Result<AuthResponse, ApiError>> {
+    const result = await this.serverApiClient.post<SigninRequest, AuthResponse>(
+      `${this.apiBaseUrl}/v${this.apiVersion}/auth/login`,
+      credenials
+    );
+
+    if (result.isErr()) {
+      console.error(result.error.errorMessage, { error: result.error });
+      return err(result.error);
+    }
+
+    return ok(result.value);
+  }
 
   async signup(
     user: RegisteringDBUser

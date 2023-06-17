@@ -42,7 +42,7 @@ function SigninForm({}: Props) {
       onSubmit={handleSubmit(onSubmit)}
     >
       <header className="space-y-1.5">
-        <h2 className="title-1">Popcorn's ready - welcome back!</h2>
+        <h2 className="title-1">Popcorn&apos;`s ready - welcome back!</h2>
         <p className="text-gray-500">{TaglineMessages.default}</p>
       </header>
 

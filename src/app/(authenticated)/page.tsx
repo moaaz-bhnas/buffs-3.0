@@ -2,13 +2,13 @@ import Container from "@/components/container/Container";
 import AddReviewContainer from "@/components/add-review/AddReviewContainer";
 import { Inter } from "next/font/google";
 import { Metadata } from "next/types";
-import tagline from "@/config/content/tagline";
+import TaglineMessages from "@/utils/messages/taglineMessages";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Buffs - Feed",
-  description: tagline,
+  description: TaglineMessages.default,
 };
 
 export default function Home() {

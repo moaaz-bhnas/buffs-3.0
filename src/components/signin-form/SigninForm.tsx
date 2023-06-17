@@ -1,36 +1,36 @@
 "use client";
 
-import { BaseSyntheticEvent } from "react";
-import InlineInput from "../inline-input/InlineInput";
-import { RegisteringDBUser } from "@/interfaces/database/User";
 import { ServerApiClient } from "@/apis/server-api-client";
-import { useAsyncFn } from "react-use";
-import ThemeButton from "../theme-button/ThemeButton";
-import { useForm, useWatch } from "react-hook-form";
-import emailValidationRegex from "@/utils/regex/emailValidationRegex";
-import ErrorMessages from "@/utils/messages/errorMessages";
+import { SigninRequest } from "@/interfaces/server/SigninRequest";
 import TaglineMessages from "@/utils/messages/taglineMessages";
+import { BaseSyntheticEvent } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { useAsyncFn } from "react-use";
+import InlineInput from "../inline-input/InlineInput";
+import emailValidationRegex from "@/utils/regex/emailValidationRegex";
+import ThemeButton from "../theme-button/ThemeButton";
+import ErrorMessages from "@/utils/messages/errorMessages";
 
 type Props = {};
 
 type TOnSubmit = (
-  data: RegisteringDBUser,
+  data: SigninRequest,
   event: BaseSyntheticEvent<object, any, any> | undefined
 ) => Promise<void>;
 
 const serverApiClient = new ServerApiClient();
 
-function SignupForm({}: Props) {
+function SigninForm({}: Props) {
   const {
     register,
     formState: { errors, isValid, isSubmitting },
     control,
     handleSubmit,
-  } = useForm<RegisteringDBUser>();
+  } = useForm<SigninRequest>();
   const watcher = useWatch({ control });
 
   const [onSubmitState, onSubmit] = useAsyncFn<TOnSubmit>(async (data) => {
-    const result = await serverApiClient.signup(data);
+    const result = await serverApiClient.signin(data);
     if (result.isErr()) {
       throw new Error(result.error.errorMessage);
     }
@@ -42,9 +42,10 @@ function SignupForm({}: Props) {
       onSubmit={handleSubmit(onSubmit)}
     >
       <header className="space-y-1.5">
-        <h2 className="title-1">Join the club</h2>
+        <h2 className="title-1">Popcorn&apos;s ready - welcome back!</h2>
         <p className="text-gray-500">{TaglineMessages.default}</p>
       </header>
+
       <div className="space-y-3">
         <InlineInput
           value={watcher.email || ""}
@@ -59,49 +60,16 @@ function SignupForm({}: Props) {
               message: "Please enter a valid email",
             },
             validate: {
-              emailAvailable: async (fieldValue) => {
+              emailExists: async (fieldValue) => {
                 const result = await serverApiClient.getUserByEmail(fieldValue);
-                if (result.isOk() && result.value.length > 0) {
-                  return "Email already exists. Signin instead?";
+                if (result.isErr()) {
+                  return "Sorry, email does not exist.";
                 }
                 return true;
               },
             },
           })}
           error={errors.email}
-        />
-        <InlineInput
-          value={watcher.displayName || ""}
-          type="text"
-          classname="rounded-md p-2"
-          label="Full name"
-          labelClassName="text-gray-500"
-          {...register("displayName", {
-            required: "Display name is required",
-          })}
-          error={errors.displayName}
-        />
-        <InlineInput
-          value={watcher.username || ""}
-          type="text"
-          classname="rounded-md p-2"
-          label="Username"
-          labelClassName="text-gray-500"
-          {...register("username", {
-            required: "Username is required",
-            validate: {
-              emailAvailable: async (fieldValue) => {
-                const result = await serverApiClient.getUserByUsername(
-                  fieldValue
-                );
-                if (result.isOk() && result.value.length > 0) {
-                  return ErrorMessages.usernameUsed;
-                }
-                return true;
-              },
-            },
-          })}
-          error={errors.username}
         />
         <InlineInput
           value={watcher.password || ""}
@@ -127,10 +95,10 @@ function SignupForm({}: Props) {
         disabled={!isValid}
         error={onSubmitState.error && ErrorMessages.somthingWentWrong}
       >
-        Sign Up
+        Login
       </ThemeButton>
     </form>
   );
 }
 
-export default SignupForm;
+export default SigninForm;

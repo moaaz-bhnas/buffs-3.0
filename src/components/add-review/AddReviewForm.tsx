@@ -9,7 +9,7 @@ import {
 } from "react";
 import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
 import { MovieApiClient } from "@/apis/movie-api-client";
-import classNames from "@/utils/style/classNames";
+import classNames from "@/helpers/style/classNames";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { ImageSize } from "@/interfaces/movies/ImageSize";
 import { useUpdateEffect } from "usehooks-ts";

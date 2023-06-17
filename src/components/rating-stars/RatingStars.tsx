@@ -1,4 +1,4 @@
-import classNames from "@/utils/style/classNames";
+import classNames from "@/helpers/style/classNames";
 import { StarIcon } from "@heroicons/react/24/outline";
 import {
   Dispatch,

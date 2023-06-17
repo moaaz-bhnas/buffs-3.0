@@ -6,7 +6,7 @@ import { ImageSize } from "@/interfaces/movies/ImageSize";
 import { MovieSearchResponse } from "@/interfaces/movies/MovieSearchResponse";
 import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
 import { MoviesApiConfiguration } from "@/interfaces/movies/MoviesApiConfiguration";
-import ApiClient from "@/utils/api-client/apiClient";
+import ApiClient from "@/helpers/api-client/apiClient";
 import { Result, err, ok } from "neverthrow";
 
 export class MovieApiClient implements IMovieApiClient {

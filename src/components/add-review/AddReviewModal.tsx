@@ -1,6 +1,5 @@
 "use client";
 
-import getFirstWord from "@/utils/string/getFirstWord";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useRef, useState } from "react";
 import AddReviewForm from "./AddReviewForm";

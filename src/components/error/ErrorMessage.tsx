@@ -14,7 +14,7 @@ function ErrorMessage({ message }: Props) {
       exit={{ opacity: 0, y: 10 }}
       transition={{ duration: 0.2 }}
     >
-      <ExclamationCircleIcon className="w-4" />
+      <ExclamationCircleIcon className="w-4 shrink-0" />
       {message}
     </motion.p>
   );

@@ -87,7 +87,20 @@ function SignupForm({}: Props) {
           classname="rounded-md p-2"
           label="Username"
           labelClassName="text-gray-500"
-          {...register("username", { required: "Username is required" })}
+          {...register("username", {
+            required: "Username is required",
+            validate: {
+              emailAvailable: async (fieldValue) => {
+                const result = await serverApiClient.getUserByUsername(
+                  fieldValue
+                );
+                if (result.isOk() && result.value.length > 0) {
+                  return ErrorMessages.usernameUsed;
+                }
+                return true;
+              },
+            },
+          })}
           error={errors.username}
         />
         <InlineInput

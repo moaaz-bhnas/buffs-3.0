@@ -9,6 +9,7 @@ import { useAsyncFn } from "react-use";
 import ThemeButton from "../theme-button/ThemeButton";
 import { useForm, useWatch } from "react-hook-form";
 import emailValidationRegex from "@/utils/regex/emailValidationRegex";
+import ErrorMessages from "@/utils/messages/errorMessages";
 
 type Props = {};
 
@@ -29,7 +30,10 @@ function SignupForm({}: Props) {
   const watcher = useWatch({ control });
 
   const [onSubmitState, onSubmit] = useAsyncFn<TOnSubmit>(async (data) => {
-    await serverApiClient.signup(data);
+    const result = await serverApiClient.signup(data);
+    if (result.isErr()) {
+      throw new Error(result.error.errorMessage);
+    }
   });
 
   return (
@@ -108,6 +112,7 @@ function SignupForm({}: Props) {
         className="w-full"
         loading={onSubmitState.loading}
         disabled={!isValid}
+        error={onSubmitState.error && ErrorMessages.somthingWentWrong}
       >
         Sign Up
       </ThemeButton>

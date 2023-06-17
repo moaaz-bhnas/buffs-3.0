@@ -3,7 +3,7 @@
 import { Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import classNames from "@/utils/style/classNames";
+import classNames from "@/helpers/style/classNames";
 
 type Props = {};
 

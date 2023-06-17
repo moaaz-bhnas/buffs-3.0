@@ -2,7 +2,7 @@ import "@/app/globals.css";
 
 import Container from "@/components/container/Container";
 import Logo from "@/components/logo/Logo";
-import classNames from "@/utils/style/classNames";
+import classNames from "@/helpers/style/classNames";
 
 import { Open_Sans } from "next/font/google";
 

@@ -1,5 +1,5 @@
 import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
-import classNames from "@/utils/style/classNames";
+import classNames from "@/helpers/style/classNames";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
 import {

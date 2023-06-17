@@ -2,7 +2,7 @@ import { ApiConfiguration } from "@/interfaces/api-client/ApiConfiguration";
 import { ApiError } from "@/interfaces/api-client/Error";
 import { IApiClient } from "@/interfaces/api-client/IApiClient";
 import { RequestConfig } from "@/interfaces/api-client/RequestConfig";
-import handleApiError from "@/utils/api-client/handleApiError";
+import handleApiError from "@/helpers/api-client/handleApiError";
 import axios, { AxiosInstance } from "axios";
 import axiosRetry, { IAxiosRetryConfig } from "axios-retry";
 import { Result, ok } from "neverthrow";

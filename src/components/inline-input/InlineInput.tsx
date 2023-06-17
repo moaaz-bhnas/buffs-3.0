@@ -1,7 +1,7 @@
 "use client";
 
 import { RegisteringDBUser } from "@/interfaces/database/User";
-import classNames from "@/utils/style/classNames";
+import classNames from "@/helpers/style/classNames";
 import {
   ChangeEventHandler,
   FocusEventHandler,

@@ -1,4 +1,4 @@
-import classNames from "@/utils/style/classNames";
+import classNames from "@/helpers/style/classNames";
 import Image from "next/image";
 
 type Props = {

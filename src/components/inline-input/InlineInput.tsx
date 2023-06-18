@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 import { FieldError, UseFormRegister } from "react-hook-form";
-import ErrorMessage from "../error/ErrorMessage";
+import ErrorMessage from "../alerts/ErrorMessage";
 import { AnimatePresence } from "framer-motion";
 
 type Props = {

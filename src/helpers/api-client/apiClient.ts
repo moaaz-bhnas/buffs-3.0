@@ -49,9 +49,12 @@ export default class ApiClient implements IApiClient {
     axiosRetry(apiClient, retryConfig);
   }
 
-  async get<TResponse>(path: string): Promise<Result<TResponse, ApiError>> {
+  async get<TResponse>(
+    path: string,
+    config: RequestConfig = { headers: {} }
+  ): Promise<Result<TResponse, ApiError>> {
     try {
-      const response = await this.client.get<TResponse>(path);
+      const response = await this.client.get<TResponse>(path, config);
       return ok(response.data);
     } catch (error: any) {
       return handleApiError<TResponse>(error);

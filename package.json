@@ -22,6 +22,7 @@
     "eslint-config-next": "^13.4.3",
     "eslint-plugin-neverthrow": "^1.1.4",
     "framer-motion": "^10.12.8",
+    "js-cookie": "^3.0.5",
     "luxon": "^3.3.0",
     "neverthrow": "^6.0.0",
     "next": "^13.4.3",

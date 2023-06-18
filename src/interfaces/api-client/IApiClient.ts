@@ -3,7 +3,10 @@ import { RequestConfig } from "./RequestConfig";
 import { ApiError } from "./Error";
 
 export interface IApiClient {
-  get<TResponse>(path: string): Promise<Result<TResponse, ApiError>>;
+  get<TResponse>(
+    path: string,
+    config?: RequestConfig
+  ): Promise<Result<TResponse, ApiError>>;
   post<TRequest, TResponse>(
     path: string,
     payload: TRequest,

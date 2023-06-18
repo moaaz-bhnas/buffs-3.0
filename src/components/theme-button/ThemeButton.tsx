@@ -2,12 +2,14 @@ import classNames from "@/helpers/style/classNames";
 import Spinner from "../spinner/Spinner";
 import { ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import ErrorMessage from "../error/ErrorMessage";
+import ErrorMessage from "../alerts/ErrorMessage";
+import SuccessMessage from "../alerts/SuccessMessage";
 
 type Props = {
   children: ReactNode;
   type: "button" | "submit" | "reset";
-  error?: string;
+  errorMessage?: string;
+  successMessage?: string;
   className?: string;
   loading?: boolean;
   disabled?: boolean;
@@ -17,12 +19,13 @@ function ThemeButton({
   children,
   type,
   className = "",
-  error,
+  errorMessage,
+  successMessage,
   loading = false,
   disabled = false,
 }: Props) {
   return (
-    <div className="space-y-1">
+    <div className="space-y-1.5">
       <button
         className={classNames(
           "flex items-center justify-center gap-2 rounded-md bg-teal-600 py-2 text-white",
@@ -46,7 +49,8 @@ function ThemeButton({
         </AnimatePresence>
       </button>
       <AnimatePresence>
-        {error && <ErrorMessage message={error} />}
+        {errorMessage && <ErrorMessage message={errorMessage} />}
+        {successMessage && <SuccessMessage message={successMessage} />}
       </AnimatePresence>
     </div>
   );

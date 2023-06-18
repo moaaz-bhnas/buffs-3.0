@@ -1,6 +1,6 @@
 "use client";
 
-import { BaseSyntheticEvent } from "react";
+import { BaseSyntheticEvent, useState } from "react";
 import InlineInput from "../inline-input/InlineInput";
 import { RegisteringDBUser } from "@/interfaces/database/User";
 import { ServerApiClient } from "@/apis/server-api-client";
@@ -8,8 +8,9 @@ import { useAsyncFn } from "react-use";
 import ThemeButton from "../theme-button/ThemeButton";
 import { useForm, useWatch } from "react-hook-form";
 import emailValidationRegex from "@/utils/regex/emailValidationRegex";
-import ErrorMessages from "@/utils/messages/errorMessages";
-import TaglineMessages from "@/utils/messages/taglineMessages";
+import taglineMessages from "@/utils/messages/taglineMessages";
+import errorMessages from "@/utils/messages/errorMessages";
+import successMessages from "@/utils/messages/successMessages";
 
 type Props = {};
 
@@ -29,11 +30,15 @@ function SignupForm({}: Props) {
   } = useForm<RegisteringDBUser>();
   const watcher = useWatch({ control });
 
+  // Success logic
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const [onSubmitState, onSubmit] = useAsyncFn<TOnSubmit>(async (data) => {
     const result = await serverApiClient.signup(data);
     if (result.isErr()) {
       throw new Error(result.error.errorMessage);
     }
+    setIsSuccess(true);
   });
 
   return (
@@ -43,7 +48,7 @@ function SignupForm({}: Props) {
     >
       <header className="space-y-1.5">
         <h2 className="title-1">Join the club</h2>
-        <p className="text-gray-500">{TaglineMessages.default}</p>
+        <p className="text-gray-500">{taglineMessages.default}</p>
       </header>
       <div className="space-y-3">
         <InlineInput
@@ -95,7 +100,7 @@ function SignupForm({}: Props) {
                   fieldValue
                 );
                 if (result.isOk() && result.value.length > 0) {
-                  return ErrorMessages.usernameUsed;
+                  return errorMessages.usernameUsed;
                 }
                 return true;
               },
@@ -125,7 +130,8 @@ function SignupForm({}: Props) {
         className="w-full"
         loading={isSubmitting}
         disabled={!isValid}
-        error={onSubmitState.error && ErrorMessages.somthingWentWrong}
+        errorMessage={onSubmitState.error && errorMessages.somthingWentWrong}
+        successMessage={isSuccess ? successMessages.signup : undefined}
       >
         Sign Up
       </ThemeButton>

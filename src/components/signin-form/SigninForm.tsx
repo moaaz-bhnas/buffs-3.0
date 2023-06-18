@@ -2,14 +2,15 @@
 
 import { ServerApiClient } from "@/apis/server-api-client";
 import { SigninRequest } from "@/interfaces/server/SigninRequest";
-import TaglineMessages from "@/utils/messages/taglineMessages";
-import { BaseSyntheticEvent } from "react";
+import { BaseSyntheticEvent, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useAsyncFn } from "react-use";
 import InlineInput from "../inline-input/InlineInput";
 import emailValidationRegex from "@/utils/regex/emailValidationRegex";
 import ThemeButton from "../theme-button/ThemeButton";
-import ErrorMessages from "@/utils/messages/errorMessages";
+import taglineMessages from "@/utils/messages/taglineMessages";
+import errorMessages from "@/utils/messages/errorMessages";
+import successMessages from "@/utils/messages/successMessages";
 
 type Props = {};
 
@@ -29,11 +30,15 @@ function SigninForm({}: Props) {
   } = useForm<SigninRequest>();
   const watcher = useWatch({ control });
 
+  // Success logic
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const [onSubmitState, onSubmit] = useAsyncFn<TOnSubmit>(async (data) => {
     const result = await serverApiClient.signin(data);
     if (result.isErr()) {
       throw new Error(result.error.errorMessage);
     }
+    setIsSuccess(true);
   });
 
   return (
@@ -43,7 +48,7 @@ function SigninForm({}: Props) {
     >
       <header className="space-y-1.5">
         <h2 className="title-1">Popcorn&apos;s ready - welcome back!</h2>
-        <p className="text-gray-500">{TaglineMessages.default}</p>
+        <p className="text-gray-500">{taglineMessages.default}</p>
       </header>
 
       <div className="space-y-3">
@@ -93,7 +98,8 @@ function SigninForm({}: Props) {
         className="w-full"
         loading={isSubmitting}
         disabled={!isValid}
-        error={onSubmitState.error && ErrorMessages.somthingWentWrong}
+        errorMessage={onSubmitState.error && errorMessages.somthingWentWrong}
+        successMessage={isSuccess ? successMessages.signin : undefined}
       >
         Login
       </ThemeButton>

@@ -12,6 +12,7 @@ import taglineMessages from "@/utils/messages/taglineMessages";
 import errorMessages from "@/utils/messages/errorMessages";
 import successMessages from "@/utils/messages/successMessages";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
@@ -23,6 +24,10 @@ type TOnSubmit = (
 const serverApiClient = new ServerApiClient();
 
 function SignupForm({}: Props) {
+  const router = useRouter();
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  // react-hook-form logic
   const {
     register,
     formState: { errors, isValid, isSubmitting },
@@ -31,16 +36,14 @@ function SignupForm({}: Props) {
   } = useForm<RegisteringDBUser>();
   const watcher = useWatch({ control });
 
-  // Success logic
-  const [isSuccess, setIsSuccess] = useState(false);
-
   const [onSubmitState, onSubmit] = useAsyncFn<TOnSubmit>(async (data) => {
     const result = await serverApiClient.signup(data);
     if (result.isErr()) {
       throw new Error(result.error.errorMessage);
     }
-    Cookies.set("token", result.value.token, { expires: 30 });
     setIsSuccess(true);
+    Cookies.set("token", result.value.token, { expires: 30 });
+    router.push("/");
   });
 
   return (

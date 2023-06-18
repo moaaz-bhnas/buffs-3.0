@@ -11,6 +11,7 @@ import emailValidationRegex from "@/utils/regex/emailValidationRegex";
 import taglineMessages from "@/utils/messages/taglineMessages";
 import errorMessages from "@/utils/messages/errorMessages";
 import successMessages from "@/utils/messages/successMessages";
+import Cookies from "js-cookie";
 
 type Props = {};
 
@@ -38,6 +39,7 @@ function SignupForm({}: Props) {
     if (result.isErr()) {
       throw new Error(result.error.errorMessage);
     }
+    Cookies.set("token", result.value.token, { expires: 30 });
     setIsSuccess(true);
   });
 

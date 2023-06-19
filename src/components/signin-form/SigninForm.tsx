@@ -43,7 +43,9 @@ function SigninForm({}: Props) {
       throw new Error(result.error.errorMessage);
     }
     setIsSuccess(true);
-    Cookies.set("token", result.value.token, { expires: 30 });
+    Cookies.set("token", result.value.token, {
+      expires: Number(process.env.NEXT_PUBLIC_JWT_EXPIRE),
+    });
     router.push("/");
   });
 
@@ -103,7 +105,6 @@ function SigninForm({}: Props) {
         type="submit"
         className="w-full"
         loading={isSubmitting}
-        disabled={!isValid}
         errorMessage={onSubmitState.error && errorMessages.somthingWentWrong}
         successMessage={isSuccess ? successMessages.signin : undefined}
       >

@@ -13,6 +13,7 @@ import errorMessages from "@/utils/messages/errorMessages";
 import successMessages from "@/utils/messages/successMessages";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type Props = {};
 
@@ -48,7 +49,7 @@ function SigninForm({}: Props) {
 
   return (
     <form
-      className="space-y-8 sm:mx-auto sm:max-w-md sm:p-4"
+      className="space-y-6 sm:mx-auto sm:max-w-md sm:p-4"
       onSubmit={handleSubmit(onSubmit)}
     >
       <header className="space-y-1.5">
@@ -108,6 +109,13 @@ function SigninForm({}: Props) {
       >
         Login
       </ThemeButton>
+
+      <p className="flex gap-x-1.5">
+        <span>Not a member yet?</span>
+        <Link href="/signup" className="font-semibold text-teal-700 underline">
+          Join the club
+        </Link>
+      </p>
     </form>
   );
 }

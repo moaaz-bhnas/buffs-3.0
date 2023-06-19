@@ -7,6 +7,7 @@ import ApiClient from "@/helpers/api-client/apiClient";
 import { Result, err, ok } from "neverthrow";
 import { SigninRequest } from "@/interfaces/server/SigninRequest";
 import { GetUserByTokenResponse } from "@/interfaces/server/GetUserByTokenResponse";
+import { SignoutResponse } from "@/interfaces/server/SignoutResponse";
 
 interface Props {
   token?: string;
@@ -54,6 +55,19 @@ export class ServerApiClient {
     }
 
     return ok(result.value);
+  }
+
+  async signout(): Promise<Result<{}, ApiError>> {
+    const result = await this.serverApiClient.get<SignoutResponse>(
+      `${this.apiBaseUrl}/v${this.apiVersion}/auth/logout`
+    );
+
+    if (result.isErr()) {
+      console.error(result.error.errorMessage, { error: result.error });
+      return err(result.error);
+    }
+
+    return ok(result.value.data);
   }
 
   async getUserByToken(): Promise<Result<DBUser, ApiError>> {

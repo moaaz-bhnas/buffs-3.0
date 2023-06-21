@@ -13,5 +13,7 @@ export interface DBUser {
   email: string;
   password: string;
   role: string;
+  avatar: string;
   createdAt: Date;
+  updatedAt: Date;
 }

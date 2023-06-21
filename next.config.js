@@ -14,15 +14,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "lh3.googleusercontent.com",
+        hostname: "s.gravatar.com",
       },
       {
         protocol: "https",
         hostname: "image.tmdb.org",
-      },
-      {
-        protocol: "https",
-        hostname: "placehold.co",
       },
     ],
   },

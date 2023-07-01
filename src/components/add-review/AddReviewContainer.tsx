@@ -1,18 +1,14 @@
-import { cookies } from "next/dist/client/components/headers";
 import ReviewModal from "./AddReviewModal";
 import Link from "next/link";
-import { ServerApiClient } from "@/apis/server-api-client";
 import UserAvatar from "../avatar/UserAvatar";
 import { Suspense } from "react";
 import AvatarSkeleton from "../avatar/AvatarSkeleton";
+import getServerUser from "@/helpers/auth/getServerUser";
 
 type Props = {};
 
-const serverApiClient = new ServerApiClient();
-
 async function AddReviewContainer({}: Props) {
-  const authToken = cookies().get("token")?.value;
-  const userResult = await serverApiClient.getUserByToken(authToken || "");
+  const userResult = await getServerUser();
 
   if (userResult.isErr()) {
     return <></>;

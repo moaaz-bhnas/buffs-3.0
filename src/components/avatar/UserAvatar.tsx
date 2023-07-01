@@ -1,14 +1,10 @@
-import { ServerApiClient } from "@/apis/server-api-client";
-import { cookies } from "next/dist/client/components/headers";
+import getServerUser from "@/helpers/auth/getServerUser";
 import Avatar from "./Avatar";
 
 type Props = { size?: number };
 
-const serverApiClient = new ServerApiClient();
-
 async function UserAvatar({ size }: Props) {
-  const authToken = cookies().get("token")?.value;
-  const userResult = await serverApiClient.getUserByToken(authToken || "");
+  const userResult = await getServerUser();
 
   if (userResult.isErr()) {
     return <></>;

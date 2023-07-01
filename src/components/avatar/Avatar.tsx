@@ -1,23 +1,18 @@
-import classNames from "@/helpers/style/classNames";
 import Image from "next/image";
 
 type Props = {
-  className?: string;
+  avatarUrl: string;
+  size?: number;
 };
 
-async function Avatar({ className = "" }: Props) {
-  // const user = await getCurrentUser();
-  // const avatarSrc = user?.image
-  //   ? user.image
-  //   : "images/avatar/default-avatar.svg";
-
+function Avatar({ avatarUrl, size = 28 }: Props) {
   return (
     <Image
-      className={classNames("w-7 rounded-full", className)}
-      src={"images/avatar/default-avatar.svg"}
+      className="rounded-full"
+      src={avatarUrl}
       alt=""
-      width={0}
-      height={0}
+      width={size}
+      height={size}
       sizes="3rem"
     />
   );

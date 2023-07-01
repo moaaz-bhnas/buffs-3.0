@@ -1,14 +1,10 @@
-import {
-  BellIcon,
-  ChevronDownIcon,
-  PaperAirplaneIcon,
-} from "@heroicons/react/24/outline";
+import { BellIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import SearchForm from "./SearchForm";
 import Link from "next/link";
-import Avatar from "../avatar/Avatar";
 import { Suspense } from "react";
 import AvatarSkeleton from "../avatar/AvatarSkeleton";
 import SettingsPopover from "./SettingsPopover";
+import UserAvatar from "../avatar/UserAvatar";
 
 type Props = {};
 
@@ -52,7 +48,7 @@ function DesktopNavigation({}: Props) {
           >
             <Suspense fallback={<AvatarSkeleton />}>
               {/* @ts-expect-error Async Server Component */}
-              <Avatar />
+              <UserAvatar />
             </Suspense>
           </Link>
         </li>

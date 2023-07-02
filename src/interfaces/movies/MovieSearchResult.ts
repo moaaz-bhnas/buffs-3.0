@@ -1,7 +1,7 @@
 import { GenreDetails } from "./GenreDetails";
 
 export interface MovieSearchResult {
-  id: string;
+  id: number;
   title: string;
   /**
    * Only the unique part of the poster image path.

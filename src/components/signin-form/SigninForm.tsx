@@ -66,7 +66,7 @@ function SigninForm({}: Props) {
   } else {
     passwordError = {
       type: "validate",
-      message: `Sorry, the password you entered doesn't match the one attached to the email`,
+      message: `Sorry, the password you entered doesn't match the one attached to this email`,
     };
   }
 

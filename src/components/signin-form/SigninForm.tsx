@@ -3,7 +3,7 @@
 import { ServerApiClient } from "@/apis/server-api-client";
 import { SigninRequest } from "@/interfaces/server/SigninRequest";
 import { BaseSyntheticEvent, useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { FieldError, useForm, useWatch } from "react-hook-form";
 import { useAsyncFn } from "react-use";
 import InlineInput from "../inline-input/InlineInput";
 import emailValidationRegex from "@/utils/regex/emailValidationRegex";
@@ -14,6 +14,7 @@ import successMessages from "@/utils/messages/successMessages";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import HttpStatusCode from "@/interfaces/http-status-codes/HttpStatusCode";
 
 type Props = {};
 
@@ -27,6 +28,7 @@ const serverApiClient = new ServerApiClient();
 function SigninForm({}: Props) {
   const router = useRouter();
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isWrongPassword, setIsWrongPassword] = useState(false);
 
   // react-hook-form logic
   const {
@@ -38,9 +40,18 @@ function SigninForm({}: Props) {
   const watcher = useWatch({ control });
 
   const [onSubmitState, onSubmit] = useAsyncFn<TOnSubmit>(async (data) => {
+    setIsWrongPassword(false);
     const result = await serverApiClient.signin(data);
     if (result.isErr()) {
-      throw new Error(result.error.errorMessage);
+      if (
+        result.error.errorStatus &&
+        result.error.errorStatus === HttpStatusCode.UNAUTHORIZED
+      ) {
+        setIsWrongPassword(true);
+        return;
+      } else {
+        throw new Error(result.error.errorMessage);
+      }
     }
     setIsSuccess(true);
     Cookies.set("token", result.value.token, {
@@ -48,6 +59,16 @@ function SigninForm({}: Props) {
     });
     router.push("/");
   });
+
+  let passwordError: FieldError | undefined;
+  if (errors.password) {
+    passwordError = errors.password;
+  } else if (isWrongPassword) {
+    passwordError = {
+      type: "validate",
+      message: `Sorry, the password you entered doesn't match the one attached to this email`,
+    };
+  }
 
   return (
     <form
@@ -97,7 +118,7 @@ function SigninForm({}: Props) {
               message: "Password must be at least 6 characters",
             },
           })}
-          error={errors.password}
+          error={passwordError}
         />
       </div>
 

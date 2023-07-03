@@ -75,7 +75,7 @@ function SigninForm({}: Props) {
             validate: {
               emailExists: async (fieldValue) => {
                 const result = await serverApiClient.getUserByEmail(fieldValue);
-                if (result.isErr()) {
+                if (result.isErr() || result.value.length === 0) {
                   return "Sorry, email does not exist.";
                 }
                 return true;

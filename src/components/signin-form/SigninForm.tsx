@@ -63,7 +63,7 @@ function SigninForm({}: Props) {
   let passwordError: FieldError | undefined;
   if (errors.password) {
     passwordError = errors.password;
-  } else {
+  } else if (isWrongPassword) {
     passwordError = {
       type: "validate",
       message: `Sorry, the password you entered doesn't match the one attached to this email`,

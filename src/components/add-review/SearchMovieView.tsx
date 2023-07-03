@@ -1,4 +1,4 @@
-import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
+import { MovieSearchResult } from "@/interfaces/tmdb/MovieSearchResult";
 import classNames from "@/helpers/style/classNames";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";

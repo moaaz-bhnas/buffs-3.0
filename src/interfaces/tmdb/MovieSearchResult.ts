@@ -3,6 +3,8 @@ import { GenreDetails } from "./GenreDetails";
 export interface MovieSearchResult {
   id: number;
   title: string;
+  overview: string;
+  vote_average: number;
   /**
    * Only the unique part of the poster image path.
    * e.g. "/wuMc08IPKEatf9rnMNXvIDxqP4W.jpg"

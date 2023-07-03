@@ -8,6 +8,9 @@ import { Result, err, ok } from "neverthrow";
 import { SigninRequest } from "@/interfaces/server/SigninRequest";
 import { GetUserByTokenResponse } from "@/interfaces/server/GetUserByTokenResponse";
 import { cache } from "react";
+import { RegisteringReview } from "@/interfaces/database/RegisteringReview";
+import { Review } from "@/interfaces/database/Review";
+import { CreateReviewResponse } from "@/interfaces/server/CreateReviewResponse";
 
 export class ServerApiClient {
   private readonly apiBaseUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api`;
@@ -85,6 +88,22 @@ export class ServerApiClient {
     const result = await this.serverApiClient.get<GetUsersResponse>(
       `${this.apiBaseUrl}/v${this.apiVersion}/users?username=${username}`
     );
+
+    if (result.isErr()) {
+      console.error(result.error.errorMessage, { error: result.error });
+      return err(result.error);
+    }
+
+    return ok(result.value.data);
+  }
+
+  async createReview(
+    review: RegisteringReview
+  ): Promise<Result<Review, ApiError>> {
+    const result = await this.serverApiClient.post<
+      RegisteringReview,
+      CreateReviewResponse
+    >(`${this.apiBaseUrl}/v${this.apiVersion}/reviews`, review);
 
     if (result.isErr()) {
       console.error(result.error.errorMessage, { error: result.error });

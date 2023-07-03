@@ -1,28 +1,36 @@
 "use client";
 
 import {
+  FormEvent,
   ForwardedRef,
   forwardRef,
   useEffect,
   useState,
   useTransition,
 } from "react";
-import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
+import { MovieSearchResult } from "@/interfaces/tmdb/MovieSearchResult";
 import { MovieApiClient } from "@/apis/movie-api-client";
 import classNames from "@/helpers/style/classNames";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { ImageSize } from "@/interfaces/movies/ImageSize";
+import { ImageSize } from "@/interfaces/tmdb/ImageSize";
 import { useUpdateEffect } from "usehooks-ts";
 import { motion } from "framer-motion";
 import SelectedMovieView from "./SelectedMovieView";
 import useMeasure from "react-use-measure";
 import SearchMovieView from "./SearchMovieView";
+import { useAsyncFn } from "react-use";
+import { RegisteringReview } from "@/interfaces/database/RegisteringReview";
+import mapTmdbMovieToDBMovie from "@/helpers/reviews/mapTmdbMovieToDBMovie";
+import { ServerApiClient } from "@/apis/server-api-client";
 
 type Props = {
   closeModal?: () => void;
 };
 
 const movieApiClient = new MovieApiClient();
+const serverApiClient = new ServerApiClient();
+
+type TOnSubmit = (event: FormEvent<HTMLFormElement>) => Promise<void>;
 
 function AddReviewForm(
   { closeModal = () => {} }: Props,
@@ -30,7 +38,7 @@ function AddReviewForm(
 ) {
   // review data
   const [rating, setRating] = useState(0);
-  const [review, setReview] = useState("");
+  const [reviewText, setReviewText] = useState("");
 
   // Search logic
   const [_, startTransition] = useTransition();
@@ -82,6 +90,28 @@ function AddReviewForm(
   // height transition
   const [formRef, formBounds] = useMeasure({ offsetSize: true });
 
+  // submit
+  const [handleSubmitState, handleSubmit] = useAsyncFn<TOnSubmit>(
+    async (event) => {
+      // 1. prevent default behaviour on submit
+      event.preventDefault();
+
+      // 2. collect review data
+      if (!selectedSearchResult) {
+        return;
+      }
+      const review: RegisteringReview = {
+        movieDetails: mapTmdbMovieToDBMovie(selectedSearchResult),
+        rating,
+        review: reviewText,
+      };
+
+      // 3. Push
+      const result = serverApiClient.createReview(review); // pass token too
+    },
+    [rating, reviewText, selectedSearchResult]
+  );
+
   return (
     <motion.div
       animate={{
@@ -96,6 +126,7 @@ function AddReviewForm(
           "space-y-4",
           selectedSearchResult ? "w-[50rem]" : "w-[30rem]"
         )}
+        onSubmit={handleSubmit}
       >
         <header className="flex items-center justify-between">
           <h2 className="font-semibold">Write a review</h2>
@@ -126,8 +157,8 @@ function AddReviewForm(
               movie={selectedSearchResult}
               rating={rating}
               setRating={setRating}
-              review={review}
-              setReview={setReview}
+              reviewText={reviewText}
+              setReviewText={setReviewText}
               setSelectedSearchResult={setSelectedSearchResult}
             />
           </motion.div>

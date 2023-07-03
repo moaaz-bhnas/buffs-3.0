@@ -1,11 +1,11 @@
 import { ApiError } from "@/interfaces/api-client/Error";
 import { IApiClient } from "@/interfaces/api-client/IApiClient";
-import { GenreDetails } from "@/interfaces/movies/GenreDetails";
-import { IMovieApiClient } from "@/interfaces/movies/IMovieApiClient";
-import { ImageSize } from "@/interfaces/movies/ImageSize";
-import { MovieSearchResponse } from "@/interfaces/movies/MovieSearchResponse";
-import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
-import { MoviesApiConfiguration } from "@/interfaces/movies/MoviesApiConfiguration";
+import { GenreDetails } from "@/interfaces/tmdb/GenreDetails";
+import { IMovieApiClient } from "@/interfaces/tmdb/IMovieApiClient";
+import { ImageSize } from "@/interfaces/tmdb/ImageSize";
+import { MovieSearchResponse } from "@/interfaces/tmdb/MovieSearchResponse";
+import { MovieSearchResult } from "@/interfaces/tmdb/MovieSearchResult";
+import { MoviesApiConfiguration } from "@/interfaces/tmdb/MoviesApiConfiguration";
 import ApiClient from "@/helpers/api-client/apiClient";
 import { Result, err, ok } from "neverthrow";
 import { cache } from "react";

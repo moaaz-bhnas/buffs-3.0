@@ -1,4 +1,4 @@
-import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
+import { MovieSearchResult } from "@/interfaces/tmdb/MovieSearchResult";
 import { DateTime } from "luxon";
 import Image from "next/image";
 

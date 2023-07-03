@@ -1,37 +1,28 @@
-export interface Review {
-  _id: string;
-  rating: number;
-  review: string;
-  userMetadata: {
-    _id: string;
-    username: string;
-    fullName: string;
-    avatar: string;
-  };
-  movieMetadata: {
-    tmdbId: string;
-    title: string;
-    releaseDate: Date;
-    image: string;
-    genres: string[];
-  };
-  createdAt: Date;
-}
+import { DBMovie } from "./DBMovie";
 
-export interface RegisteringReview {
-  rating: number;
-  review: string;
-  userMetadata: {
-    _id: string;
-    username: string;
-    fullName: string;
+export interface Review {
+  username: string;
+  userDetails: {
+    displayName: string;
     avatar: string;
   };
-  movieMetadata: {
-    tmdbId: string;
-    title: string;
-    releaseDate: Date;
-    image: string;
-    genres: string[];
-  };
+  movieDetails: DBMovie;
+  rating: number;
+  review: string;
+  /**
+   * Array of usernames who liked the review
+   */
+  likers: string[];
+  /**
+   * Array of usernames who saved the review
+   */
+  savers: string[];
+  /**
+   * Array of usernames who shared the review
+   */
+  sharers: string[];
+  /**
+   * TODO: needs to be updated with the comment schema
+   */
+  comments: any[];
 }

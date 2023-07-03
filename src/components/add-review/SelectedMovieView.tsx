@@ -1,6 +1,6 @@
 "use client";
 
-import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
+import { MovieSearchResult } from "@/interfaces/tmdb/MovieSearchResult";
 import { DateTime } from "luxon";
 import Image from "next/image";
 import RatingStars from "../rating-stars/RatingStars";
@@ -13,8 +13,8 @@ type Props = {
   movie: MovieSearchResult;
   rating: number;
   setRating: Dispatch<SetStateAction<number>>;
-  review: string;
-  setReview: Dispatch<SetStateAction<string>>;
+  reviewText: string;
+  setReviewText: Dispatch<SetStateAction<string>>;
   setSelectedSearchResult: Dispatch<SetStateAction<MovieSearchResult | null>>;
 };
 
@@ -22,8 +22,8 @@ function SelectedMovieView({
   movie,
   rating,
   setRating,
-  review,
-  setReview,
+  reviewText,
+  setReviewText,
   setSelectedSearchResult,
 }: Props) {
   return (
@@ -67,8 +67,8 @@ function SelectedMovieView({
           </div>
           <div className="container">
             <MDEditor
-              value={review}
-              onChange={(review) => setReview(review || "")}
+              value={reviewText}
+              onChange={(review) => setReviewText(review || "")}
               previewOptions={{
                 rehypePlugins: [[rehypeSanitize]],
               }}

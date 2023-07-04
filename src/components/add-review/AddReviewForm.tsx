@@ -22,6 +22,9 @@ import { useAsyncFn } from "react-use";
 import { RegisteringReview } from "@/interfaces/database/RegisteringReview";
 import mapTmdbMovieToDBMovie from "@/helpers/reviews/mapTmdbMovieToDBMovie";
 import { ServerApiClient } from "@/apis/server-api-client";
+import ThemeButton from "../theme-button/ThemeButton";
+import errorMessages from "@/utils/messages/errorMessages";
+import successMessages from "@/utils/messages/successMessages";
 
 type Props = {
   closeModal?: () => void;
@@ -46,7 +49,7 @@ function AddReviewForm(
   const [selectedSearchResult, setSelectedSearchResult] =
     useState<MovieSearchResult | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingResults, setIsLoadingResults] = useState(false);
 
   const handleSelectMovie = (movie: MovieSearchResult) => {
     setSelectedSearchResult(movie);
@@ -57,7 +60,7 @@ function AddReviewForm(
   const searchAndSetResults = async (searchQuery: string): Promise<void> => {
     if (searchQuery === "") return;
 
-    setIsLoading(true);
+    setIsLoadingResults(true);
     const searchResult = await movieApiClient.searchMovies(searchQuery, {
       withImages: true,
       imageSize: ImageSize.lg,
@@ -65,10 +68,10 @@ function AddReviewForm(
     if (searchResult.isOk()) {
       startTransition(() => {
         setSearchResults(searchResult.value);
-        setIsLoading(false);
+        setIsLoadingResults(false);
       });
     } else {
-      setIsLoading(false);
+      setIsLoadingResults(false);
     }
   };
 
@@ -78,19 +81,20 @@ function AddReviewForm(
 
   useUpdateEffect(
     function clearResultsAfterLastAsyncFinishes() {
-      if (!isLoading && searchQuery === "") {
+      if (!isLoadingResults && searchQuery === "") {
         startTransition(() => {
           setSearchResults([]);
         });
       }
     },
-    [isLoading, searchQuery]
+    [isLoadingResults, searchQuery]
   );
 
   // height transition
   const [formRef, formBounds] = useMeasure({ offsetSize: true });
 
   // submit
+  const [isSuccess, setIsSuccess] = useState(false);
   const [handleSubmitState, handleSubmit] = useAsyncFn<TOnSubmit>(
     async (event) => {
       // 1. prevent default behaviour on submit
@@ -106,8 +110,14 @@ function AddReviewForm(
         review: reviewText,
       };
 
-      // 3. Push
-      const result = serverApiClient.createReview(review); // pass token too
+      // 2. Push
+      const result = await serverApiClient.createReview(review);
+
+      if (result.isErr()) {
+        throw new Error(result.error.errorMessage);
+      }
+
+      setIsSuccess(true);
     },
     [rating, reviewText, selectedSearchResult]
   );
@@ -152,16 +162,31 @@ function AddReviewForm(
 
         {/* 2. Selected view */}
         {selectedSearchResult && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <SelectedMovieView
-              movie={selectedSearchResult}
-              rating={rating}
-              setRating={setRating}
-              reviewText={reviewText}
-              setReviewText={setReviewText}
-              setSelectedSearchResult={setSelectedSearchResult}
-            />
-          </motion.div>
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              <SelectedMovieView
+                movie={selectedSearchResult}
+                rating={rating}
+                setRating={setRating}
+                reviewText={reviewText}
+                setReviewText={setReviewText}
+                setSelectedSearchResult={setSelectedSearchResult}
+              />
+            </motion.div>
+
+            <ThemeButton
+              type="submit"
+              className="w-full"
+              loading={handleSubmitState.loading}
+              errorMessage={
+                handleSubmitState.error && errorMessages.somthingWentWrong
+              }
+              successMessage={isSuccess ? successMessages.review : undefined}
+              disabled={rating === 0}
+            >
+              Post
+            </ThemeButton>
+          </>
         )}
       </form>
     </motion.div>

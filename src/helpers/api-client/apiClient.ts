@@ -1,13 +1,12 @@
 import { ApiConfiguration } from "@/interfaces/api-client/ApiConfiguration";
 import { ApiError } from "@/interfaces/api-client/Error";
-import { IApiClient } from "@/interfaces/api-client/IApiClient";
 import { RequestConfig } from "@/interfaces/api-client/RequestConfig";
 import handleApiError from "@/helpers/api-client/handleApiError";
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import axiosRetry, { IAxiosRetryConfig } from "axios-retry";
 import { Result, ok } from "neverthrow";
 
-export default class ApiClient implements IApiClient {
+export default class ApiClient {
   private client: AxiosInstance;
 
   constructor(apiConfiguration: ApiConfiguration) {
@@ -64,8 +63,9 @@ export default class ApiClient implements IApiClient {
   async post<TRequest, TResponse>(
     path: string,
     payload: TRequest,
-    config: RequestConfig = { headers: {} }
+    config: AxiosRequestConfig<any> = { headers: {} }
   ): Promise<Result<TResponse, ApiError>> {
+    console.log("🐱‍💻", { config });
     try {
       const response = await this.client.post<TResponse>(path, payload, config);
       return ok(response.data);

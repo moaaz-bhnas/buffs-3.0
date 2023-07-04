@@ -1,5 +1,4 @@
 import { ApiError } from "@/interfaces/api-client/Error";
-import { IApiClient } from "@/interfaces/api-client/IApiClient";
 import { GenreDetails } from "@/interfaces/tmdb/GenreDetails";
 import { IMovieApiClient } from "@/interfaces/tmdb/IMovieApiClient";
 import { ImageSize } from "@/interfaces/tmdb/ImageSize";
@@ -15,7 +14,7 @@ export class MovieApiClient implements IMovieApiClient {
   private apiBaseUrl = "https://api.themoviedb.org";
   private apiVersion = 3;
   private apiResultsLanguage = "en-US";
-  private movieApiClient: IApiClient = new ApiClient({});
+  private movieApiClient = new ApiClient({});
   private moviesApiConfiguration: MoviesApiConfiguration | null = null;
   private allGenresDetails: GenreDetails[] | null = null;
 

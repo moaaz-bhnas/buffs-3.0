@@ -1,8 +1,10 @@
 "use client";
 
 import {
+  Dispatch,
   FormEvent,
   ForwardedRef,
+  SetStateAction,
   forwardRef,
   useEffect,
   useState,
@@ -24,9 +26,9 @@ import mapTmdbMovieToDBMovie from "@/helpers/reviews/mapTmdbMovieToDBMovie";
 import { ServerApiClient } from "@/apis/server-api-client";
 import ThemeButton from "../theme-button/ThemeButton";
 import errorMessages from "@/utils/messages/errorMessages";
-import successMessages from "@/utils/messages/successMessages";
 
 type Props = {
+  setIsSuccess: Dispatch<SetStateAction<boolean>>;
   closeModal?: () => void;
 };
 
@@ -36,7 +38,7 @@ const serverApiClient = new ServerApiClient();
 type TOnSubmit = (event: FormEvent<HTMLFormElement>) => Promise<void>;
 
 function AddReviewForm(
-  { closeModal = () => {} }: Props,
+  { setIsSuccess, closeModal = () => {} }: Props,
   searchInputRef: ForwardedRef<HTMLInputElement>
 ) {
   // review data
@@ -95,7 +97,6 @@ function AddReviewForm(
   const [formRef, formBounds] = useMeasure({ offsetSize: true });
 
   // submit
-  const [isSuccess, setIsSuccess] = useState(false);
   const [handleSubmitState, handleSubmit] = useAsyncFn<TOnSubmit>(
     async (event) => {
       // 1. prevent default behaviour on submit
@@ -119,6 +120,7 @@ function AddReviewForm(
       }
 
       setIsSuccess(true);
+      closeModal();
     },
     [rating, reviewText, selectedMovie]
   );
@@ -182,7 +184,7 @@ function AddReviewForm(
               errorMessage={
                 handleSubmitState.error && errorMessages.somthingWentWrong
               }
-              successMessage={isSuccess ? successMessages.review : undefined}
+              // successMessage={isSuccess ? successMessages.review : undefined}
               disabled={rating === 0}
             >
               Post

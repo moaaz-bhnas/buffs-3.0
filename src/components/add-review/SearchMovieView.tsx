@@ -1,4 +1,4 @@
-import { MovieSearchResult } from "@/interfaces/tmdb/MovieSearchResult";
+import { TmdbDemoMovie } from "@/interfaces/tmdb/TmdbDemoMovie";
 import classNames from "@/helpers/style/classNames";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
@@ -14,8 +14,8 @@ import MovieResultItem from "./MovieResultItem";
 type Props = {
   searchQuery: string;
   setSearchQuery: Dispatch<SetStateAction<string>>;
-  searchResults: MovieSearchResult[];
-  onSelectMovie: (movie: MovieSearchResult) => void;
+  searchResults: TmdbDemoMovie[];
+  onSelectMovie: (movie: TmdbDemoMovie) => void;
 };
 
 function SearchMovieView(

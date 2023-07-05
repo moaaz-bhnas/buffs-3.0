@@ -8,11 +8,11 @@ import {
   useState,
   useTransition,
 } from "react";
-import { MovieSearchResult } from "@/interfaces/tmdb/MovieSearchResult";
-import { MovieApiClient } from "@/apis/movie-api-client";
+import { TmdbDemoMovie } from "@/interfaces/tmdb/TmdbDemoMovie";
+import { TmdbApiClient } from "@/apis/tmdb-api-client";
 import classNames from "@/helpers/style/classNames";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { ImageSize } from "@/interfaces/tmdb/ImageSize";
+import { TmdbImageSize } from "@/interfaces/tmdb/TmdbImageSize";
 import { useUpdateEffect } from "usehooks-ts";
 import { motion } from "framer-motion";
 import SelectedMovieView from "./SelectedMovieView";
@@ -30,7 +30,7 @@ type Props = {
   closeModal?: () => void;
 };
 
-const movieApiClient = new MovieApiClient();
+const tmdbApiClient = new TmdbApiClient();
 const serverApiClient = new ServerApiClient();
 
 type TOnSubmit = (event: FormEvent<HTMLFormElement>) => Promise<void>;
@@ -45,14 +45,15 @@ function AddReviewForm(
 
   // Search logic
   const [_, startTransition] = useTransition();
-  const [searchResults, setSearchResults] = useState<MovieSearchResult[]>([]);
-  const [selectedSearchResult, setSelectedSearchResult] =
-    useState<MovieSearchResult | null>(null);
+  const [searchResults, setSearchResults] = useState<TmdbDemoMovie[]>([]);
+  const [selectedMovie, setSelectedMovie] = useState<TmdbDemoMovie | null>(
+    null
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoadingResults, setIsLoadingResults] = useState(false);
 
-  const handleSelectMovie = (movie: MovieSearchResult) => {
-    setSelectedSearchResult(movie);
+  const handleSelectMovie = (movie: TmdbDemoMovie) => {
+    setSelectedMovie(movie);
     setSearchQuery("");
     setRating(0);
   };
@@ -61,9 +62,9 @@ function AddReviewForm(
     if (searchQuery === "") return;
 
     setIsLoadingResults(true);
-    const searchResult = await movieApiClient.searchMovies(searchQuery, {
+    const searchResult = await tmdbApiClient.searchMovies(searchQuery, {
       withImages: true,
-      imageSize: ImageSize.lg,
+      TmdbImageSize: TmdbImageSize.lg,
     });
     if (searchResult.isOk()) {
       startTransition(() => {
@@ -101,11 +102,11 @@ function AddReviewForm(
       event.preventDefault();
 
       // 2. collect review data
-      if (!selectedSearchResult) {
+      if (!selectedMovie) {
         return;
       }
       const review: RegisteringReview = {
-        movieDetails: mapTmdbMovieToDBMovie(selectedSearchResult),
+        movieDetails: mapTmdbMovieToDBMovie(selectedMovie),
         rating,
         review: reviewText,
       };
@@ -119,7 +120,7 @@ function AddReviewForm(
 
       setIsSuccess(true);
     },
-    [rating, reviewText, selectedSearchResult]
+    [rating, reviewText, selectedMovie]
   );
 
   return (
@@ -134,7 +135,7 @@ function AddReviewForm(
         ref={formRef}
         className={classNames(
           "space-y-4",
-          selectedSearchResult ? "w-[50rem]" : "w-[30rem]"
+          selectedMovie ? "w-[50rem]" : "w-[30rem]"
         )}
         onSubmit={handleSubmit}
       >
@@ -150,7 +151,7 @@ function AddReviewForm(
         </header>
 
         {/* 1. Search view */}
-        {!selectedSearchResult && (
+        {!selectedMovie && (
           <SearchMovieView
             ref={searchInputRef}
             searchQuery={searchQuery}
@@ -161,16 +162,16 @@ function AddReviewForm(
         )}
 
         {/* 2. Selected view */}
-        {selectedSearchResult && (
+        {selectedMovie && (
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <SelectedMovieView
-                movie={selectedSearchResult}
+                movie={selectedMovie}
                 rating={rating}
                 setRating={setRating}
                 reviewText={reviewText}
                 setReviewText={setReviewText}
-                setSelectedSearchResult={setSelectedSearchResult}
+                setSelectedMovie={setSelectedMovie}
               />
             </motion.div>
 

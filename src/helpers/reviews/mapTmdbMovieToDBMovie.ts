@@ -1,7 +1,7 @@
 import { DBMovie } from "@/interfaces/database/DBMovie";
-import { MovieSearchResult } from "@/interfaces/tmdb/MovieSearchResult";
+import { TmdbDemoMovie } from "@/interfaces/tmdb/TmdbDemoMovie";
 
-export default function mapTmdbMovieToDBMovie(tmdbMovie: MovieSearchResult) {
+export default function mapTmdbMovieToDBMovie(tmdbMovie: TmdbDemoMovie) {
   const dbMovie: DBMovie = {
     tmdbId: tmdbMovie.id,
     title: tmdbMovie.title,

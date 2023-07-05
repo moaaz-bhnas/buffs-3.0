@@ -14,7 +14,7 @@ export class MovieApiClient implements IMovieApiClient {
   private apiBaseUrl = "https://api.themoviedb.org";
   private apiVersion = 3;
   private apiResultsLanguage = "en-US";
-  private movieApiClient = new ApiClient({});
+  private movieApiClient = new ApiClient();
   private moviesApiConfiguration: MoviesApiConfiguration | null = null;
   private allGenresDetails: GenreDetails[] | null = null;
 

@@ -14,7 +14,7 @@ import { CreateReviewResponse } from "@/interfaces/server/CreateReviewResponse";
 export class ServerApiClient {
   private readonly apiBaseUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api`;
   private readonly apiVersion = 1;
-  private serverApiClient = new ApiClient({});
+  private serverApiClient = new ApiClient({ withCredentials: true });
 
   async signin(
     credenials: SigninRequest
@@ -100,9 +100,7 @@ export class ServerApiClient {
     const result = await this.serverApiClient.post<
       RegisteringReview,
       CreateReviewResponse
-    >(`${this.apiBaseUrl}/v${this.apiVersion}/reviews`, review, {
-      withCredentials: true,
-    });
+    >(`${this.apiBaseUrl}/v${this.apiVersion}/reviews`, review);
 
     if (result.isErr()) {
       console.error(result.error.errorMessage, { error: result.error });

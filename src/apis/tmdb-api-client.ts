@@ -6,7 +6,6 @@ import { TmdbDemoMovie } from "@/interfaces/tmdb/TmdbDemoMovie";
 import { TmdbConfiguration } from "@/interfaces/tmdb/TmdbConfiguration";
 import ApiClient from "@/helpers/api-client/apiClient";
 import { Result, err, ok } from "neverthrow";
-import { cache } from "react";
 
 export class TmdbApiClient {
   private apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
@@ -22,24 +21,24 @@ export class TmdbApiClient {
     this.setAllGenresDetails();
   }
 
-  private getTmdbConfiguration = cache(
-    async (): Promise<Result<TmdbConfiguration, ApiError>> => {
-      if (this.TmdbConfiguration) return ok(this.TmdbConfiguration);
+  private async getTmdbConfiguration(): Promise<
+    Result<TmdbConfiguration, ApiError>
+  > {
+    if (this.TmdbConfiguration) return ok(this.TmdbConfiguration);
 
-      const result = await this.TmdbApiClient.get<TmdbConfiguration>(
-        `${this.apiBaseUrl}/${this.apiVersion}/configuration?api_key=${this.apiKey}`
-      );
+    const result = await this.TmdbApiClient.get<TmdbConfiguration>(
+      `${this.apiBaseUrl}/${this.apiVersion}/configuration?api_key=${this.apiKey}`
+    );
 
-      if (result.isErr()) {
-        console.error(`Failed to get movies API configuration`, {
-          error: result.error,
-        });
-        return err(result.error);
-      }
-
-      return ok(result.value);
+    if (result.isErr()) {
+      console.error(`Failed to get movies API configuration`, {
+        error: result.error,
+      });
+      return err(result.error);
     }
-  );
+
+    return ok(result.value);
+  }
 
   private async setTmdbConfiguration(): Promise<void> {
     const configuration = await this.getTmdbConfiguration();
@@ -49,26 +48,26 @@ export class TmdbApiClient {
     }
   }
 
-  private getAllGenresDetails = cache(
-    async (): Promise<Result<TmdbGenreDetails[], ApiError>> => {
-      if (this.allGenresDetails) return ok(this.allGenresDetails);
+  private async getAllGenresDetails(): Promise<
+    Result<TmdbGenreDetails[], ApiError>
+  > {
+    if (this.allGenresDetails) return ok(this.allGenresDetails);
 
-      const result = await this.TmdbApiClient.get<{
-        genres: TmdbGenreDetails[];
-      }>(
-        `${this.apiBaseUrl}/${this.apiVersion}/genre/movie/list?api_key=${this.apiKey}`
-      );
+    const result = await this.TmdbApiClient.get<{
+      genres: TmdbGenreDetails[];
+    }>(
+      `${this.apiBaseUrl}/${this.apiVersion}/genre/movie/list?api_key=${this.apiKey}`
+    );
 
-      if (result.isErr()) {
-        console.error(`Failed to get genres list`, {
-          error: result.error,
-        });
-        return err(result.error);
-      }
-
-      return ok(result.value.genres);
+    if (result.isErr()) {
+      console.error(`Failed to get genres list`, {
+        error: result.error,
+      });
+      return err(result.error);
     }
-  );
+
+    return ok(result.value.genres);
+  }
 
   private async setAllGenresDetails(): Promise<void> {
     const result = await this.getAllGenresDetails();

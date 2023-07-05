@@ -14,7 +14,7 @@ import classNames from "@/helpers/style/classNames";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { TmdbImageSize } from "@/interfaces/tmdb/TmdbImageSize";
 import { useUpdateEffect } from "usehooks-ts";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import SelectedMovieView from "./SelectedMovieView";
 import useMeasure from "react-use-measure";
 import SearchMovieView from "./SearchMovieView";
@@ -25,6 +25,7 @@ import { ServerApiClient } from "@/apis/server-api-client";
 import ThemeButton from "../theme-button/ThemeButton";
 import errorMessages from "@/utils/messages/errorMessages";
 import successMessages from "@/utils/messages/successMessages";
+import SuccessMessage from "../alerts/SuccessMessage";
 
 type Props = {
   closeModal?: () => void;
@@ -182,11 +183,19 @@ function AddReviewForm(
               errorMessage={
                 handleSubmitState.error && errorMessages.somthingWentWrong
               }
-              successMessage={isSuccess ? successMessages.review : undefined}
+              // successMessage={isSuccess ? successMessages.review : undefined}
               disabled={rating === 0}
             >
               Post
             </ThemeButton>
+
+            <AnimatePresence>
+              {isSuccess && (
+                <div className="fixed top-4">
+                  <SuccessMessage message={successMessages.review} />
+                </div>
+              )}
+            </AnimatePresence>
           </>
         )}
       </form>

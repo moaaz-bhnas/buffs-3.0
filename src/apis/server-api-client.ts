@@ -6,7 +6,6 @@ import ApiClient from "@/helpers/api-client/apiClient";
 import { Result, err, ok } from "neverthrow";
 import { SigninRequest } from "@/interfaces/server/SigninRequest";
 import { GetUserByTokenResponse } from "@/interfaces/server/GetUserByTokenResponse";
-import { cache } from "react";
 import { RegisteringReview } from "@/interfaces/database/RegisteringReview";
 import { Review } from "@/interfaces/database/Review";
 import { CreateReviewResponse } from "@/interfaces/server/CreateReviewResponse";
@@ -14,7 +13,7 @@ import { CreateReviewResponse } from "@/interfaces/server/CreateReviewResponse";
 export class ServerApiClient {
   private readonly apiBaseUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api`;
   private readonly apiVersion = 1;
-  private serverApiClient = new ApiClient({ withCredentials: true });
+  private readonly serverApiClient = new ApiClient({ withCredentials: true });
 
   async signin(
     credenials: SigninRequest

@@ -8,11 +8,11 @@ import ApiClient from "@/helpers/api-client/apiClient";
 import { Result, err, ok } from "neverthrow";
 
 export class TmdbApiClient {
-  private apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-  private apiBaseUrl = "https://api.themoviedb.org";
-  private apiVersion = 3;
-  private apiResultsLanguage = "en-US";
-  private TmdbApiClient = new ApiClient();
+  private readonly apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+  private readonly apiBaseUrl = "https://api.themoviedb.org";
+  private readonly apiVersion = 3;
+  private readonly apiResultsLanguage = "en-US";
+  private readonly TmdbApiClient = new ApiClient();
   private TmdbConfiguration: TmdbConfiguration | null = null;
   private allGenresDetails: TmdbGenreDetails[] | null = null;
 

@@ -1,10 +1,10 @@
-import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
+import { TmdbDemoMovie } from "@/interfaces/tmdb/TmdbDemoMovie";
 import { DateTime } from "luxon";
 import Image from "next/image";
 
 type Props = {
-  movie: MovieSearchResult;
-  onClick: (movie: MovieSearchResult) => void;
+  movie: TmdbDemoMovie;
+  onClick: (movie: TmdbDemoMovie) => void;
 };
 
 function MovieResultItem({ movie, onClick }: Props) {

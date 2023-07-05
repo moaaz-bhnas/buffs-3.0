@@ -1,6 +1,6 @@
 "use client";
 
-import { MovieSearchResult } from "@/interfaces/movies/MovieSearchResult";
+import { TmdbDemoMovie } from "@/interfaces/tmdb/TmdbDemoMovie";
 import { DateTime } from "luxon";
 import Image from "next/image";
 import RatingStars from "../rating-stars/RatingStars";
@@ -10,21 +10,21 @@ import rehypeSanitize from "rehype-sanitize";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 type Props = {
-  movie: MovieSearchResult;
+  movie: TmdbDemoMovie;
   rating: number;
   setRating: Dispatch<SetStateAction<number>>;
-  review: string;
-  setReview: Dispatch<SetStateAction<string>>;
-  setSelectedSearchResult: Dispatch<SetStateAction<MovieSearchResult | null>>;
+  reviewText: string;
+  setReviewText: Dispatch<SetStateAction<string>>;
+  setSelectedMovie: Dispatch<SetStateAction<TmdbDemoMovie | null>>;
 };
 
 function SelectedMovieView({
   movie,
   rating,
   setRating,
-  review,
-  setReview,
-  setSelectedSearchResult,
+  reviewText,
+  setReviewText,
+  setSelectedMovie,
 }: Props) {
   return (
     <div className="space-y-2">
@@ -32,7 +32,7 @@ function SelectedMovieView({
       <button
         className="flex items-center gap-x-2 underline"
         type="button"
-        onClick={() => setSelectedSearchResult(null)}
+        onClick={() => setSelectedMovie(null)}
       >
         <ArrowLeftIcon className="w-4" />
         Review another movie
@@ -67,8 +67,8 @@ function SelectedMovieView({
           </div>
           <div className="container">
             <MDEditor
-              value={review}
-              onChange={(review) => setReview(review || "")}
+              value={reviewText}
+              onChange={(review) => setReviewText(review || "")}
               previewOptions={{
                 rehypePlugins: [[rehypeSanitize]],
               }}

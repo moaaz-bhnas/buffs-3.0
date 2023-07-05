@@ -1,5 +1,4 @@
 import { ApiError } from "@/interfaces/api-client/Error";
-import { IApiClient } from "@/interfaces/api-client/IApiClient";
 import { DBUser, RegisteringDBUser } from "@/interfaces/database/User";
 import { AuthResponse } from "@/interfaces/server/AuthResponse";
 import { GetUsersResponse } from "@/interfaces/server/GetUsersResponse";
@@ -8,11 +7,14 @@ import { Result, err, ok } from "neverthrow";
 import { SigninRequest } from "@/interfaces/server/SigninRequest";
 import { GetUserByTokenResponse } from "@/interfaces/server/GetUserByTokenResponse";
 import { cache } from "react";
+import { RegisteringReview } from "@/interfaces/database/RegisteringReview";
+import { Review } from "@/interfaces/database/Review";
+import { CreateReviewResponse } from "@/interfaces/server/CreateReviewResponse";
 
 export class ServerApiClient {
   private readonly apiBaseUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api`;
   private readonly apiVersion = 1;
-  private serverApiClient: IApiClient = new ApiClient({});
+  private serverApiClient = new ApiClient({ withCredentials: true });
 
   async signin(
     credenials: SigninRequest
@@ -46,25 +48,23 @@ export class ServerApiClient {
     return ok(result.value);
   }
 
-  getUserByToken = cache(
-    async (token: string): Promise<Result<DBUser, ApiError>> => {
-      const result = await this.serverApiClient.get<GetUserByTokenResponse>(
-        `${this.apiBaseUrl}/v${this.apiVersion}/auth/me`,
-        {
-          headers: {
-            Cookie: `token=${token}`,
-          },
-        }
-      );
-
-      if (result.isErr()) {
-        console.error(result.error.errorMessage, { error: result.error });
-        return err(result.error);
+  async getUserByToken(token: string): Promise<Result<DBUser, ApiError>> {
+    const result = await this.serverApiClient.get<GetUserByTokenResponse>(
+      `${this.apiBaseUrl}/v${this.apiVersion}/auth/me`,
+      {
+        headers: {
+          Cookie: `token=${token}`,
+        },
       }
+    );
 
-      return ok(result.value.data);
+    if (result.isErr()) {
+      console.error(result.error.errorMessage, { error: result.error });
+      return err(result.error);
     }
-  );
+
+    return ok(result.value.data);
+  }
 
   async getUserByEmail(email: string): Promise<Result<DBUser[], ApiError>> {
     const result = await this.serverApiClient.get<GetUsersResponse>(
@@ -85,6 +85,22 @@ export class ServerApiClient {
     const result = await this.serverApiClient.get<GetUsersResponse>(
       `${this.apiBaseUrl}/v${this.apiVersion}/users?username=${username}`
     );
+
+    if (result.isErr()) {
+      console.error(result.error.errorMessage, { error: result.error });
+      return err(result.error);
+    }
+
+    return ok(result.value.data);
+  }
+
+  async createReview(
+    review: RegisteringReview
+  ): Promise<Result<Review, ApiError>> {
+    const result = await this.serverApiClient.post<
+      RegisteringReview,
+      CreateReviewResponse
+    >(`${this.apiBaseUrl}/v${this.apiVersion}/reviews`, review);
 
     if (result.isErr()) {
       console.error(result.error.errorMessage, { error: result.error });

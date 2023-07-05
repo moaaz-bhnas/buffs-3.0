@@ -10,7 +10,7 @@ type Props = {};
 const searchResults = ["Gone Girl", "The Perks of Being a Walflower"];
 
 function SearchForm({}: Props) {
-  const [selectedSearchResult, setSelectedSearchResult] = useState("");
+  const [selectedMovie, setSelectedMovie] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredSearchResults =
@@ -24,8 +24,8 @@ function SearchForm({}: Props) {
     <Combobox
       as="form"
       className="relative"
-      value={selectedSearchResult}
-      onChange={setSelectedSearchResult}
+      value={selectedMovie}
+      onChange={setSelectedMovie}
       nullable
     >
       {({ open }) => (

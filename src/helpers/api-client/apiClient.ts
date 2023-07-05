@@ -1,29 +1,24 @@
-import { ApiConfiguration } from "@/interfaces/api-client/ApiConfiguration";
 import { ApiError } from "@/interfaces/api-client/Error";
-import { IApiClient } from "@/interfaces/api-client/IApiClient";
-import { RequestConfig } from "@/interfaces/api-client/RequestConfig";
 import handleApiError from "@/helpers/api-client/handleApiError";
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import axiosRetry, { IAxiosRetryConfig } from "axios-retry";
 import { Result, ok } from "neverthrow";
 
-export default class ApiClient implements IApiClient {
+export default class ApiClient {
   private client: AxiosInstance;
 
-  constructor(apiConfiguration: ApiConfiguration) {
-    this.client = this.createAxiosClient(apiConfiguration);
+  constructor(requestConfig: AxiosRequestConfig = {}) {
+    this.client = this.createAxiosClient(requestConfig);
   }
 
-  private createAxiosClient(apiConfiguration: ApiConfiguration): AxiosInstance {
+  private createAxiosClient(requestConfig: AxiosRequestConfig): AxiosInstance {
     const axiosClient = axios.create({
       responseType: "json",
       headers: {
         "Content-Type": "application/json",
-        ...(apiConfiguration.accessToken && {
-          Authorization: `Token ${apiConfiguration.accessToken}`,
-        }),
       },
       timeout: 10 * 1000,
+      ...requestConfig,
     });
 
     this.setRetryConfiguration(axiosClient);
@@ -51,7 +46,7 @@ export default class ApiClient implements IApiClient {
 
   async get<TResponse>(
     path: string,
-    config: RequestConfig = { headers: {} }
+    config: AxiosRequestConfig<any> = { headers: {} }
   ): Promise<Result<TResponse, ApiError>> {
     try {
       const response = await this.client.get<TResponse>(path, config);
@@ -64,7 +59,7 @@ export default class ApiClient implements IApiClient {
   async post<TRequest, TResponse>(
     path: string,
     payload: TRequest,
-    config: RequestConfig = { headers: {} }
+    config: AxiosRequestConfig<any> = { headers: {} }
   ): Promise<Result<TResponse, ApiError>> {
     try {
       const response = await this.client.post<TResponse>(path, payload, config);

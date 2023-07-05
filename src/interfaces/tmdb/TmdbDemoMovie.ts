@@ -1,8 +1,10 @@
-import { GenreDetails } from "./GenreDetails";
+import { TmdbGenreDetails } from "./TmdbGenreDetails";
 
-export interface MovieSearchResult {
+export interface TmdbDemoMovie {
   id: number;
   title: string;
+  overview: string;
+  vote_average: number;
   /**
    * Only the unique part of the poster image path.
    * e.g. "/wuMc08IPKEatf9rnMNXvIDxqP4W.jpg"
@@ -32,6 +34,6 @@ export interface MovieSearchResult {
    * and search for genre_ids for this movie
    * to generate "genres" which contains id, string of genre (list)
    */
-  genres?: GenreDetails[];
+  genres?: TmdbGenreDetails[];
   // other data we don't care about
 }

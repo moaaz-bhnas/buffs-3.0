@@ -4,12 +4,16 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useRef, useState } from "react";
 import AddReviewForm from "./AddReviewForm";
 import getFirstWord from "@/helpers/string/getFirstWord";
+import SuccessMessage from "../alerts/SuccessMessage";
+import successMessages from "@/utils/messages/successMessages";
+import Notification from "../notification/Notification";
 
 type Props = { userDisplayName: string };
 
 function AddReviewModal({ userDisplayName }: Props) {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   function closeModal() {
     setIsOpen(false);
@@ -60,13 +64,21 @@ function AddReviewModal({ userDisplayName }: Props) {
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="w-auto transform rounded-md bg-white p-4 pt-2 text-left align-middle shadow-xl transition-all">
-                  <AddReviewForm closeModal={closeModal} ref={searchInputRef} />
+                  <AddReviewForm
+                    closeModal={closeModal}
+                    ref={searchInputRef}
+                    setIsSuccess={setIsSuccess}
+                  />
                 </Dialog.Panel>
               </Transition.Child>
             </div>
           </div>
         </Dialog>
       </Transition>
+
+      <Notification visible={isSuccess} setIsVisible={setIsSuccess}>
+        <SuccessMessage message={successMessages.review} />
+      </Notification>
     </>
   );
 }

@@ -1,8 +1,10 @@
 "use client";
 
 import {
+  Dispatch,
   FormEvent,
   ForwardedRef,
+  SetStateAction,
   forwardRef,
   useEffect,
   useState,
@@ -14,7 +16,7 @@ import classNames from "@/helpers/style/classNames";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { TmdbImageSize } from "@/interfaces/tmdb/TmdbImageSize";
 import { useUpdateEffect } from "usehooks-ts";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import SelectedMovieView from "./SelectedMovieView";
 import useMeasure from "react-use-measure";
 import SearchMovieView from "./SearchMovieView";
@@ -24,10 +26,9 @@ import mapTmdbMovieToDBMovie from "@/helpers/reviews/mapTmdbMovieToDBMovie";
 import { ServerApiClient } from "@/apis/server-api-client";
 import ThemeButton from "../theme-button/ThemeButton";
 import errorMessages from "@/utils/messages/errorMessages";
-import successMessages from "@/utils/messages/successMessages";
-import SuccessMessage from "../alerts/SuccessMessage";
 
 type Props = {
+  setIsSuccess: Dispatch<SetStateAction<boolean>>;
   closeModal?: () => void;
 };
 
@@ -37,7 +38,7 @@ const serverApiClient = new ServerApiClient();
 type TOnSubmit = (event: FormEvent<HTMLFormElement>) => Promise<void>;
 
 function AddReviewForm(
-  { closeModal = () => {} }: Props,
+  { setIsSuccess, closeModal = () => {} }: Props,
   searchInputRef: ForwardedRef<HTMLInputElement>
 ) {
   // review data
@@ -96,7 +97,6 @@ function AddReviewForm(
   const [formRef, formBounds] = useMeasure({ offsetSize: true });
 
   // submit
-  const [isSuccess, setIsSuccess] = useState(false);
   const [handleSubmitState, handleSubmit] = useAsyncFn<TOnSubmit>(
     async (event) => {
       // 1. prevent default behaviour on submit
@@ -120,6 +120,7 @@ function AddReviewForm(
       }
 
       setIsSuccess(true);
+      closeModal();
     },
     [rating, reviewText, selectedMovie]
   );
@@ -188,14 +189,6 @@ function AddReviewForm(
             >
               Post
             </ThemeButton>
-
-            <AnimatePresence>
-              {isSuccess && (
-                <div className="fixed top-4">
-                  <SuccessMessage message={successMessages.review} />
-                </div>
-              )}
-            </AnimatePresence>
           </>
         )}
       </form>

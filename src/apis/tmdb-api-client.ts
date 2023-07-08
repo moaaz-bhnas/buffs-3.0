@@ -6,14 +6,18 @@ import { TmdbDemoMovie } from "@/interfaces/tmdb/TmdbDemoMovie";
 import { TmdbConfiguration } from "@/interfaces/tmdb/TmdbConfiguration";
 import ApiClient from "@/helpers/api-client/apiClient";
 import { Result, err, ok } from "neverthrow";
+import {
+  CrewMember,
+  TmdbMovieCredits,
+} from "@/interfaces/tmdb/TmdbMovieCredits";
 
 export class TmdbApiClient {
   private readonly apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
   private readonly apiBaseUrl = "https://api.themoviedb.org";
   private readonly apiVersion = 3;
   private readonly apiResultsLanguage = "en-US";
-  private readonly TmdbApiClient = new ApiClient();
-  private TmdbConfiguration: TmdbConfiguration | null = null;
+  private readonly tmdbApiClient = new ApiClient();
+  private tmdbConfiguration: TmdbConfiguration | null = null;
   private allGenresDetails: TmdbGenreDetails[] | null = null;
 
   constructor() {
@@ -24,9 +28,9 @@ export class TmdbApiClient {
   private async getTmdbConfiguration(): Promise<
     Result<TmdbConfiguration, ApiError>
   > {
-    if (this.TmdbConfiguration) return ok(this.TmdbConfiguration);
+    if (this.tmdbConfiguration) return ok(this.tmdbConfiguration);
 
-    const result = await this.TmdbApiClient.get<TmdbConfiguration>(
+    const result = await this.tmdbApiClient.get<TmdbConfiguration>(
       `${this.apiBaseUrl}/${this.apiVersion}/configuration?api_key=${this.apiKey}`
     );
 
@@ -44,7 +48,7 @@ export class TmdbApiClient {
     const configuration = await this.getTmdbConfiguration();
 
     if (configuration.isOk()) {
-      this.TmdbConfiguration = configuration.value;
+      this.tmdbConfiguration = configuration.value;
     }
   }
 
@@ -53,7 +57,7 @@ export class TmdbApiClient {
   > {
     if (this.allGenresDetails) return ok(this.allGenresDetails);
 
-    const result = await this.TmdbApiClient.get<{
+    const result = await this.tmdbApiClient.get<{
       genres: TmdbGenreDetails[];
     }>(
       `${this.apiBaseUrl}/${this.apiVersion}/genre/movie/list?api_key=${this.apiKey}`
@@ -84,7 +88,7 @@ export class TmdbApiClient {
       TmdbImageSize: TmdbImageSize.sm,
     }
   ): Promise<Result<TmdbDemoMovie[], ApiError>> {
-    const result = await this.TmdbApiClient.get<TmdbSearchResponse>(
+    const result = await this.tmdbApiClient.get<TmdbSearchResponse>(
       `${this.apiBaseUrl}/${this.apiVersion}/search/movie?api_key=${this.apiKey}&query=${query}&language=${this.apiResultsLanguage}&page=1`
     );
 
@@ -214,5 +218,50 @@ export class TmdbApiClient {
     }
 
     return ok(updatedMovies);
+  }
+
+  private async getMovieCredits(
+    movieId: number
+  ): Promise<Result<TmdbMovieCredits, ApiError>> {
+    const result = await this.tmdbApiClient.get<TmdbMovieCredits>(
+      `${this.apiBaseUrl}/${this.apiVersion}/movie/${movieId}/credits?api_key=${this.apiKey}&language=${this.apiResultsLanguage}`
+    );
+
+    if (result.isErr()) {
+      console.error(`Failed to get credits for movie id: ${movieId}`, {
+        error: result.error,
+      });
+      return err(result.error);
+    }
+
+    return ok(result.value);
+  }
+
+  async getMovieDirector(
+    movieId: number
+  ): Promise<Result<CrewMember, ApiError>> {
+    const movieCreditsResult = await this.getMovieCredits(movieId);
+
+    if (movieCreditsResult.isErr()) {
+      console.error(`Failed to get credits for movie id: ${movieId}`, {
+        error: movieCreditsResult.error,
+      });
+      return err(movieCreditsResult.error);
+    }
+
+    const director = movieCreditsResult.value.crew.find(
+      (crewMember) => crewMember.job === "Director"
+    );
+
+    if (!director) {
+      console.error(`Couldn't find director for movie id: ${movieId}`, {
+        movieCrew: movieCreditsResult.value.crew,
+      });
+      return err({
+        errorMessage: `Couldn't find director for movie id: ${movieId}`,
+      });
+    }
+
+    return ok(director);
   }
 }

@@ -101,13 +101,19 @@ function AddReviewForm(
     async (event) => {
       // 1. prevent default behaviour on submit
       event.preventDefault();
-
-      // 2. collect review data
       if (!selectedMovie) {
         return;
       }
+      // 2. collect review data
+      const movieDetailsResult = await mapTmdbMovieToDBMovie(selectedMovie);
+
+      if (movieDetailsResult.isErr()) {
+        console.error(movieDetailsResult.error.errorMessage);
+        throw new Error(movieDetailsResult.error.errorMessage);
+      }
+
       const review: RegisteringReview = {
-        movieDetails: mapTmdbMovieToDBMovie(selectedMovie),
+        movieDetails: movieDetailsResult.value,
         rating,
         review: reviewText,
       };
@@ -116,6 +122,7 @@ function AddReviewForm(
       const result = await serverApiClient.createReview(review);
 
       if (result.isErr()) {
+        console.error(result.error.errorMessage);
         throw new Error(result.error.errorMessage);
       }
 

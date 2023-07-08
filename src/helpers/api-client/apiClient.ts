@@ -31,13 +31,7 @@ export default class ApiClient {
       retries: 3,
       retryDelay: axiosRetry.exponentialDelay,
       retryCondition: (error) => {
-        if (error.response) {
-          if (error.response.status === 500) {
-            return true;
-          }
-        }
-
-        return axiosRetry.isNetworkOrIdempotentRequestError(error);
+        return axiosRetry.isNetworkError(error);
       },
     };
 

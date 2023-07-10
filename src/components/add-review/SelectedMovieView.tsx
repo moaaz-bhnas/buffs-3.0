@@ -8,6 +8,7 @@ import { Dispatch, SetStateAction } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import rehypeSanitize from "rehype-sanitize";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { useMediaQuery } from "usehooks-ts";
 
 type Props = {
   movie: TmdbDemoMovie;
@@ -26,6 +27,8 @@ function SelectedMovieView({
   setReviewText,
   setSelectedMovie,
 }: Props) {
+  const largeScreen = useMediaQuery("(min-width: 1024px)");
+
   return (
     <div className="space-y-2">
       {/* Back to search */}
@@ -69,6 +72,7 @@ function SelectedMovieView({
             <MDEditor
               value={reviewText}
               onChange={(review) => setReviewText(review || "")}
+              preview={largeScreen ? "live" : "edit"}
               previewOptions={{
                 rehypePlugins: [[rehypeSanitize]],
               }}

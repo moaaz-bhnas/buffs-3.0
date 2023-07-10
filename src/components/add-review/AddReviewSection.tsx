@@ -7,7 +7,7 @@ import getServerUser from "@/helpers/auth/getServerUser";
 
 type Props = {};
 
-async function AddReviewContainer({}: Props) {
+async function AddReviewSection({}: Props) {
   const userResult = await getServerUser();
 
   if (userResult.isErr()) {
@@ -32,4 +32,4 @@ async function AddReviewContainer({}: Props) {
   );
 }
 
-export default AddReviewContainer;
+export default AddReviewSection;

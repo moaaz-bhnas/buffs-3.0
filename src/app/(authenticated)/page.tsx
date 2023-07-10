@@ -1,5 +1,5 @@
 import Container from "@/components/container/Container";
-import AddReviewContainer from "@/components/add-review/AddReviewContainer";
+import AddReviewSection from "@/components/add-review/AddReviewSection";
 import taglineMessages from "@/utils/messages/taglineMessages";
 import { Inter } from "next/font/google";
 import { Metadata } from "next/types";
@@ -17,9 +17,9 @@ export default function Home() {
       {/* <Motion /> */}
       <Container>
         <div className="flex">
-          <div className="w-full sm:w-3/5">
+          <div className="hidden sm:block sm:w-3/5">
             {/* @ts-expect-error Async Server Component */}
-            <AddReviewContainer />
+            <AddReviewSection />
           </div>
         </div>
       </Container>

@@ -1,6 +1,6 @@
 "use client";
 
-import signout from "@/helpers/auth/signout";
+import { ServerApiClient } from "@/apis/server-api-client";
 import { Popover, Transition } from "@headlessui/react";
 import {
   ArrowLeftOnRectangleIcon,
@@ -9,6 +9,8 @@ import {
 import { useRouter } from "next/navigation";
 
 type Props = {};
+
+const serverApiClient = new ServerApiClient();
 
 function SettingsPopover({}: Props) {
   const router = useRouter();
@@ -28,7 +30,7 @@ function SettingsPopover({}: Props) {
             <button
               className="menu-item flex w-full items-center"
               type="button"
-              onClick={() => signout(router)}
+              onClick={() => serverApiClient.signout(router)}
             >
               <ArrowLeftOnRectangleIcon className="me-3 w-7 rounded-full bg-gray-200 p-1 text-gray-600" />
               <span className="font-medium">Log out</span>

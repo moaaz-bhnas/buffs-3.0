@@ -9,6 +9,8 @@ import { GetUserByTokenResponse } from "@/interfaces/server/GetUserByTokenRespon
 import { RegisteringReview } from "@/interfaces/database/RegisteringReview";
 import { Review } from "@/interfaces/database/Review";
 import { CreateReviewResponse } from "@/interfaces/server/CreateReviewResponse";
+import { SignoutResponse } from "@/interfaces/server/SignoutResponse";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 
 export class ServerApiClient {
   private readonly apiBaseUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api`;
@@ -44,6 +46,22 @@ export class ServerApiClient {
       return err(result.error);
     }
 
+    return ok(result.value);
+  }
+
+  async signout(
+    router: AppRouterInstance
+  ): Promise<Result<SignoutResponse, ApiError>> {
+    const result = await this.serverApiClient.get<SignoutResponse>(
+      `${this.apiBaseUrl}/v${this.apiVersion}/auth/logout`
+    );
+
+    if (result.isErr()) {
+      console.error(result.error.errorMessage, { error: result.error });
+      return err(result.error);
+    }
+
+    router.push("/signin");
     return ok(result.value);
   }
 

@@ -9,7 +9,7 @@ import { GetUserByTokenResponse } from "@/interfaces/server/GetUserByTokenRespon
 import { RegisteringReview } from "@/interfaces/database/RegisteringReview";
 import { Review } from "@/interfaces/database/Review";
 import { CreateReviewResponse } from "@/interfaces/server/CreateReviewResponse";
-import { SignoutRespons } from "@/interfaces/server/SignoutRespons";
+import { SignoutResponse } from "@/interfaces/server/SignoutResponse";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 
 export class ServerApiClient {
@@ -51,8 +51,8 @@ export class ServerApiClient {
 
   async signout(
     router: AppRouterInstance
-  ): Promise<Result<SignoutRespons, ApiError>> {
-    const result = await this.serverApiClient.get<SignoutRespons>(
+  ): Promise<Result<SignoutResponse, ApiError>> {
+    const result = await this.serverApiClient.get<SignoutResponse>(
       `${this.apiBaseUrl}/v${this.apiVersion}/auth/logout`
     );
 

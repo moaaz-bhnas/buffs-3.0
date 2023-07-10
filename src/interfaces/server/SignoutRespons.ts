@@ -1,4 +1,4 @@
-export interface SignoutRespons {
+export interface SignoutResponse {
   success: boolean;
   data: {};
 }

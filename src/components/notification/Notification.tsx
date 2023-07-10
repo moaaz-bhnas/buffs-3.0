@@ -5,16 +5,22 @@ type Props = {
   visible: boolean;
   setIsVisible: Dispatch<SetStateAction<boolean>>;
   children: ReactNode;
+  timeoutInMs?: number;
 };
 
-function Notification({ visible, setIsVisible, children }: Props) {
+function Notification({
+  visible,
+  setIsVisible,
+  children,
+  timeoutInMs = 5000,
+}: Props) {
   useEffect(
     function hideNotification() {
       let timeoutId: NodeJS.Timeout;
       if (visible) {
         timeoutId = setTimeout(() => {
           setIsVisible(false);
-        }, 5000);
+        }, timeoutInMs);
       }
 
       return () => {

@@ -13,7 +13,7 @@ import {
 import { TmdbDemoMovie } from "@/interfaces/tmdb/TmdbDemoMovie";
 import { TmdbApiClient } from "@/apis/tmdb-api-client";
 import classNames from "@/helpers/style/classNames";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { TmdbImageSize } from "@/interfaces/tmdb/TmdbImageSize";
 import { useUpdateEffect } from "usehooks-ts";
 import { motion } from "framer-motion";
@@ -26,9 +26,16 @@ import mapTmdbMovieToDBMovie from "@/helpers/reviews/mapTmdbMovieToDBMovie";
 import { ServerApiClient } from "@/apis/server-api-client";
 import ThemeButton from "../theme-button/ThemeButton";
 import errorMessages from "@/utils/messages/errorMessages";
+import ProgressSteps from "../progress-steps/ProgressSteps";
+import { useRouter } from "next/navigation";
+
+enum AddReviewStep {
+  selectMovie = "Select Movie",
+  review = "Review",
+}
 
 type Props = {
-  setIsSuccess: Dispatch<SetStateAction<boolean>>;
+  setIsSuccess?: Dispatch<SetStateAction<boolean>>;
   closeModal?: () => void;
 };
 
@@ -37,10 +44,16 @@ const serverApiClient = new ServerApiClient();
 
 type TOnSubmit = (event: FormEvent<HTMLFormElement>) => Promise<void>;
 
-function AddReviewForm(
-  { setIsSuccess, closeModal = () => {} }: Props,
-  searchInputRef: ForwardedRef<HTMLInputElement>
-) {
+function AddReviewForm({
+  // setIsSuccess = () => {},
+  closeModal = () => {},
+}: // searchInputRef: ForwardedRef<HTMLInputElement>
+Props) {
+  const router = useRouter();
+
+  // controls view
+  const [activeStep, setActiveStep] = useState(AddReviewStep.selectMovie);
+
   // review data
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
@@ -56,8 +69,9 @@ function AddReviewForm(
 
   const handleSelectMovie = (movie: TmdbDemoMovie) => {
     setSelectedMovie(movie);
-    setSearchQuery("");
     setRating(0);
+    setReviewText("");
+    setActiveStep(AddReviewStep.review);
   };
 
   const searchAndSetResults = async (searchQuery: string): Promise<void> => {
@@ -93,10 +107,11 @@ function AddReviewForm(
     [isLoadingResults, searchQuery]
   );
 
-  // height transition
-  const [formRef, formBounds] = useMeasure({ offsetSize: true });
+  // // height transition
+  // const [formRef, formBounds] = useMeasure({ offsetSize: true });
 
   // submit
+  const [isSuccess, setIsSuccess] = useState(false);
   const [handleSubmitState, handleSubmit] = useAsyncFn<TOnSubmit>(
     async (event) => {
       // 1. prevent default behaviour on submit
@@ -127,80 +142,103 @@ function AddReviewForm(
       }
 
       setIsSuccess(true);
-      closeModal();
+      router.back();
+      // closeModal();
     },
     [rating, reviewText, selectedMovie]
   );
 
+  // Progress steps
+  const steps = [
+    {
+      name: AddReviewStep.selectMovie,
+      isActive: activeStep === AddReviewStep.selectMovie,
+      disabled: activeStep === AddReviewStep.selectMovie,
+      isFinished: Boolean(selectedMovie),
+      onClick: () => setActiveStep(AddReviewStep.selectMovie),
+    },
+    {
+      name: AddReviewStep.review,
+      isActive: activeStep === AddReviewStep.review,
+      disabled: !selectedMovie,
+      isFinished: isSuccess,
+      onClick: () => setActiveStep(AddReviewStep.review),
+    },
+  ];
+
   return (
-    <motion.div
-      animate={{
-        height: formBounds.height,
-        width: formBounds.width,
-      }}
-      transition={{ duration: 0.4, bounce: 0 }}
+    // <motion.div
+    //   animate={{
+    //     height: formBounds.height,
+    //     width: formBounds.width,
+    //   }}
+    //   transition={{ duration: 0.4, bounce: 0 }}
+    // >
+    <form
+      // ref={formRef}
+      className={classNames(
+        "space-y-4"
+        // selectedMovie ? "w-[50rem]" : "w-[30rem]"
+      )}
+      onSubmit={handleSubmit}
     >
-      <form
-        ref={formRef}
-        className={classNames(
-          "space-y-4",
-          selectedMovie ? "w-[50rem]" : "w-[30rem]"
-        )}
-        onSubmit={handleSubmit}
-      >
-        <header className="flex items-center justify-between">
-          <h2 className="font-semibold">Write a review</h2>
-          <button
-            className="bg-gray-20 flex h-10 w-10 rounded-full transition hover:bg-gray-300 focus:bg-gray-300"
-            type="button"
-            onClick={closeModal}
+      {/* <header className="flex items-center justify-between">
+        <h2 className="font-semibold">Write a review</h2>
+        <button
+          className="bg-gray-20 flex h-10 w-10 rounded-full transition hover:bg-gray-300 focus:bg-gray-300"
+          type="button"
+          onClick={closeModal}
+        >
+          <XMarkIcon className="m-auto w-6" />
+        </button>
+      </header> */}
+
+      {/* Progress steps */}
+      <ProgressSteps steps={steps} />
+
+      {/* 1. Search view */}
+      {activeStep === AddReviewStep.selectMovie && (
+        <SearchMovieView
+          // ref={searchInputRef}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          searchResults={searchResults}
+          onSelectMovie={handleSelectMovie}
+        />
+      )}
+
+      {/* 2. Selected view */}
+      {activeStep === AddReviewStep.review && selectedMovie && (
+        <>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <SelectedMovieView
+              movie={selectedMovie}
+              rating={rating}
+              setRating={setRating}
+              reviewText={reviewText}
+              setReviewText={setReviewText}
+              setSelectedMovie={setSelectedMovie}
+            />
+          </motion.div>
+
+          <ThemeButton
+            type="submit"
+            className="w-full"
+            loading={handleSubmitState.loading}
+            errorMessage={
+              handleSubmitState.error && errorMessages.somthingWentWrong
+            }
+            // successMessage={isSuccess ? successMessages.review : undefined}
+            disabled={rating === 0}
           >
-            <XMarkIcon className="m-auto w-6" />
-          </button>
-        </header>
-
-        {/* 1. Search view */}
-        {!selectedMovie && (
-          <SearchMovieView
-            ref={searchInputRef}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            searchResults={searchResults}
-            onSelectMovie={handleSelectMovie}
-          />
-        )}
-
-        {/* 2. Selected view */}
-        {selectedMovie && (
-          <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <SelectedMovieView
-                movie={selectedMovie}
-                rating={rating}
-                setRating={setRating}
-                reviewText={reviewText}
-                setReviewText={setReviewText}
-                setSelectedMovie={setSelectedMovie}
-              />
-            </motion.div>
-
-            <ThemeButton
-              type="submit"
-              className="w-full"
-              loading={handleSubmitState.loading}
-              errorMessage={
-                handleSubmitState.error && errorMessages.somthingWentWrong
-              }
-              // successMessage={isSuccess ? successMessages.review : undefined}
-              disabled={rating === 0}
-            >
-              Post
-            </ThemeButton>
-          </>
-        )}
-      </form>
-    </motion.div>
+            Post
+          </ThemeButton>
+        </>
+      )}
+    </form>
+    // </motion.div>
   );
 }
 
-export default forwardRef(AddReviewForm);
+export default AddReviewForm;
+// export default forwardRef(AddReviewForm);

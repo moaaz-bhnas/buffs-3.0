@@ -66,7 +66,7 @@ function AddReviewModal({ userDisplayName }: Props) {
                 <Dialog.Panel className="w-auto transform rounded-md bg-white p-4 pt-2 text-left align-middle shadow-xl transition-all">
                   <AddReviewForm
                     closeModal={closeModal}
-                    ref={searchInputRef}
+                    // ref={searchInputRef}
                     setIsSuccess={setIsSuccess}
                   />
                 </Dialog.Panel>

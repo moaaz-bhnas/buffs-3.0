@@ -6,8 +6,12 @@ import Image from "next/image";
 import RatingStars from "../rating-stars/RatingStars";
 import { Dispatch, SetStateAction } from "react";
 import MDEditor from "@uiw/react-md-editor";
+import "@uiw/react-md-editor/markdown-editor.css";
 import rehypeSanitize from "rehype-sanitize";
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowLeftIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 import { useMediaQuery } from "usehooks-ts";
 
 type Props = {
@@ -31,15 +35,15 @@ function SelectedMovieView({
 
   return (
     <div className="space-y-2">
-      {/* Back to search */}
+      {/* Back to search
       <button
         className="flex items-center gap-x-2 underline"
         type="button"
         onClick={() => setSelectedMovie(null)}
       >
-        <ArrowLeftIcon className="w-4" />
-        Review another movie
-      </button>
+        <MagnifyingGlassIcon className="w-4" />
+        Review another movie?
+      </button> */}
 
       <div className="flex items-start gap-x-4">
         {/* Poster */}
@@ -55,11 +59,22 @@ function SelectedMovieView({
           sizes="200px"
         />
 
-        {/* Review details */}
-        <div className="flex flex-1 flex-col gap-y-4">
+        {/* Mobie title and genre */}
+        <div>
           <p className="text-lg font-light leading-6">
             {movie.title} ({DateTime.fromISO(movie.release_date).year})
           </p>
+          {movie.genres && (
+            <p className="sm:hidden">
+              {movie.genres.map((genre) => genre.name).join(", ")}
+            </p>
+          )}
+        </div>
+      </div>
+
+      <div>
+        {/* Review details */}
+        <div className="flex flex-1 flex-col gap-y-4">
           <div className="space-y-1">
             <p className="font-semibold">Your rating:</p>
             <RatingStars

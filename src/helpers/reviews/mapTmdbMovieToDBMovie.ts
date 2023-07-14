@@ -1,21 +1,9 @@
-import { TmdbApiClient } from "@/apis/tmdb-api-client";
-import { ApiError } from "@/interfaces/api-client/Error";
 import { DBMovie } from "@/interfaces/database/DBMovie";
 import { TmdbDemoMovie } from "@/interfaces/tmdb/TmdbDemoMovie";
-import { Result, err, ok } from "neverthrow";
 
-export default async function mapTmdbMovieToDBMovie(
+export default function mapTmdbMovieToDBMovie(
   tmdbMovie: TmdbDemoMovie
-): Promise<Result<DBMovie, ApiError>> {
-  // Get director data
-  const tmdbApiClient = new TmdbApiClient();
-  const directorResult = await tmdbApiClient.getMovieDirector(tmdbMovie.id);
-
-  if (directorResult.isErr()) {
-    return err(directorResult.error);
-  }
-
-  // Create movie object
+): DBMovie {
   const dbMovie: DBMovie = {
     tmdbId: tmdbMovie.id,
     title: tmdbMovie.title,
@@ -24,12 +12,15 @@ export default async function mapTmdbMovieToDBMovie(
     genres: tmdbMovie.genres?.map((genre) => genre.name) || [],
     summary: tmdbMovie.overview,
     tmdbRating: tmdbMovie.vote_average,
-    director: {
-      tmdbId: directorResult.value.id,
-      name: directorResult.value.name,
-      tmdbCreditId: directorResult.value.credit_id,
-    },
   };
 
-  return ok(dbMovie);
+  if (tmdbMovie.director) {
+    dbMovie.director = {
+      tmdbId: tmdbMovie.director.id,
+      name: tmdbMovie.director.name,
+      tmdbCreditId: tmdbMovie.director.credit_id,
+    };
+  }
+
+  return dbMovie;
 }

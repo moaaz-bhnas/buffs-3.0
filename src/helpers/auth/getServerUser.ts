@@ -2,7 +2,7 @@
 
 import { ServerApiClient } from "@/apis/server-api-client";
 import { ApiError } from "@/interfaces/api-client/Error";
-import { DBUser } from "@/interfaces/database/User";
+import { DBUser } from "@/interfaces/database/DBUser";
 import { Result, err } from "neverthrow";
 import { cookies } from "next/dist/client/components/headers";
 

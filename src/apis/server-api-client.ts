@@ -1,5 +1,5 @@
 import { ApiError } from "@/interfaces/api-client/Error";
-import { DBUser, RegisteringDBUser } from "@/interfaces/database/User";
+import { DBUser, RegisteringDBUser } from "@/interfaces/database/DBUser";
 import { AuthResponse } from "@/interfaces/server/AuthResponse";
 import { GetUsersResponse } from "@/interfaces/server/GetUsersResponse";
 import ApiClient from "@/helpers/api-client/apiClient";
@@ -7,9 +7,10 @@ import { Result, err, ok } from "neverthrow";
 import { SigninRequest } from "@/interfaces/server/SigninRequest";
 import { GetUserByTokenResponse } from "@/interfaces/server/GetUserByTokenResponse";
 import { RegisteringReview } from "@/interfaces/database/RegisteringReview";
-import { Review } from "@/interfaces/database/Review";
+import { DBReview } from "@/interfaces/database/DBReview";
 import { CreateReviewResponse } from "@/interfaces/server/CreateReviewResponse";
 import { SignoutResponse } from "@/interfaces/server/SignoutResponse";
+import { GetReviewsResponse } from "@/interfaces/server/GetReviewsResponse";
 
 export class ServerApiClient {
   private readonly apiBaseUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api`;
@@ -107,9 +108,22 @@ export class ServerApiClient {
     return ok(result.value.data);
   }
 
+  async getReviews(): Promise<Result<DBReview[], ApiError>> {
+    const result = await this.serverApiClient.get<GetReviewsResponse>(
+      `${this.apiBaseUrl}/v${this.apiVersion}/reviews`
+    );
+
+    if (result.isErr()) {
+      console.error(result.error.errorMessage, { error: result.error });
+      return err(result.error);
+    }
+
+    return ok(result.value.data);
+  }
+
   async createReview(
     review: RegisteringReview
-  ): Promise<Result<Review, ApiError>> {
+  ): Promise<Result<DBReview, ApiError>> {
     const result = await this.serverApiClient.post<
       RegisteringReview,
       CreateReviewResponse

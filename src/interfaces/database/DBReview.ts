@@ -1,6 +1,6 @@
 import { DBMovie } from "./DBMovie";
 
-export interface Review {
+export interface DBReview {
   username: string;
   userDetails: {
     displayName: string;

@@ -1,4 +1,4 @@
-import { DBUser } from "../database/User";
+import { DBUser } from "../database/DBUser";
 
 export interface GetUserByTokenResponse {
   success: boolean;

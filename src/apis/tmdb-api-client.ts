@@ -10,6 +10,7 @@ import {
   CrewMember,
   TmdbMovieCredits,
 } from "@/interfaces/tmdb/TmdbMovieCredits";
+import structuredClone from "@ungap/structured-clone";
 
 export class TmdbApiClient {
   private readonly apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
@@ -158,16 +159,15 @@ export class TmdbApiClient {
     }
 
     // Let's go
-    const updatedMovies: TmdbDemoMovie[] = [];
+    const updatedMovies: TmdbDemoMovie[] = structuredClone(movies);
 
-    for (const movie of movies) {
+    for (const movie of updatedMovies) {
       if (movie.backdrop_path) {
         movie.complete_backdrop_path = `${secure_base_url}${backdrop_sizes[backdropSize]}${movie.backdrop_path}`;
       }
       if (movie.poster_path) {
         movie.complete_poster_path = `${secure_base_url}${poster_sizes[posterSize]}${movie.poster_path}`;
       }
-      updatedMovies.push(movie);
     }
 
     return ok(updatedMovies);
@@ -199,10 +199,10 @@ export class TmdbApiClient {
       return err(allGenresDetails.error);
     }
 
-    const updatedMovies: TmdbDemoMovie[] = [];
+    const updatedMovies: TmdbDemoMovie[] = structuredClone(movies);
 
     // Let's go
-    for (const movie of movies) {
+    for (const movie of updatedMovies) {
       const genres: TmdbGenreDetails[] = [];
       for (const genreId of movie.genre_ids) {
         const TmdbGenreDetails = this.getTmdbGenreDetailsById(
@@ -214,10 +214,24 @@ export class TmdbApiClient {
         }
       }
       movie.genres = genres;
-      updatedMovies.push(movie);
     }
 
     return ok(updatedMovies);
+  }
+
+  async mapDirectorsToMovies(
+    movies: TmdbDemoMovie[]
+  ): Promise<TmdbDemoMovie[]> {
+    const updatedMovies: TmdbDemoMovie[] = structuredClone(movies);
+
+    for (const movie of updatedMovies) {
+      const directorResult = await this.getMovieDirector(movie.id);
+      if (directorResult.isOk()) {
+        movie.director = directorResult.value;
+      }
+    }
+
+    return updatedMovies;
   }
 
   private async getMovieCredits(
@@ -237,7 +251,7 @@ export class TmdbApiClient {
     return ok(result.value);
   }
 
-  async getMovieDirector(
+  private async getMovieDirector(
     movieId: number
   ): Promise<Result<CrewMember, ApiError>> {
     const movieCreditsResult = await this.getMovieCredits(movieId);

@@ -6,7 +6,7 @@ export interface DBMovie {
   genres: string[];
   summary: string;
   tmdbRating: number;
-  director: {
+  director?: {
     tmdbId: number;
     name: string;
     tmdbCreditId: string;

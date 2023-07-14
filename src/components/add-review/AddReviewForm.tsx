@@ -104,16 +104,16 @@ function AddReviewForm(
       if (!selectedMovie) {
         return;
       }
-      // 2. collect review data
-      const movieDetailsResult = await mapTmdbMovieToDBMovie(selectedMovie);
+      // 2. Add director data to the selected movie
+      const movieWithDirector = await tmdbApiClient.mapDirectorsToMovies([
+        selectedMovie,
+      ]);
 
-      if (movieDetailsResult.isErr()) {
-        console.error(movieDetailsResult.error.errorMessage);
-        throw new Error(movieDetailsResult.error.errorMessage);
-      }
+      // 3. collect review data
+      const movieDetailsResult = mapTmdbMovieToDBMovie(movieWithDirector[0]);
 
       const review: RegisteringReview = {
-        movieDetails: movieDetailsResult.value,
+        movieDetails: movieDetailsResult,
         rating,
         review: reviewText,
       };

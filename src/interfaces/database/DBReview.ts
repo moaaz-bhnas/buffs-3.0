@@ -1,6 +1,7 @@
 import { DBMovie } from "./DBMovie";
 
 export interface DBReview {
+  _id: string;
   username: string;
   userDetails: {
     displayName: string;
@@ -25,4 +26,6 @@ export interface DBReview {
    * TODO: needs to be updated with the comment schema
    */
   comments: any[];
+  createdAt: string;
+  updatedAt: string;
 }

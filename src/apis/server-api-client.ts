@@ -108,9 +108,14 @@ export class ServerApiClient {
     return ok(result.value.data);
   }
 
-  async getReviews(): Promise<Result<DBReview[], ApiError>> {
+  async getReviews(token: string): Promise<Result<DBReview[], ApiError>> {
     const result = await this.serverApiClient.get<GetReviewsResponse>(
-      `${this.apiBaseUrl}/v${this.apiVersion}/reviews`
+      `${this.apiBaseUrl}/v${this.apiVersion}/reviews?sort=-_id`,
+      {
+        headers: {
+          Cookie: `token=${token}`,
+        },
+      }
     );
 
     if (result.isErr()) {

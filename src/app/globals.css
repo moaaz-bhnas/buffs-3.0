@@ -11,6 +11,7 @@
     @apply text-gray-950;
   }
 
+  /* interactive elements */
   button,
   input,
   textarea,

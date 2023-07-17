@@ -1,5 +1,5 @@
 import Container from "@/components/container/Container";
-import AddReviewSection from "@/components/add-review/AddReviewSection";
+import AddReviewSection from "@/components/add-review/desktop/AddReviewSection";
 import taglineMessages from "@/utils/messages/taglineMessages";
 import { Inter } from "next/font/google";
 import { Metadata } from "next/types";

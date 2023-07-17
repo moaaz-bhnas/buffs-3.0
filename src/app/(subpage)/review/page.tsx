@@ -1,4 +1,4 @@
-import AddReviewForm from "@/components/add-review/AddReviewForm";
+import AddReviewFormContainer from "@/components/add-review/mobile/AddReviewFormContainer";
 import Container from "@/components/container/Container";
 import SubpageHeader from "@/components/header/SubpageHeader";
 import taglineMessages from "@/utils/messages/taglineMessages";
@@ -18,7 +18,7 @@ function ReveiwPage({}: Props) {
 
       <main>
         <Container>
-          <AddReviewForm />
+          <AddReviewFormContainer />
         </Container>
       </main>
     </>

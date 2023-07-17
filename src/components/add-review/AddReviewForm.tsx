@@ -1,15 +1,6 @@
 "use client";
 
-import {
-  Dispatch,
-  FormEvent,
-  ForwardedRef,
-  SetStateAction,
-  forwardRef,
-  useEffect,
-  useState,
-  useTransition,
-} from "react";
+import { FormEvent, useEffect, useRef, useState, useTransition } from "react";
 import { TmdbDemoMovie } from "@/interfaces/tmdb/TmdbDemoMovie";
 import { TmdbApiClient } from "@/apis/tmdb-api-client";
 import classNames from "@/helpers/style/classNames";
@@ -18,7 +9,6 @@ import { TmdbImageSize } from "@/interfaces/tmdb/TmdbImageSize";
 import { useUpdateEffect } from "usehooks-ts";
 import { motion } from "framer-motion";
 import SelectedMovieView from "./SelectedMovieView";
-import useMeasure from "react-use-measure";
 import SearchMovieView from "./SearchMovieView";
 import { useAsyncFn } from "react-use";
 import { RegisteringReview } from "@/interfaces/database/RegisteringReview";
@@ -35,8 +25,7 @@ enum AddReviewStep {
 }
 
 type Props = {
-  setIsSuccess?: Dispatch<SetStateAction<boolean>>;
-  closeModal?: () => void;
+  onSuccess?: Function;
 };
 
 const tmdbApiClient = new TmdbApiClient();
@@ -44,12 +33,11 @@ const serverApiClient = new ServerApiClient();
 
 type TOnSubmit = (event: FormEvent<HTMLFormElement>) => Promise<void>;
 
-function AddReviewForm({
-  // setIsSuccess = () => {},
-  closeModal = () => {},
-}: // searchInputRef: ForwardedRef<HTMLInputElement>
-Props) {
+function AddReviewForm({ onSuccess = () => {} }: Props) {
   const router = useRouter();
+
+  // refs
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // controls view
   const [activeStep, setActiveStep] = useState(AddReviewStep.selectMovie);
@@ -92,6 +80,7 @@ Props) {
     }
   };
 
+  // Effects
   useEffect(() => {
     searchAndSetResults(searchQuery);
   }, [searchQuery]);
@@ -107,8 +96,14 @@ Props) {
     [isLoadingResults, searchQuery]
   );
 
-  // // height transition
-  // const [formRef, formBounds] = useMeasure({ offsetSize: true });
+  useEffect(
+    function focusSearchInput() {
+      if (searchInputRef.current) {
+        searchInputRef.current.focus();
+      }
+    },
+    [searchInputRef]
+  );
 
   // submit
   const [isSuccess, setIsSuccess] = useState(false);
@@ -143,7 +138,7 @@ Props) {
 
       setIsSuccess(true);
       router.back();
-      // closeModal();
+      onSuccess();
     },
     [rating, reviewText, selectedMovie]
   );
@@ -167,39 +162,14 @@ Props) {
   ];
 
   return (
-    // <motion.div
-    //   animate={{
-    //     height: formBounds.height,
-    //     width: formBounds.width,
-    //   }}
-    //   transition={{ duration: 0.4, bounce: 0 }}
-    // >
-    <form
-      // ref={formRef}
-      className={classNames(
-        "space-y-4"
-        // selectedMovie ? "w-[50rem]" : "w-[30rem]"
-      )}
-      onSubmit={handleSubmit}
-    >
-      {/* <header className="flex items-center justify-between">
-        <h2 className="font-semibold">Write a review</h2>
-        <button
-          className="bg-gray-20 flex h-10 w-10 rounded-full transition hover:bg-gray-300 focus:bg-gray-300"
-          type="button"
-          onClick={closeModal}
-        >
-          <XMarkIcon className="m-auto w-6" />
-        </button>
-      </header> */}
-
+    <form className={classNames("space-y-4")} onSubmit={handleSubmit}>
       {/* Progress steps */}
       <ProgressSteps steps={steps} />
 
       {/* 1. Search view */}
       {activeStep === AddReviewStep.selectMovie && (
         <SearchMovieView
-          // ref={searchInputRef}
+          ref={searchInputRef}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           searchResults={searchResults}
@@ -236,9 +206,7 @@ Props) {
         </>
       )}
     </form>
-    // </motion.div>
   );
 }
 
 export default AddReviewForm;
-// export default forwardRef(AddReviewForm);

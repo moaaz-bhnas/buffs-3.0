@@ -8,11 +8,6 @@ import { Dispatch, SetStateAction } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import "@uiw/react-md-editor/markdown-editor.css";
 import rehypeSanitize from "rehype-sanitize";
-import {
-  ArrowLeftIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/outline";
-import { useMediaQuery } from "usehooks-ts";
 
 type Props = {
   movie: TmdbDemoMovie;
@@ -31,24 +26,12 @@ function SelectedMovieView({
   setReviewText,
   setSelectedMovie,
 }: Props) {
-  const largeScreen = useMediaQuery("(min-width: 1024px)");
-
   return (
     <div className="space-y-2">
-      {/* Back to search
-      <button
-        className="flex items-center gap-x-2 underline"
-        type="button"
-        onClick={() => setSelectedMovie(null)}
-      >
-        <MagnifyingGlassIcon className="w-4" />
-        Review another movie?
-      </button> */}
-
       <div className="flex items-start gap-x-4">
         {/* Poster */}
         <Image
-          className="aspect-[185/278] w-40 animate-load rounded-sm bg-gray-300"
+          className="aspect-[185/278] w-40 animate-load rounded-sm bg-gray-300 sm:w-36"
           src={
             movie.complete_poster_path ||
             "images/placeholders/backdrop-placeholder.svg"
@@ -87,7 +70,7 @@ function SelectedMovieView({
             <MDEditor
               value={reviewText}
               onChange={(review) => setReviewText(review || "")}
-              preview={largeScreen ? "live" : "edit"}
+              preview="edit"
               previewOptions={{
                 rehypePlugins: [[rehypeSanitize]],
               }}

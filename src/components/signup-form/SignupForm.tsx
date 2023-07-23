@@ -2,7 +2,7 @@
 
 import { BaseSyntheticEvent, useState } from "react";
 import InlineInput from "../inline-input/InlineInput";
-import { RegisteringDBUser } from "@/interfaces/database/User";
+import { RegisteringDBUser } from "@/interfaces/database/DBUser";
 import { ServerApiClient } from "@/apis/server-api-client";
 import { useAsyncFn } from "react-use";
 import ThemeButton from "../theme-button/ThemeButton";

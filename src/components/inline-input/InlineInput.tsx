@@ -1,13 +1,8 @@
 "use client";
 
-import { RegisteringDBUser } from "@/interfaces/database/User";
+import { RegisteringDBUser } from "@/interfaces/database/DBUser";
 import classNames from "@/helpers/style/classNames";
-import {
-  ChangeEventHandler,
-  FocusEventHandler,
-  forwardRef,
-  useState,
-} from "react";
+import { FocusEventHandler, forwardRef, useState } from "react";
 import { FieldError, UseFormRegister } from "react-hook-form";
 import ErrorMessage from "../alerts/ErrorMessage";
 import { AnimatePresence } from "framer-motion";

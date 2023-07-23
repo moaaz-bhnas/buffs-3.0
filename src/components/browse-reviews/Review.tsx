@@ -7,12 +7,22 @@ import Image from "next/image";
 import { DateTime } from "luxon";
 import { StarIcon } from "@heroicons/react/24/outline";
 import MDEditor from "@uiw/react-md-editor";
+import { useEffect } from "react";
+import { socket } from "@/socket";
 
 type Props = {
   review: DBReview;
 };
 
 function Review({ review }: Props) {
+  useEffect(() => {
+    socket.connect();
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   return (
     <li role="article" className="space-y-2 border-b py-3 first:pt-0">
       {/* username and avatar */}

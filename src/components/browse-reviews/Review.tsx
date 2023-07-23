@@ -13,11 +13,6 @@ type Props = {
 };
 
 function Review({ review }: Props) {
-  console.log(
-    "DateTime.fromISO(review.createdAt).diffNow()",
-    DateTime.fromISO(review.createdAt).toRelative()
-  );
-
   return (
     <li role="article" className="space-y-2 border-b py-3 first:pt-0">
       {/* username and avatar */}
@@ -30,7 +25,11 @@ function Review({ review }: Props) {
             {review.userDetails.displayName}
           </Link>
         </div>
-        <time className="text-sm text-gray-600" dateTime={review.createdAt}>
+        <time
+          className="text-sm text-gray-600"
+          dateTime={review.createdAt}
+          suppressHydrationWarning={true}
+        >
           {DateTime.fromISO(review.createdAt).toRelative()}
         </time>
       </header>

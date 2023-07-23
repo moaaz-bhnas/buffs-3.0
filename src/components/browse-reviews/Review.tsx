@@ -15,20 +15,24 @@ type Props = {
 function Review({ review }: Props) {
   console.log(
     "DateTime.fromISO(review.createdAt).diffNow()",
-    DateTime.fromISO(review.createdAt).diffNow()
+    DateTime.fromISO(review.createdAt).toRelative()
   );
 
   return (
     <li role="article" className="space-y-2 border-b py-3 first:pt-0">
       {/* username and avatar */}
-      <header className="flex items-center gap-x-1">
-        <Link href={`/${review.username}`}>
-          <Avatar size={32} avatarUrl={review.userDetails.avatar} />
-        </Link>
-        <Link href={`/${review.username}`} className="font-semibold">
-          {review.userDetails.displayName}
-        </Link>
-        <time>{DateTime.fromISO(review.createdAt).diffNow().hours}</time>
+      <header className="flex items-center gap-x-4">
+        <div className="flex items-center gap-x-1">
+          <Link href={`/${review.username}`}>
+            <Avatar size={32} avatarUrl={review.userDetails.avatar} />
+          </Link>
+          <Link href={`/${review.username}`} className="font-semibold">
+            {review.userDetails.displayName}
+          </Link>
+        </div>
+        <time className="text-sm text-gray-600" dateTime={review.createdAt}>
+          {DateTime.fromISO(review.createdAt).toRelative()}
+        </time>
       </header>
 
       {/* movie details */}

@@ -17,6 +17,9 @@ type Props = {
 function Review({ review }: Props) {
   useEffect(() => {
     socket.connect();
+    socket.on("hello from server", (...args) => {
+      console.log("😋 sockets are fun", args);
+    });
 
     return () => {
       socket.disconnect();

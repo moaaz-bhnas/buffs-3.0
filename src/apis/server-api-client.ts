@@ -80,22 +80,25 @@ export class ServerApiClient {
     return ok(result.value.data);
   }
 
-  async getUserByEmail(email: string): Promise<Result<DBUser[], ApiError>> {
+  async getUserByEmail(email: string): Promise<Result<DBUser, ApiError>> {
     const result = await this.serverApiClient.get<GetUsersResponse>(
       `${this.apiBaseUrl}/v${this.apiVersion}/users?email=${email}`
     );
 
     if (result.isErr()) {
-      console.error(result.error.errorMessage, { error: result.error });
       return err(result.error);
     }
 
-    return ok(result.value.data);
+    if (result.value.data.length === 0) {
+      return err({
+        errorMessage: `User with email ${email} doesn't exist`,
+      });
+    }
+
+    return ok(result.value.data[0]);
   }
 
-  async getUserByUsername(
-    username: string
-  ): Promise<Result<DBUser[], ApiError>> {
+  async getUserByUsername(username: string): Promise<Result<DBUser, ApiError>> {
     const result = await this.serverApiClient.get<GetUsersResponse>(
       `${this.apiBaseUrl}/v${this.apiVersion}/users?username=${username}`
     );
@@ -105,7 +108,13 @@ export class ServerApiClient {
       return err(result.error);
     }
 
-    return ok(result.value.data);
+    if (result.value.data.length === 0) {
+      return err({
+        errorMessage: `User with username ${username} doesn't exist`,
+      });
+    }
+
+    return ok(result.value.data[0]);
   }
 
   async getReviews(token: string): Promise<Result<DBReview[], ApiError>> {

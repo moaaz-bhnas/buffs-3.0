@@ -74,7 +74,7 @@ function SignupForm({}: Props) {
             validate: {
               emailAvailable: async (fieldValue) => {
                 const result = await serverApiClient.getUserByEmail(fieldValue);
-                if (result.isOk() && result.value.length > 0) {
+                if (result.isOk()) {
                   return "Email already exists. Signin instead?";
                 }
                 return true;
@@ -107,7 +107,7 @@ function SignupForm({}: Props) {
                 const result = await serverApiClient.getUserByUsername(
                   fieldValue
                 );
-                if (result.isOk() && result.value.length > 0) {
+                if (result.isOk()) {
                   return errorMessages.usernameUsed;
                 }
                 return true;

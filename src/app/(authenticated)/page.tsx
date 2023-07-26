@@ -16,8 +16,8 @@ export default function Home() {
     <main>
       {/* <Motion /> */}
       <Container>
-        <div className="flex">
-          <div className="w-full sm:w-3/5">
+        <div className='flex'>
+          <div className='w-full sm:w-3/5'>
             {/* @ts-expect-error Async Server Component */}
             <AddReviewContainer />
           </div>

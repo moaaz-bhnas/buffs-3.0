@@ -16,16 +16,15 @@ async function AddReviewContainer({}: Props) {
 
   return (
     <section
-      className="flex gap-x-2 rounded-md bg-white p-3 shadow-sm"
-      aria-label="Write a review"
-    >
-      <Link href="/profile">
+      className='flex gap-x-2 rounded-md bg-white p-3 shadow-sm'
+      aria-label='Write a review'>
+      <Link href='/profile'>
         <Suspense fallback={<AvatarSkeleton />}>
           {/* @ts-expect-error Async Server Component */}
           <UserAvatar size={40} />
         </Suspense>
       </Link>
-      <div className="flex-1">
+      <div className='flex-1'>
         <ReviewModal userDisplayName={userResult.value.displayName} />
       </div>
     </section>

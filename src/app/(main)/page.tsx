@@ -15,6 +15,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main>
+      <p>test</p>
       {/* <Motion /> */}
       <Container>
         <div className="flex">

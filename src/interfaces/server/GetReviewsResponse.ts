@@ -1,6 +1,6 @@
-import { DBUser } from "../database/DBUser";
+import { DBReview } from "../database/DBReview";
 
-export interface GetUsersResponse {
+export interface GetReviewsResponse {
   success: boolean;
   count: number;
   pagination: {
@@ -9,5 +9,5 @@ export interface GetUsersResponse {
       limit: number;
     };
   };
-  data: DBUser[];
+  data: DBReview[];
 }

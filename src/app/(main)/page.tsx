@@ -1,8 +1,9 @@
 import Container from "@/components/container/Container";
-import AddReviewContainer from "@/components/add-review/AddReviewContainer";
+import AddReviewSection from "@/components/add-review/desktop/AddReviewSection";
 import taglineMessages from "@/utils/messages/taglineMessages";
 import { Inter } from "next/font/google";
 import { Metadata } from "next/types";
+import Feed from "@/components/feed/Feed";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,9 +20,14 @@ export default function Home() {
         <div className='flex'>
           <div className='w-full sm:w-3/5'>
             {/* @ts-expect-error Async Server Component */}
-            <AddReviewContainer />
+            <AddReviewSection />
           </div>
         </div>
+      </Container>
+
+      <Container>
+        {/* @ts-expect-error Async Server Component */}
+        <Feed />
       </Container>
     </main>
   );

@@ -2,11 +2,12 @@
 
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useRef, useState } from "react";
-import AddReviewForm from "./AddReviewForm";
 import getFirstWord from "@/helpers/string/getFirstWord";
-import SuccessMessage from "../alerts/SuccessMessage";
 import successMessages from "@/utils/messages/successMessages";
-import Notification from "../notification/Notification";
+import AddReviewForm from "../AddReviewForm";
+import SuccessMessage from "@/components/alerts/SuccessMessage";
+import Notification from "@/components/notification/Notification";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 type Props = { userDisplayName: string };
 
@@ -63,12 +64,21 @@ function AddReviewModal({ userDisplayName }: Props) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-auto transform rounded-md bg-white p-4 pt-2 text-left align-middle shadow-xl transition-all">
-                  <AddReviewForm
-                    closeModal={closeModal}
-                    ref={searchInputRef}
-                    setIsSuccess={setIsSuccess}
-                  />
+                <Dialog.Panel className="h-[43rem] w-full max-w-xl transform space-y-4 overflow-auto rounded-md bg-white p-4 pt-2 text-left align-middle shadow-xl transition-all">
+                  {/* header */}
+                  <div className="flex items-center justify-between border-b">
+                    <h2 className="font-semibold">Write a review</h2>
+                    <button
+                      className="bg-gray-20 flex h-10 w-10 rounded-full transition hover:bg-gray-300 focus:bg-gray-300"
+                      type="button"
+                      onClick={closeModal}
+                    >
+                      <XMarkIcon className="m-auto w-6" />
+                    </button>
+                  </div>
+
+                  {/* form */}
+                  <AddReviewForm onSuccess={closeModal} />
                 </Dialog.Panel>
               </Transition.Child>
             </div>

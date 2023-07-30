@@ -2,7 +2,7 @@
 
 import { BaseSyntheticEvent, useState } from "react";
 import InlineInput from "../inline-input/InlineInput";
-import { RegisteringDBUser } from "@/interfaces/database/User";
+import { RegisteringDBUser } from "@/interfaces/database/DBUser";
 import { ServerApiClient } from "@/apis/server-api-client";
 import { useAsyncFn } from "react-use";
 import ThemeButton from "../theme-button/ThemeButton";
@@ -74,7 +74,7 @@ function SignupForm({}: Props) {
             validate: {
               emailAvailable: async (fieldValue) => {
                 const result = await serverApiClient.getUserByEmail(fieldValue);
-                if (result.isOk() && result.value.length > 0) {
+                if (result.isOk()) {
                   return "Email already exists. Signin instead?";
                 }
                 return true;
@@ -107,7 +107,7 @@ function SignupForm({}: Props) {
                 const result = await serverApiClient.getUserByUsername(
                   fieldValue
                 );
-                if (result.isOk() && result.value.length > 0) {
+                if (result.isOk()) {
                   return errorMessages.usernameUsed;
                 }
                 return true;

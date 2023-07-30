@@ -10,8 +10,8 @@ export default async function page({ params }: PageProps) {
     return (
       <Container>
         <div className='flex'>
-          <Avatar avatarUrl={userResult.value[0].avatar}></Avatar>
-          <h1> {userResult.value[0].displayName}</h1>
+          <Avatar avatarUrl={userResult.value.avatar}></Avatar>
+          <h1> {userResult.value.displayName}</h1>
         </div>
       </Container>
     );

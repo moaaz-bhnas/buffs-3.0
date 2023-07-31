@@ -9,7 +9,7 @@ import {
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import { useRouter } from "next/navigation";
 import { useAsyncFn } from "react-use";
-// import Notification from "../notification/Notification";
+import Notification from "../notification/Notification";
 import { useState } from "react";
 import ErrorMessage from "../alerts/ErrorMessage";
 import errorMessages from "@/utils/messages/errorMessages";
@@ -63,9 +63,9 @@ function SettingsPopover({}: Props) {
         </Popover.Panel>
       </Transition>
 
-      {/* <Notification visible={isSignoutError} setIsVisible={setIsSignoutError}>
+      <Notification visible={isSignoutError} setIsVisible={setIsSignoutError}>
         <ErrorMessage message={errorMessages.somthingWentWrong} />
-      </Notification> */}
+      </Notification>
     </Popover>
   );
 }

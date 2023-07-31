@@ -6,7 +6,7 @@ import getFirstWord from "@/helpers/string/getFirstWord";
 import successMessages from "@/utils/messages/successMessages";
 import AddReviewForm from "../AddReviewForm";
 import SuccessMessage from "@/components/alerts/SuccessMessage";
-import Notification from "@/components/notification/Notification";
+// import Notification from "@/components/notification/Notification";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 type Props = { userDisplayName: string };
@@ -86,9 +86,9 @@ function AddReviewModal({ userDisplayName }: Props) {
         </Dialog>
       </Transition>
 
-      <Notification visible={isSuccess} setIsVisible={setIsSuccess}>
+      {/* <Notification visible={isSuccess} setIsVisible={setIsSuccess}>
         <SuccessMessage message={successMessages.review} />
-      </Notification>
+      </Notification> */}
     </>
   );
 }

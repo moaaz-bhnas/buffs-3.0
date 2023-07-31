@@ -26,7 +26,6 @@ export default function Home() {
       </Container>
 
       <Container>
-        {/* @ts-expect-error Async Server Component */}
         <Feed />
       </Container>
     </main>

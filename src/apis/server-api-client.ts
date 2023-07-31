@@ -11,6 +11,7 @@ import { DBReview } from "@/interfaces/database/DBReview";
 import { CreateReviewResponse } from "@/interfaces/server/CreateReviewResponse";
 import { SignoutResponse } from "@/interfaces/server/SignoutResponse";
 import { GetReviewsResponse } from "@/interfaces/server/GetReviewsResponse";
+import { isBrowser } from "framer-motion";
 
 export class ServerApiClient {
   private readonly apiBaseUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api`;
@@ -117,7 +118,19 @@ export class ServerApiClient {
     return ok(result.value.data[0]);
   }
 
+  /**
+   *
+   * @param {string} token required only in server code
+   * as in the client (browser) all cookies are sent with each request
+   */
   async getReviews(token?: string): Promise<Result<DBReview[], ApiError>> {
+    if (!isBrowser && !token) {
+      return err({
+        errorMessage:
+          "Dear developer, you need to pass the auth token if the function is run in the server",
+      });
+    }
+
     const config = token ? { headers: { Cookie: `token=${token}` } } : {};
 
     const result = await this.serverApiClient.get<GetReviewsResponse>(

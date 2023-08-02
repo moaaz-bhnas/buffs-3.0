@@ -1,10 +1,10 @@
-import { BellIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
-import SearchForm from "./SearchForm";
-import Link from "next/link";
-import { Suspense } from "react";
-import AvatarSkeleton from "../avatar/AvatarSkeleton";
-import SettingsPopover from "./SettingsPopover";
-import UserAvatar from "../avatar/UserAvatar";
+import { BellIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline';
+import SearchForm from './SearchForm';
+import Link from 'next/link';
+import { Suspense } from 'react';
+import AvatarSkeleton from '../avatar/AvatarSkeleton';
+import SettingsPopover from './SettingsPopover';
+import UserAvatar from '../avatar/UserAvatar';
 
 type Props = {};
 

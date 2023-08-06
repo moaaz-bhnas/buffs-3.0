@@ -1,7 +1,7 @@
-import Container from '@/components/container/Container';
-import { PageProps } from '../../../../.next/types/app/(authenticated)/layout';
-import { ServerApiClient } from '@/apis/server-api-client';
-import Avatar from '@/components/avatar/Avatar';
+import Container from "@/components/container/Container";
+import { PageProps } from "../../../../.next/types/app/(authenticated)/layout";
+import { ServerApiClient } from "@/apis/server-api-client";
+import Avatar from "@/components/avatar/Avatar";
 
 export default async function page({ params }: PageProps) {
   const serverApiClient = new ServerApiClient();
@@ -11,7 +11,7 @@ export default async function page({ params }: PageProps) {
   }
   return (
     <Container>
-      <div className='flex'>
+      <div className="flex">
         <Avatar avatarUrl={userResult.value.avatar}></Avatar>
         <h1> {userResult.value.displayName}</h1>
       </div>

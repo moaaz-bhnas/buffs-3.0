@@ -1,5 +1,5 @@
 import Container from "@/components/container/Container";
-import { PageProps } from "../../../../.next/types/app/(authenticated)/layout";
+import { PageProps } from "../../../../.next/types/app/(authenticated)/[username]/page";
 import { ServerApiClient } from "@/apis/server-api-client";
 import Avatar from "@/components/avatar/Avatar";
 

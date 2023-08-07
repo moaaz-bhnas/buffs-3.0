@@ -13,8 +13,7 @@ function MovieResultItem({ movie, onClick }: Props) {
       <button
         className="flex w-full transition-all hover:ring-4 hover:ring-teal-400"
         type="button"
-        onClick={() => onClick(movie)}
-      >
+        onClick={() => onClick(movie)}>
         <Image
           className="aspect-[185/278] w-full animate-load rounded-sm bg-gray-300"
           src={

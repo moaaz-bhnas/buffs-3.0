@@ -16,8 +16,8 @@ export default async function page({ params }: PageProps) {
   return (
     <Container>
       <div className="flex">
-        <div className="w-1/4">
-          <Avatar avatarUrl={userResult.value.avatar} size={150}></Avatar>
+        <div className="w-40 lg:mr-8">
+          <Avatar avatarUrl={userResult.value.avatar} size={150} />
         </div>
         <div className="flex w-9/12 flex-col">
           <div className="flex">
@@ -31,7 +31,7 @@ export default async function page({ params }: PageProps) {
             </ThemeButton>
           </div>
           <div className="mt-5">
-            <ul className="flex justify-between w-full md:w-9/12">
+            <ul className="flex justify-between md:w-9/12">
               <li className="text-base md:text-lg font-medium text-center">
                 <span className="font-bold">208 </span>reviews
               </li>
@@ -49,11 +49,11 @@ export default async function page({ params }: PageProps) {
             Cinematic Emotions! 😍🎉 Welcome to my movie realm! 🎉 As a devoted
             film enthusiast, I express my cinematic experiences through
             captivating emojee reviews! 📝💖 From heartwarming to
-            adrenaline-pumping moments, I've got all the emojis to convey the
-            magic of movies! 🎥✨ Join me on this emotive journey as we uncover
-            cinematic treasures together! 🏆🎬 Let's create a wonderland of
-            emotions through movies and share our thoughts and recommendations!
-            🤗💬🍿
+            adrenaline-pumping moments, I&apos;ve got all the emojis to convey
+            the magic of movies! 🎥✨ Join me on this emotive journey as we
+            uncover cinematic treasures together! 🏆🎬 Let&apos;s create a
+            wonderland of emotions through movies and share our thoughts and
+            recommendations! 🤗💬🍿
           </div>
         </div>
       </div>

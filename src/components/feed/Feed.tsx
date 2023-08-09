@@ -49,13 +49,20 @@ function Feed({}: Props) {
   }, []);
 
   useEffect(function establishSocketConnection() {
-    socket.connect();
+    socket.on("connect", () => {
+      // Join feed room
+      socket.emit(SocketEvent.SUBSCRIBED_TO_FEED);
+    });
+
+    // Listen to reviews update
     socket.on(SocketEvent.REVIEW_UPDATED, (updatedReview: DBReview) => {
       handleReviewUpdate(updatedReview, setReveiws);
     });
 
     return () => {
-      socket.disconnect();
+      socket.off("connect");
+      socket.off("disconnect");
+      socket.off("pong");
     };
   }, []);
 

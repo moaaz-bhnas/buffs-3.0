@@ -5,6 +5,7 @@ import { PageProps } from "../../../../.next/types/app/(authenticated)/[username
 import { ServerApiClient } from "@/apis/server-api-client";
 import Avatar from "@/components/avatar/Avatar";
 import ThemeButton from "@/components/theme-button/ThemeButton";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import classNames from "../../../helpers/style/classNames";
 
 export default async function page({ params }: PageProps) {
@@ -54,6 +55,23 @@ export default async function page({ params }: PageProps) {
             uncover cinematic treasures together! 🏆🎬 Let&apos;s create a
             wonderland of emotions through movies and share our thoughts and
             recommendations! 🤗💬🍿
+          </div>
+        </div>
+      </div>
+      <div>
+        <h1 className="text-lg font-normal tracking-wider text-slate-700">
+          FAVORITE FILMS
+        </h1>
+        <hr className="h-px my-3 bg-gray-200 border-0 dark:bg-gray-500" />
+        <div className="flex flex-row justify-between">
+          <div className="w-28 h-48 md:w-52 md:h-[22rem] lg:w-[17rem] lg:h-96 bg-slate-300 rounded-md flex justify-center group hover:drop-shadow-xl ease-in duration-150 cursor-pointer">
+            <PlusIcon className="w-12 h-12 md:w-20 md:h-20 m-auto opacity-20 group-hover:opacity-90 transition-opacity ease-in duration-150" />
+          </div>
+          <div className="w-28 h-48 md:w-52 md:h-[22rem] lg:w-[17rem] lg:h-96 bg-slate-300 rounded-md flex justify-center group hover:drop-shadow-xl ease-in duration-150 cursor-pointer">
+            <PlusIcon className="w-12 h-12 md:w-20 md:h-20 m-auto opacity-20 group-hover:opacity-90 transition-opacity ease-in duration-150" />
+          </div>
+          <div className="w-28 h-48 md:w-52 md:h-[22rem] lg:w-[17rem] lg:h-96 bg-slate-300 rounded-md flex justify-center group hover:drop-shadow-xl ease-in duration-150 cursor-pointer">
+            <PlusIcon className="w-12 h-12 md:w-20 md:h-20 m-auto opacity-20 group-hover:opacity-90 transition-opacity ease-in duration-150" />
           </div>
         </div>
       </div>

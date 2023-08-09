@@ -1,3 +1,5 @@
+"use-client";
+
 import classNames from "@/helpers/style/classNames";
 import Spinner from "../spinner/Spinner";
 import { ReactNode } from "react";

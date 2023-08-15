@@ -14,8 +14,6 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/solid";
 import { Popover } from "@headlessui/react";
-import getServerUser from "@/helpers/auth/getServerUser";
-import { DBUser } from "@/interfaces/database/DBUser";
 
 type Props = {
   review: DBReview;

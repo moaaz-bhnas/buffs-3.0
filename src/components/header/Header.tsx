@@ -24,6 +24,7 @@ function Header({}: Props) {
 
           {/* Desktop navigation */}
           <div className="ms-6 hidden flex-1 sm:block">
+            {/* @ts-expect-error Async Server Component */}
             <DesktopNavigation />
           </div>
         </nav>

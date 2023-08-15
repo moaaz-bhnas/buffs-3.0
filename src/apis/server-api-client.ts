@@ -145,6 +145,36 @@ export class ServerApiClient {
     return ok(result.value.data);
   }
 
+  /**
+   *
+   * @param {string} token required only in server code
+   * as in the client (browser) all cookies are sent with each request
+   */
+  async getReviewsByUsername(
+    username: string,
+    token?: string
+  ): Promise<Result<DBReview[], ApiError>> {
+    if (isServer() && !token) {
+      return err({
+        errorMessage:
+          "Dear developer, you need to pass the auth token if the function is run in the server",
+      });
+    }
+
+    const config = token ? { headers: { Cookie: `token=${token}` } } : {};
+
+    const result = await this.serverApiClient.get<GetReviewsResponse>(
+      `${this.apiBaseUrl}/v${this.apiVersion}/reviews?username=${username}&sort=-_id`,
+      config
+    );
+
+    if (result.isErr()) {
+      return err(result.error);
+    }
+
+    return ok(result.value.data);
+  }
+
   async createReview(
     review: RegisteringReview
   ): Promise<Result<DBReview, ApiError>> {

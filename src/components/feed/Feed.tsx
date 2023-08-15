@@ -1,76 +1,34 @@
-"use client";
-
 import { ServerApiClient } from "@/apis/server-api-client";
+import getServerToken from "@/helpers/auth/getServerToken";
 import Review from "../browse-reviews/Review";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import socket from "@/socket";
-import { useAsyncFn } from "react-use";
-import { DBReview } from "@/interfaces/database/DBReview";
-import { SocketEvent } from "@/interfaces/socket/SocketEvent";
-import structuredClone from "@ungap/structured-clone";
+import getServerUser from "@/helpers/auth/getServerUser";
 
 type Props = {};
 
 const serverApiClient = new ServerApiClient();
 
-function handleReviewUpdate(
-  updatedReview: DBReview,
-  setReveiws: Dispatch<SetStateAction<DBReview[]>>
-) {
-  setReveiws((prevReviews) => {
-    let newReviews = structuredClone(prevReviews);
-    newReviews = newReviews.map((review) => {
-      if (review._id === updatedReview._id) {
-        return updatedReview;
-      } else {
-        return review;
-      }
-    });
-    return newReviews;
-  });
-}
+async function Feed({}: Props) {
+  const currentViewer = await getServerUser();
+  if (currentViewer.isErr()) {
+    return <></>;
+  }
+  const token = getServerToken();
+  const reviewsResult = await serverApiClient.getReviews(token);
 
-function Feed({}: Props) {
-  const [reviews, setReveiws] = useState<DBReview[]>([]);
-
-  const [getReveiwsState, getAndSetReviews] = useAsyncFn(async () => {
-    const reviewsResult = await serverApiClient.getReviews();
-
-    if (reviewsResult.isErr()) {
-      throw new Error(JSON.stringify(reviewsResult.error));
-    }
-
-    setReveiws(reviewsResult.value);
-  });
-
-  // effects
-  useEffect(() => {
-    getAndSetReviews();
-  }, []);
-
-  useEffect(function establishSocketConnection() {
-    socket.on("connect", () => {
-      // Join feed room
-      socket.emit(SocketEvent.SUBSCRIBED_TO_FEED);
-    });
-
-    // Listen to reviews update
-    socket.on(SocketEvent.REVIEW_UPDATED, (updatedReview: DBReview) => {
-      handleReviewUpdate(updatedReview, setReveiws);
-    });
-
-    return () => {
-      socket.off("connect");
-      socket.off("disconnect");
-      socket.off("pong");
-    };
-  }, []);
+  if (reviewsResult.isErr()) {
+    console.error(reviewsResult.error.errorMessage);
+    return <></>;
+  }
 
   return (
     <section>
       <ul>
-        {reviews.map((review) => (
-          <Review key={review._id} review={review} />
+        {reviewsResult.value.map((review) => (
+          <Review
+            key={review._id}
+            review={review}
+            currentViewer={currentViewer.value.username}
+          />
         ))}
       </ul>
     </section>

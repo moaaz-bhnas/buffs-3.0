@@ -34,8 +34,6 @@ const serverApiClient = new ServerApiClient();
 type TOnSubmit = (event: FormEvent<HTMLFormElement>) => Promise<void>;
 
 function AddReviewForm({ onSuccess = () => {} }: Props) {
-  const router = useRouter();
-
   // refs
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -137,7 +135,6 @@ function AddReviewForm({ onSuccess = () => {} }: Props) {
       }
 
       setIsSuccess(true);
-      router.back();
       onSuccess();
     },
     [rating, reviewText, selectedMovie]
@@ -199,7 +196,8 @@ function AddReviewForm({ onSuccess = () => {} }: Props) {
               handleSubmitState.error && errorMessages.somthingWentWrong
             }
             // successMessage={isSuccess ? successMessages.review : undefined}
-            disabled={rating === 0}>
+            disabled={rating === 0}
+          >
             Post
           </ThemeButton>
         </>

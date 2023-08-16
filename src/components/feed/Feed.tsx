@@ -1,35 +1,21 @@
-"use client";
-
 import { ServerApiClient } from "@/apis/server-api-client";
+import getServerToken from "@/helpers/auth/getServerToken";
 import Review from "../browse-reviews/Review";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import socket from "@/socket";
-import { useAsyncFn } from "react-use";
-import { DBReview } from "@/interfaces/database/DBReview";
-import { SocketEvent } from "@/interfaces/socket/SocketEvent";
-import structuredClone from "@ungap/structured-clone";
+import getServerUser from "@/helpers/auth/getServerUser";
 
 type Props = {};
 
 const serverApiClient = new ServerApiClient();
 
-function handleReviewUpdate(
-  updatedReview: DBReview,
-  setReveiws: Dispatch<SetStateAction<DBReview[]>>
-) {
-  setReveiws((prevReviews) => {
-    let newReviews = structuredClone(prevReviews);
-    newReviews = newReviews.map((review) => {
-      if (review._id === updatedReview._id) {
-        return updatedReview;
-      } else {
-        return review;
-      }
-    });
-    return newReviews;
-  });
-}
+async function Feed({}: Props) {
+  const currentViewer = await getServerUser();
+  if (currentViewer.isErr()) {
+    return <></>;
+  }
+  const token = getServerToken();
+  const reviewsResult = await serverApiClient.getReviews(token);
 
+<<<<<<< HEAD
 function handleNewReviews(
   newReview: DBReview,
   setReveiws: Dispatch<SetStateAction<DBReview[]>>
@@ -81,12 +67,22 @@ function Feed({}: Props) {
       socket.off("pong");
     };
   }, []);
+=======
+  if (reviewsResult.isErr()) {
+    console.error(reviewsResult.error.errorMessage);
+    return <></>;
+  }
+>>>>>>> 015c0cb124abcd81c5bfc97bcb01be64c97c9fdb
 
   return (
     <section>
       <ul>
-        {reviews.map((review) => (
-          <Review key={review._id} review={review} />
+        {reviewsResult.value.map((review) => (
+          <Review
+            key={review._id}
+            review={review}
+            currentViewer={currentViewer.value.username}
+          />
         ))}
       </ul>
     </section>

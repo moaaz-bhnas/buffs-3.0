@@ -1,21 +1,18 @@
 "use client";
 
 import Container from "@/components/container/Container";
+import { PageProps } from "../../../../.next/types/app/(authenticated)/[username]/page";
 import { ServerApiClient } from "@/apis/server-api-client";
 import Avatar from "@/components/avatar/Avatar";
 import ThemeButton from "@/components/theme-button/ThemeButton";
+import classNames from "../../../helpers/style/classNames";
 
-export default async function page({
-  params,
-}: {
-  params: { username: string };
-}) {
+export default async function page({ params }: PageProps) {
   const serverApiClient = new ServerApiClient();
   const userResult = await serverApiClient.getUserByUsername(params.username);
   if (userResult.isErr()) {
     return <Container>Oops, User not found</Container>;
   }
-
   return (
     <Container>
       <div className="flex">
@@ -24,25 +21,24 @@ export default async function page({
         </div>
         <div className="flex w-9/12 flex-col">
           <div className="flex">
-            <h1 className="w-1/2 text-lg font-medium">
+            <h1 className="font-medium text-lg w-1/2">
               {userResult.value.displayName}
             </h1>
             <ThemeButton
               type="button"
-              className="p-10 font-bold hover:bg-teal-500"
-            >
+              className="p-10 hover:bg-teal-500 font-bold">
               Follow
             </ThemeButton>
           </div>
           <div className="mt-5">
             <ul className="flex justify-between md:w-9/12">
-              <li className="text-center text-base font-medium md:text-lg">
+              <li className="text-base md:text-lg font-medium text-center">
                 <span className="font-bold">208 </span>reviews
               </li>
-              <li className="text-center text-base font-medium md:text-lg">
+              <li className="text-base md:text-lg font-medium text-center">
                 <span className="font-bold">20K </span>followers
               </li>
-              <li className="text-center text-base font-medium md:text-lg">
+              <li className="text-base md:text-lg font-medium text-center">
                 <span className="font-bold">400 </span>following
               </li>
             </ul>

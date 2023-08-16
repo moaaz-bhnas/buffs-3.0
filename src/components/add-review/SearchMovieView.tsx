@@ -1,3 +1,5 @@
+"use-client";
+
 import { TmdbDemoMovie } from "@/interfaces/tmdb/TmdbDemoMovie";
 import classNames from "@/helpers/style/classNames";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";

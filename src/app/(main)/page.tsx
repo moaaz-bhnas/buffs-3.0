@@ -15,11 +15,9 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main>
-      <h1>test</h1>
-      {/* <Motion /> */}
       <Container>
         <div className="flex">
-          <div className="w-full sm:w-3/5">
+          <div className="hidden sm:block sm:w-3/5">
             {/* @ts-expect-error Async Server Component */}
             <AddReviewSection />
           </div>
@@ -27,7 +25,6 @@ export default function Home() {
       </Container>
 
       <Container>
-        {/* @ts-expect-error Async Server Component */}
         <Feed />
       </Container>
     </main>

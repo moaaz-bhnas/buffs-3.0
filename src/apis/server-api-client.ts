@@ -11,6 +11,7 @@ import { DBReview } from "@/interfaces/database/DBReview";
 import { CreateReviewResponse } from "@/interfaces/server/CreateReviewResponse";
 import { SignoutResponse } from "@/interfaces/server/SignoutResponse";
 import { GetReviewsResponse } from "@/interfaces/server/GetReviewsResponse";
+import isServer from "@/helpers/environment/isServer";
 
 export class ServerApiClient {
   private readonly apiBaseUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api`;
@@ -117,18 +118,57 @@ export class ServerApiClient {
     return ok(result.value.data[0]);
   }
 
-  async getReviews(token: string): Promise<Result<DBReview[], ApiError>> {
+  /**
+   *
+   * @param {string} token required only in server code
+   * as in the client (browser) all cookies are sent with each request
+   */
+  async getReviews(token?: string): Promise<Result<DBReview[], ApiError>> {
+    if (isServer() && !token) {
+      return err({
+        errorMessage:
+          "Dear developer, you need to pass the auth token if the function is run in the server",
+      });
+    }
+
+    const config = token ? { headers: { Cookie: `token=${token}` } } : {};
+
     const result = await this.serverApiClient.get<GetReviewsResponse>(
       `${this.apiBaseUrl}/v${this.apiVersion}/reviews?sort=-_id`,
-      {
-        headers: {
-          Cookie: `token=${token}`,
-        },
-      }
+      config
     );
 
     if (result.isErr()) {
-      console.error(result.error.errorMessage, { error: result.error });
+      return err(result.error);
+    }
+
+    return ok(result.value.data);
+  }
+
+  /**
+   *
+   * @param {string} token required only in server code
+   * as in the client (browser) all cookies are sent with each request
+   */
+  async getReviewsByUsername(
+    username: string,
+    token?: string
+  ): Promise<Result<DBReview[], ApiError>> {
+    if (isServer() && !token) {
+      return err({
+        errorMessage:
+          "Dear developer, you need to pass the auth token if the function is run in the server",
+      });
+    }
+
+    const config = token ? { headers: { Cookie: `token=${token}` } } : {};
+
+    const result = await this.serverApiClient.get<GetReviewsResponse>(
+      `${this.apiBaseUrl}/v${this.apiVersion}/reviews?username=${username}&sort=-_id`,
+      config
+    );
+
+    if (result.isErr()) {
       return err(result.error);
     }
 

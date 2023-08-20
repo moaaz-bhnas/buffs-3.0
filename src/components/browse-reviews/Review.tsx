@@ -28,8 +28,7 @@ function Review({ review }: Props) {
         <time
           className="text-sm text-gray-600"
           dateTime={review.createdAt}
-          suppressHydrationWarning={true}
-        >
+          suppressHydrationWarning={true}>
           {DateTime.fromISO(review.createdAt).toRelative()}
         </time>
       </header>

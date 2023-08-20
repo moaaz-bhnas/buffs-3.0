@@ -2,6 +2,7 @@ import Container from "@/components/container/Container";
 import ProfileHeader from "@/components/profile-header/ProfileHeader";
 import FavoriteMovies from "@/components/favorite-movies/FavoriteMovies";
 import { ServerApiClient } from "@/apis/server-api-client";
+import UserReviews from "@/components/user-reviews/userReviews";
 
 export default async function page({
   params,
@@ -25,6 +26,10 @@ export default async function page({
       </Container>
       <Container>
         <FavoriteMovies />
+      </Container>
+      <Container>
+        {/* @ts-expect-error Async Server Component */}
+        <UserReviews username={params.username} />
       </Container>
     </main>
   );

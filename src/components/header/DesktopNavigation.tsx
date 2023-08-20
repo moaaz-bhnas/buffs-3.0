@@ -25,8 +25,7 @@ async function DesktopNavigation({}: Props) {
           <button
             className="flex h-12 w-12 items-center justify-center rounded-full duration-75 hover:bg-gray-200 focus:bg-gray-200"
             type="button"
-            aria-label="Toggle notifications panel"
-          >
+            aria-label="Toggle notifications panel">
             <BellIcon className="w-7" />
           </button>
         </li>
@@ -36,9 +35,8 @@ async function DesktopNavigation({}: Props) {
           <button
             className="flex h-12 w-12 items-center justify-center rounded-full duration-75 hover:bg-gray-200 focus:bg-gray-200"
             type="button"
-            aria-label="Toggle messages panel"
-          >
-            <PaperAirplaneIcon className="w-7" />
+            aria-label="Toggle messages panel">
+            <PaperAirplaneIcon className="w-7" href="../../" />
           </button>
         </li>
 
@@ -48,8 +46,7 @@ async function DesktopNavigation({}: Props) {
             <Link
               href={`/${userResult.value.username}`}
               className="flex h-12 w-12 items-center justify-center rounded-full duration-75 hover:bg-gray-200 focus:bg-gray-200"
-              aria-label="Your profile page"
-            >
+              aria-label="Your profile page">
               <Suspense fallback={<AvatarSkeleton />}>
                 {/* @ts-expect-error Async Server Component */}
                 <UserAvatar />

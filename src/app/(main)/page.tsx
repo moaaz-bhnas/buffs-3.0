@@ -8,7 +8,7 @@ import Feed from "@/components/feed/Feed";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Buffs - Feed",
+  title: "Feed | Buffs",
   description: taglineMessages.default,
 };
 

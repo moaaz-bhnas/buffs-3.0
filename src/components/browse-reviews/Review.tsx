@@ -14,7 +14,8 @@ type Props = {
 
 function Review({ review }: Props) {
   return (
-    <li role="article" className="space-y-2 border-b py-3 first:pt-0">
+    // py-3 first:pt-0
+    <li role="article" className="space-y-2">
       {/* username and avatar */}
       <header className="flex items-center gap-x-4">
         <div className="flex items-center gap-x-1">
@@ -37,12 +38,12 @@ function Review({ review }: Props) {
       {/* movie details */}
       <div className="flex gap-x-2">
         <Image
-          className="w-32 shrink-0 rounded-sm"
+          className="w-20 shrink-0 rounded-sm sm:w-28"
           src={review.movieDetails.posterPath}
           alt={""}
           width={0}
           height={0}
-          sizes="10rem"
+          sizes="8rem"
         />
 
         <div className="space-y-1">
@@ -53,16 +54,21 @@ function Review({ review }: Props) {
           <p className="text-sm text-gray-600">
             {review.movieDetails.genres.join(", ")}
           </p>
-        </div>
-      </div>
 
-      {/* Review Details */}
-      <div>
-        <p className="inline-flex items-center gap-x-1.5 rounded-full bg-teal-100 px-2 py-1">
-          <StarIcon className="w-4 fill-yellow-600 stroke-none" />
-          <span className="text-base font-semibold">{review.rating}</span>
-        </p>
-        <MDEditor.Markdown source={review.review} />
+          <hr />
+
+          <p className="flex items-center gap-x-1">
+            <StarIcon className="w-4 fill-yellow-600 stroke-none" />
+            <span className="text-base font-semibold">{review.rating}</span>
+          </p>
+          <MDEditor.Markdown
+            source={review.review}
+            style={{
+              fontFamily:
+                'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
+            }}
+          />
+        </div>
       </div>
     </li>
   );

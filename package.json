@@ -28,6 +28,7 @@
     "luxon": "^3.3.0",
     "neverthrow": "^6.0.0",
     "next": "latest",
+    "nextjs-toploader": "^1.4.2",
     "postcss": "8.4.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -84,7 +84,8 @@ function Feed({}: Props) {
 
   return (
     <section>
-      <ul>
+      {/* divide-y */}
+      <ul className="space-y-8">
         {reviews.map((review) => (
           <Review key={review._id} review={review} />
         ))}

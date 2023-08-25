@@ -8,6 +8,7 @@ import { useAsyncFn } from "react-use";
 import { DBReview } from "@/interfaces/database/DBReview";
 import { SocketEvent } from "@/interfaces/socket/SocketEvent";
 import structuredClone from "@ungap/structured-clone";
+import { DBUser } from "@/interfaces/database/DBUser";
 
 type Props = {};
 
@@ -42,7 +43,18 @@ function handleNewReviews(
 }
 
 function Feed({}: Props) {
+  const [user, setUser] = useState<DBUser | null>(null);
   const [reviews, setReveiws] = useState<DBReview[]>([]);
+
+  const [getUserState, getAndSetUser] = useAsyncFn(async () => {
+    const userResult = await serverApiClient.getUserByToken();
+
+    if (userResult.isErr()) {
+      throw new Error(JSON.stringify(userResult.error));
+    }
+
+    setUser(userResult.value);
+  });
 
   const [getReveiwsState, getAndSetReviews] = useAsyncFn(async () => {
     const reviewsResult = await serverApiClient.getReviews();
@@ -57,6 +69,10 @@ function Feed({}: Props) {
   // effects
   useEffect(() => {
     getAndSetReviews();
+  }, []);
+
+  useEffect(() => {
+    getAndSetUser();
   }, []);
 
   useEffect(function establishSocketConnection() {
@@ -86,9 +102,9 @@ function Feed({}: Props) {
     <section>
       {/* divide-y */}
       <ul className="space-y-8">
-        {reviews.map((review) => (
-          <Review key={review._id} review={review} />
-        ))}
+        {reviews.map((review) =>
+          user ? <Review key={review._id} review={review} user={user} /> : <></>
+        )}
       </ul>
     </section>
   );

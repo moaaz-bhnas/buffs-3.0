@@ -63,14 +63,23 @@ export class ServerApiClient {
     return ok(result.value);
   }
 
-  async getUserByToken(token: string): Promise<Result<DBUser, ApiError>> {
+  /**
+   * @param {string} token required only in server code
+   * as in the client (browser) all cookies are sent with each request
+   */
+  async getUserByToken(token?: string): Promise<Result<DBUser, ApiError>> {
+    if (isServer() && !token) {
+      return err({
+        errorMessage:
+          "Dear developer, you need to pass the auth token if the function is run in the server",
+      });
+    }
+
+    const config = token ? { headers: { Cookie: `token=${token}` } } : {};
+
     const result = await this.serverApiClient.get<GetUserByTokenResponse>(
       `${this.apiBaseUrl}/v${this.apiVersion}/auth/me`,
-      {
-        headers: {
-          Cookie: `token=${token}`,
-        },
-      }
+      config
     );
 
     if (result.isErr()) {
@@ -119,7 +128,6 @@ export class ServerApiClient {
   }
 
   /**
-   *
    * @param {string} token required only in server code
    * as in the client (browser) all cookies are sent with each request
    */

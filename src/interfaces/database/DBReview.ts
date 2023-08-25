@@ -2,8 +2,9 @@ import { DBMovie } from "./DBMovie";
 
 export interface DBReview {
   _id: string;
-  username: string;
+  userId: string;
   userDetails: {
+    username: string;
     displayName: string;
     avatar: string;
   };

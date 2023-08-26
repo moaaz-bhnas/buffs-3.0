@@ -8,7 +8,7 @@ import { DateTime } from "luxon";
 import { StarIcon } from "@heroicons/react/24/outline";
 import MDEditor from "@uiw/react-md-editor";
 import { DBUser } from "@/interfaces/database/DBUser";
-import PopoverReviewActions from "./PopoverReviewActions";
+import PopoverReviewActions from "./ReviewActionsPopover";
 
 type Props = {
   review: DBReview;

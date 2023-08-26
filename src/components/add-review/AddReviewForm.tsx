@@ -17,7 +17,6 @@ import { ServerApiClient } from "@/apis/server-api-client";
 import ThemeButton from "../theme-button/ThemeButton";
 import errorMessages from "@/utils/messages/errorMessages";
 import ProgressSteps from "../progress-steps/ProgressSteps";
-import { useRouter } from "next/navigation";
 
 enum AddReviewStep {
   selectMovie = "Select Movie",
@@ -184,7 +183,6 @@ function AddReviewForm({ onSuccess = () => {} }: Props) {
               setRating={setRating}
               reviewText={reviewText}
               setReviewText={setReviewText}
-              setSelectedMovie={setSelectedMovie}
             />
           </motion.div>
 

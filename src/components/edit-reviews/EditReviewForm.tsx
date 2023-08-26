@@ -1,39 +1,28 @@
 "use client";
 
-import { TmdbDemoMovie } from "@/interfaces/tmdb/TmdbDemoMovie";
-import { DateTime } from "luxon";
 import Image from "next/image";
+import { DBReview } from "@/interfaces/database/DBReview";
+import { useState } from "react";
+import { DateTime } from "luxon";
 import RatingStars from "../rating-stars/RatingStars";
-import { Dispatch, SetStateAction } from "react";
 import MDEditor from "@uiw/react-md-editor";
-import "@uiw/react-md-editor/markdown-editor.css";
 import rehypeSanitize from "rehype-sanitize";
 
 type Props = {
-  movie: TmdbDemoMovie;
-  rating: number;
-  setRating: Dispatch<SetStateAction<number>>;
-  reviewText: string;
-  setReviewText: Dispatch<SetStateAction<string>>;
+  review: DBReview;
 };
 
-function SelectedMovieView({
-  movie,
-  rating,
-  setRating,
-  reviewText,
-  setReviewText,
-}: Props) {
+function EditReviewForm({ review }: Props) {
+  const [rating, setRating] = useState(review.rating);
+  const [reviewText, setReviewText] = useState(review.review);
+
   return (
-    <div className="space-y-2">
+    <form className="space-y-2">
       <div className="flex items-start gap-x-4">
         {/* Poster */}
         <Image
           className="aspect-[185/278] w-40 animate-load rounded-sm bg-gray-300 sm:w-36"
-          src={
-            movie.complete_poster_path ||
-            "images/placeholders/backdrop-placeholder.svg"
-          }
+          src={review.movieDetails.posterPath}
           alt={""}
           width={0}
           height={0}
@@ -43,13 +32,10 @@ function SelectedMovieView({
         {/* Movie title and genre */}
         <div>
           <p className="text-lg font-light leading-6">
-            {movie.title} ({DateTime.fromISO(movie.release_date).year})
+            {review.movieDetails.title} (
+            {DateTime.fromISO(review.movieDetails.releaseDate).year})
           </p>
-          {movie.genres && (
-            <p className="sm:hidden">
-              {movie.genres.map((genre) => genre.name).join(", ")}
-            </p>
-          )}
+          <p className="sm:hidden">{review.movieDetails.genres.join(", ")}</p>
         </div>
       </div>
 
@@ -84,8 +70,8 @@ function SelectedMovieView({
           </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 }
 
-export default SelectedMovieView;
+export default EditReviewForm;

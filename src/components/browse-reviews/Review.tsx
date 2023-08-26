@@ -7,22 +7,30 @@ import Image from "next/image";
 import { DateTime } from "luxon";
 import { StarIcon } from "@heroicons/react/24/outline";
 import MDEditor from "@uiw/react-md-editor";
+import { DBUser } from "@/interfaces/database/DBUser";
+import PopoverReviewActions from "./PopoverReviewActions";
 
 type Props = {
   review: DBReview;
+  user: DBUser;
 };
 
-function Review({ review }: Props) {
+function Review({ review, user }: Props) {
+  const isAuthor = user._id === review.userId;
+
   return (
     // py-3 first:pt-0
     <li role="article" className="space-y-2">
       {/* username and avatar */}
       <header className="flex items-center gap-x-4">
         <div className="flex items-center gap-x-1">
-          <Link href={`/${review.username}`}>
+          <Link href={`/${review.userDetails.username}`}>
             <Avatar size={32} avatarUrl={review.userDetails.avatar} />
           </Link>
-          <Link href={`/${review.username}`} className="font-semibold">
+          <Link
+            href={`/${review.userDetails.username}`}
+            className="font-semibold"
+          >
             {review.userDetails.displayName}
           </Link>
         </div>
@@ -33,10 +41,13 @@ function Review({ review }: Props) {
         >
           {DateTime.fromISO(review.createdAt).toRelative()}
         </time>
+        <div className="ms-auto">
+          <PopoverReviewActions isAuthor={isAuthor} />
+        </div>
       </header>
 
       {/* movie details */}
-      <div className="flex gap-x-2">
+      <div className="flex items-start gap-x-2">
         <Image
           className="w-20 shrink-0 rounded-sm sm:w-28"
           src={review.movieDetails.posterPath}

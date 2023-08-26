@@ -8,6 +8,7 @@ import { DateTime } from "luxon";
 import { StarIcon } from "@heroicons/react/24/outline";
 import MDEditor from "@uiw/react-md-editor";
 import { DBUser } from "@/interfaces/database/DBUser";
+import PopoverReviewActions from "./PopoverReviewActions";
 
 type Props = {
   review: DBReview;
@@ -15,9 +16,7 @@ type Props = {
 };
 
 function Review({ review, user }: Props) {
-  const isUserAuthor = user._id === review.userId;
-
-  console.log("♥", isUserAuthor);
+  const isAuthor = user._id === review.userId;
 
   return (
     // py-3 first:pt-0
@@ -42,6 +41,9 @@ function Review({ review, user }: Props) {
         >
           {DateTime.fromISO(review.createdAt).toRelative()}
         </time>
+        <div className="ms-auto">
+          <PopoverReviewActions isAuthor={isAuthor} />
+        </div>
       </header>
 
       {/* movie details */}

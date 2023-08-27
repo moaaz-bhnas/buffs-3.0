@@ -102,9 +102,15 @@ function Feed({}: Props) {
     <section>
       {/* divide-y */}
       <ul className="space-y-8">
-        {reviews.map((review) =>
-          user ? <Review key={review._id} review={review} user={user} /> : <></>
-        )}
+        {reviews
+          .slice(0, 1)
+          .map((review) =>
+            user ? (
+              <Review key={review._id} review={review} user={user} />
+            ) : (
+              <></>
+            )
+          )}
       </ul>
     </section>
   );

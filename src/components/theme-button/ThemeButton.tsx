@@ -31,7 +31,7 @@ function ThemeButton({
     <div className="space-y-1.5">
       <button
         className={classNames(
-          "flex items-center justify-center gap-2 rounded-md bg-teal-600 py-2 text-white",
+          "flex items-center justify-center gap-2 rounded-md bg-teal-600 py-1.5 text-white",
           className,
           disabled ? "cursor-not-allowed opacity-50" : ""
         )}

@@ -42,7 +42,7 @@ function Review({ review, user }: Props) {
           {DateTime.fromISO(review.createdAt).toRelative()}
         </time>
         <div className="ms-auto">
-          <PopoverReviewActions isAuthor={isAuthor} />
+          <PopoverReviewActions isAuthor={isAuthor} review={review} />
         </div>
       </header>
 

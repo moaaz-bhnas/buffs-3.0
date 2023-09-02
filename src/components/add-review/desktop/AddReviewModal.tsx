@@ -12,7 +12,6 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 type Props = { userDisplayName: string };
 
 function AddReviewModal({ userDisplayName }: Props) {
-  const searchInputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -22,6 +21,11 @@ function AddReviewModal({ userDisplayName }: Props) {
 
   function openModal() {
     setIsOpen(true);
+  }
+
+  function handleSuccess() {
+    setIsSuccess(true);
+    closeModal();
   }
 
   return (
@@ -35,12 +39,7 @@ function AddReviewModal({ userDisplayName }: Props) {
       </button>
 
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-10"
-          initialFocus={searchInputRef}
-          onClose={closeModal}
-        >
+        <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -78,7 +77,7 @@ function AddReviewModal({ userDisplayName }: Props) {
                   </div>
 
                   {/* form */}
-                  <AddReviewForm onSuccess={closeModal} />
+                  <AddReviewForm onSuccess={handleSuccess} />
                 </Dialog.Panel>
               </Transition.Child>
             </div>

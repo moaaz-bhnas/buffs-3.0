@@ -15,7 +15,6 @@ type Props = {
   setRating: Dispatch<SetStateAction<number>>;
   reviewText: string;
   setReviewText: Dispatch<SetStateAction<string>>;
-  setSelectedMovie: Dispatch<SetStateAction<TmdbDemoMovie | null>>;
 };
 
 function SelectedMovieView({
@@ -24,7 +23,6 @@ function SelectedMovieView({
   setRating,
   reviewText,
   setReviewText,
-  setSelectedMovie,
 }: Props) {
   return (
     <div className="space-y-2">
@@ -42,7 +40,7 @@ function SelectedMovieView({
           sizes="200px"
         />
 
-        {/* Mobie title and genre */}
+        {/* Movie title and genre */}
         <div>
           <p className="text-lg font-light leading-6">
             {movie.title} ({DateTime.fromISO(movie.release_date).year})

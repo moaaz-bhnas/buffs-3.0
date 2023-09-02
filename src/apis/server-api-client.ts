@@ -12,6 +12,8 @@ import { CreateReviewResponse } from "@/interfaces/server/CreateReviewResponse";
 import { SignoutResponse } from "@/interfaces/server/SignoutResponse";
 import { GetReviewsResponse } from "@/interfaces/server/GetReviewsResponse";
 import isServer from "@/helpers/environment/isServer";
+import { UpdateReviewRequest } from "@/interfaces/server/UpdateReviewRequest";
+import { UpdateReviewResponse } from "@/interfaces/server/UpdateReviewResponse";
 
 export class ServerApiClient {
   private readonly apiBaseUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api`;
@@ -190,6 +192,26 @@ export class ServerApiClient {
       RegisteringReview,
       CreateReviewResponse
     >(`${this.apiBaseUrl}/v${this.apiVersion}/reviews`, review);
+
+    if (result.isErr()) {
+      console.error(result.error.errorMessage, { error: result.error });
+      return err(result.error);
+    }
+
+    return ok(result.value.data);
+  }
+
+  async updateReview(
+    reviewId: string,
+    updatedFields: UpdateReviewRequest
+  ): Promise<Result<DBReview, ApiError>> {
+    const result = await this.serverApiClient.put<
+      UpdateReviewRequest,
+      UpdateReviewResponse
+    >(
+      `${this.apiBaseUrl}/v${this.apiVersion}/reviews/${reviewId}`,
+      updatedFields
+    );
 
     if (result.isErr()) {
       console.error(result.error.errorMessage, { error: result.error });

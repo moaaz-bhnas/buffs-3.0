@@ -55,7 +55,7 @@ function SearchMovieView(
 
       {/* Movie result grid */}
       {searchResults.length > 0 && (
-        <motion.ul className="grid grid-cols-3 gap-x-2.5 gap-y-4 p-1" layout>
+        <motion.ul className="grid grid-cols-4 gap-x-2.5 gap-y-4 p-1" layout>
           {searchResults.map((movie) => (
             <motion.li key={movie.id} layout>
               <MovieResultItem movie={movie} onClick={onSelectMovie} />

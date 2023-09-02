@@ -1,3 +1,4 @@
+import classNames from "@/helpers/style/classNames";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Fragment, ReactNode } from "react";
@@ -7,9 +8,16 @@ type Props = {
   isOpen: boolean;
   close(): void;
   children: ReactNode;
+  panelClassName?: string;
 };
 
-function ModalContainer({ title, isOpen, close, children }: Props) {
+function ModalContainer({
+  title,
+  isOpen,
+  close,
+  children,
+  panelClassName = "",
+}: Props) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={close}>
@@ -36,7 +44,12 @@ function ModalContainer({ title, isOpen, close, children }: Props) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="relative w-full max-w-xl transform space-y-4 overflow-auto rounded-md bg-white p-4 pt-2 text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel
+                className={classNames(
+                  "relative w-full max-w-xl transform space-y-4 overflow-auto rounded-md bg-white p-4 pt-2 text-left align-middle shadow-xl transition-all",
+                  panelClassName
+                )}
+              >
                 {/* header */}
                 <div className="flex items-center justify-between border-b">
                   <h2 className="font-semibold">{title}</h2>

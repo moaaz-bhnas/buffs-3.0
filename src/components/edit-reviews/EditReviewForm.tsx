@@ -2,23 +2,53 @@
 
 import Image from "next/image";
 import { DBReview } from "@/interfaces/database/DBReview";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { DateTime } from "luxon";
 import RatingStars from "../rating-stars/RatingStars";
 import MDEditor from "@uiw/react-md-editor";
 import rehypeSanitize from "rehype-sanitize";
 import ThemeButton from "../theme-button/ThemeButton";
+import { useAsyncFn } from "react-use";
+import { ServerApiClient } from "@/apis/server-api-client";
+import errorMessages from "@/utils/messages/errorMessages";
 
 type Props = {
   review: DBReview;
+  onSuccess?: Function;
 };
 
-function EditReviewForm({ review }: Props) {
+type TOnSubmit = (event: FormEvent<HTMLFormElement>) => Promise<void>;
+
+const serverApiClient = new ServerApiClient();
+
+function EditReviewForm({ review, onSuccess = () => {} }: Props) {
   const [rating, setRating] = useState(review.rating);
   const [reviewText, setReviewText] = useState(review.review);
 
+  // submit
+  const [handleSubmitState, handleSubmit] = useAsyncFn<TOnSubmit>(
+    async (event) => {
+      // 1. prevent default behaviour on submit
+      event.preventDefault();
+
+      // 2. Update
+      const result = await serverApiClient.updateReview(review._id, {
+        rating,
+        review: reviewText,
+      });
+
+      if (result.isErr()) {
+        console.error(result.error.errorMessage);
+        throw new Error(result.error.errorMessage);
+      }
+
+      onSuccess();
+    },
+    [rating, reviewText]
+  );
+
   return (
-    <form className="space-y-4">
+    <form className="space-y-4" onSubmit={handleSubmit}>
       <div className="flex items-start gap-x-4">
         {/* Poster */}
         <Image
@@ -68,12 +98,11 @@ function EditReviewForm({ review }: Props) {
       <ThemeButton
         type="submit"
         className="w-full"
-        // loading={handleSubmitState.loading}
-        // errorMessage={
-        //   handleSubmitState.error && errorMessages.somthingWentWrong
-        // }
-        // successMessage={isSuccess ? successMessages.review : undefined}
-        disabled={rating === 0}
+        loading={handleSubmitState.loading}
+        errorMessage={
+          handleSubmitState.error && errorMessages.somthingWentWrong
+        }
+        disabled={rating === review.rating && reviewText === review.review}
       >
         Save
       </ThemeButton>

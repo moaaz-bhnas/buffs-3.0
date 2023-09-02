@@ -4,9 +4,8 @@ import {
   PencilIcon,
 } from "@heroicons/react/24/outline";
 import { Fragment, useState } from "react";
-import ModalContainer from "../modal/ModalContainer";
-import EditReviewForm from "../edit-reviews/EditReviewForm";
 import { DBReview } from "@/interfaces/database/DBReview";
+import EditReviewModal from "./desktop/EditReviewModal";
 
 type Props = {
   isAuthor: boolean;
@@ -14,7 +13,7 @@ type Props = {
 };
 
 function PopoverReviewActions({ isAuthor, review }: Props) {
-  const [isEditModalVisible, setIsEditModalVisible] = useState(true);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
   const actions = [
     {
@@ -68,15 +67,11 @@ function PopoverReviewActions({ isAuthor, review }: Props) {
           </Popover.Panel>
         </Transition>
       </Popover>
-      <ModalContainer
-        title="Edit Review"
-        isOpen={isEditModalVisible}
-        close={() => setIsEditModalVisible(false)}
-      >
-        <div className="w-full">
-          <EditReviewForm review={review} />
-        </div>
-      </ModalContainer>
+      <EditReviewModal
+        review={review}
+        isEditModalVisible={isEditModalVisible}
+        setIsEditModalVisible={setIsEditModalVisible}
+      />
     </>
   );
 }

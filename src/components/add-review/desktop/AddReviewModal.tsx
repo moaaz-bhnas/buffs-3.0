@@ -23,6 +23,11 @@ function AddReviewModal({ userDisplayName }: Props) {
     setIsOpen(true);
   }
 
+  function handleSuccess() {
+    setIsSuccess(true);
+    closeModal();
+  }
+
   return (
     <>
       <button
@@ -72,7 +77,7 @@ function AddReviewModal({ userDisplayName }: Props) {
                   </div>
 
                   {/* form */}
-                  <AddReviewForm onSuccess={closeModal} />
+                  <AddReviewForm onSuccess={handleSuccess} />
                 </Dialog.Panel>
               </Transition.Child>
             </div>

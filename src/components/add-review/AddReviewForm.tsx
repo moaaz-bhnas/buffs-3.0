@@ -193,7 +193,6 @@ function AddReviewForm({ onSuccess = () => {} }: Props) {
             errorMessage={
               handleSubmitState.error && errorMessages.somthingWentWrong
             }
-            // successMessage={isSuccess ? successMessages.review : undefined}
             disabled={rating === 0}
           >
             Post

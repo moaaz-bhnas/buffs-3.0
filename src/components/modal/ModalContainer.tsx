@@ -36,7 +36,7 @@ function ModalContainer({ title, isOpen, close, children }: Props) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="relative max-w-xl transform space-y-4 overflow-auto rounded-md bg-white p-4 pt-2 text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="relative w-full max-w-xl transform space-y-4 overflow-auto rounded-md bg-white p-4 pt-2 text-left align-middle shadow-xl transition-all">
                 {/* header */}
                 <div className="flex items-center justify-between border-b">
                   <h2 className="font-semibold">{title}</h2>

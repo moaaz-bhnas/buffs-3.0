@@ -73,7 +73,7 @@ function PopoverReviewActions({ isAuthor, review }: Props) {
         isOpen={isEditModalVisible}
         close={() => setIsEditModalVisible(false)}
       >
-        <div className="">
+        <div className="w-full">
           <EditReviewForm review={review} />
         </div>
       </ModalContainer>

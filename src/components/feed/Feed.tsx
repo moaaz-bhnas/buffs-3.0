@@ -1,18 +1,12 @@
 "use client";
 
-import { ServerApiClient } from "@/apis/server-api-client";
 import Review from "../browse-reviews/Review";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import socket from "@/socket";
-import { useAsyncFn } from "react-use";
 import { DBReview } from "@/interfaces/database/DBReview";
 import { SocketEvent } from "@/interfaces/socket/SocketEvent";
 import structuredClone from "@ungap/structured-clone";
 import { DBUser } from "@/interfaces/database/DBUser";
-
-type Props = {};
-
-const serverApiClient = new ServerApiClient();
 
 function handleReviewUpdate(
   updatedReview: DBReview,
@@ -42,38 +36,13 @@ function handleNewReviews(
   });
 }
 
-function Feed({}: Props) {
-  const [user, setUser] = useState<DBUser | null>(null);
-  const [reviews, setReveiws] = useState<DBReview[]>([]);
+type Props = {
+  user: DBUser;
+  reviews: DBReview[];
+};
 
-  const [getUserState, getAndSetUser] = useAsyncFn(async () => {
-    const userResult = await serverApiClient.getUserByToken();
-
-    if (userResult.isErr()) {
-      throw new Error(JSON.stringify(userResult.error));
-    }
-
-    setUser(userResult.value);
-  });
-
-  const [getReveiwsState, getAndSetReviews] = useAsyncFn(async () => {
-    const reviewsResult = await serverApiClient.getReviews();
-
-    if (reviewsResult.isErr()) {
-      throw new Error(JSON.stringify(reviewsResult.error));
-    }
-
-    setReveiws(reviewsResult.value);
-  });
-
-  // effects
-  useEffect(() => {
-    getAndSetReviews();
-  }, []);
-
-  useEffect(() => {
-    getAndSetUser();
-  }, []);
+function Feed({ user, reviews: serverReviews }: Props) {
+  const [reviews, setReveiws] = useState<DBReview[]>(serverReviews);
 
   useEffect(function establishSocketConnection() {
     socket.on("connect", () => {
@@ -102,9 +71,9 @@ function Feed({}: Props) {
     <section>
       {/* divide-y */}
       <ul className="space-y-8">
-        {reviews.map((review) =>
-          user ? <Review key={review._id} review={review} user={user} /> : <></>
-        )}
+        {reviews.map((review) => (
+          <Review key={review._id} review={review} user={user} />
+        ))}
       </ul>
     </section>
   );

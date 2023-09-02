@@ -1,9 +1,8 @@
 "use-client";
 
 import classNames from "@/helpers/style/classNames";
-import Spinner from "../spinner/Spinner";
 import { ReactNode } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import ErrorMessage from "../alerts/ErrorMessage";
 import SuccessMessage from "../alerts/SuccessMessage";
 import AnimatedSpinner from "../spinner/AnimatedSpinner";

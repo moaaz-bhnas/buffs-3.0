@@ -29,7 +29,7 @@ function SelectedMovieView({
       <div className="flex items-start gap-x-4">
         {/* Poster */}
         <Image
-          className="aspect-[185/278] w-40 animate-load rounded-sm bg-gray-300 sm:w-36"
+          className="aspect-[185/278] w-40 animate-load rounded-sm bg-gray-300 sm:w-24"
           src={
             movie.complete_poster_path ||
             "images/placeholders/backdrop-placeholder.svg"
@@ -46,7 +46,7 @@ function SelectedMovieView({
             {movie.title} ({DateTime.fromISO(movie.release_date).year})
           </p>
           {movie.genres && (
-            <p className="sm:hidden">
+            <p className="text-sm text-gray-600">
               {movie.genres.map((genre) => genre.name).join(", ")}
             </p>
           )}
@@ -80,6 +80,7 @@ function SelectedMovieView({
                   ? false
                   : cmd
               }
+              height={175}
             />
           </div>
         </div>

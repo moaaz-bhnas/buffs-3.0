@@ -158,7 +158,10 @@ function AddReviewForm({ onSuccess = () => {} }: Props) {
   ];
 
   return (
-    <form className={classNames("space-y-4")} onSubmit={handleSubmit}>
+    <form
+      className={classNames("flex flex-col gap-y-4")}
+      onSubmit={handleSubmit}
+    >
       {/* Progress steps */}
       <ProgressSteps steps={steps} />
 
@@ -186,17 +189,19 @@ function AddReviewForm({ onSuccess = () => {} }: Props) {
             />
           </motion.div>
 
-          <ThemeButton
-            type="submit"
-            className="w-full"
-            loading={handleSubmitState.loading}
-            errorMessage={
-              handleSubmitState.error && errorMessages.somthingWentWrong
-            }
-            disabled={rating === 0}
-          >
-            Post
-          </ThemeButton>
+          <div className="mt-auto">
+            <ThemeButton
+              type="submit"
+              className="w-full"
+              loading={handleSubmitState.loading}
+              errorMessage={
+                handleSubmitState.error && errorMessages.somthingWentWrong
+              }
+              disabled={rating === 0}
+            >
+              Post
+            </ThemeButton>
+          </div>
         </>
       )}
     </form>

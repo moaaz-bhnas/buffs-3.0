@@ -38,7 +38,7 @@ function ThemeButton({
         type={type}
       >
         {children}
-        <AnimatedSpinner loading={loading} className="h-5 w-5 fill-teal-600" />
+        <AnimatedSpinner loading={loading} className="h-4 w-4 fill-teal-600" />
       </button>
       <AnimatePresence>
         {errorMessage && <ErrorMessage message={errorMessage} />}

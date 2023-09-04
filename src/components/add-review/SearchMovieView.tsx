@@ -12,16 +12,24 @@ import {
   useState,
 } from "react";
 import MovieResultItem from "./MovieResultItem";
+import MovieResultsSkeleton from "./MovieResultsSkeleton";
 
 type Props = {
   searchQuery: string;
   setSearchQuery: Dispatch<SetStateAction<string>>;
+  isLoadingResults: boolean;
   searchResults: TmdbDemoMovie[];
   onSelectMovie: (movie: TmdbDemoMovie) => void;
 };
 
 function SearchMovieView(
-  { searchQuery, setSearchQuery, searchResults, onSelectMovie }: Props,
+  {
+    searchQuery,
+    setSearchQuery,
+    isLoadingResults,
+    searchResults,
+    onSelectMovie,
+  }: Props,
   searchInputRef: ForwardedRef<HTMLInputElement>
 ) {
   // search icon visibility
@@ -53,9 +61,17 @@ function SearchMovieView(
         />
       </div>
 
+      {/* Loading skeleton */}
+      {isLoadingResults && searchResults.length === 0 && (
+        <MovieResultsSkeleton />
+      )}
+
       {/* Movie result grid */}
       {searchResults.length > 0 && (
-        <motion.ul className="grid grid-cols-4 gap-x-2.5 gap-y-4 p-1" layout>
+        <motion.ul
+          className="grid grid-cols-3 gap-x-2 gap-y-4 p-1 sm:grid-cols-4 sm:gap-x-2.5"
+          layout
+        >
           {searchResults.map((movie) => (
             <motion.li key={movie.id} layout>
               <MovieResultItem movie={movie} onClick={onSelectMovie} />

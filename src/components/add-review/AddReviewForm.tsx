@@ -4,7 +4,6 @@ import { FormEvent, useEffect, useRef, useState, useTransition } from "react";
 import { TmdbDemoMovie } from "@/interfaces/tmdb/TmdbDemoMovie";
 import { TmdbApiClient } from "@/apis/tmdb-api-client";
 import classNames from "@/helpers/style/classNames";
-import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { TmdbImageSize } from "@/interfaces/tmdb/TmdbImageSize";
 import { useUpdateEffect } from "usehooks-ts";
 import { motion } from "framer-motion";
@@ -171,6 +170,7 @@ function AddReviewForm({ onSuccess = () => {} }: Props) {
           ref={searchInputRef}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
+          isLoadingResults={isLoadingResults}
           searchResults={searchResults}
           onSelectMovie={handleSelectMovie}
         />

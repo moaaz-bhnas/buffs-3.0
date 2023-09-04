@@ -57,7 +57,7 @@ function Review({ review, user }: Props) {
           sizes="8rem"
         />
 
-        <div className="space-y-1">
+        <div className="flex-1 space-y-1">
           <p className="text-base leading-6">
             {review.movieDetails.title} (
             {DateTime.fromISO(review.movieDetails.releaseDate).year})

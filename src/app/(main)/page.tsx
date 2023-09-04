@@ -26,16 +26,18 @@ export default async function Home() {
   return (
     <main>
       <Container>
-        <div className="flex">
-          <div className="hidden sm:block sm:w-3/5">
-            {/* @ts-expect-error Async Server Component */}
-            <AddReviewSection />
-          </div>
-        </div>
-      </Container>
+        <div className="flex justify-center">
+          {/* Column 1: add review + reviews */}
+          <div className="max-w-md space-y-8">
+            <div className="hidden sm:block">
+              <AddReviewSection user={userResult.value} />
+            </div>
 
-      <Container>
-        <Feed user={userResult.value} reviews={reviewsResult.value} />
+            <Feed user={userResult.value} reviews={reviewsResult.value} />
+          </div>
+
+          {/* Column 2: Streams */}
+        </div>
       </Container>
     </main>
   );

@@ -3,20 +3,16 @@ import Link from "next/link";
 import UserAvatar from "../../avatar/UserAvatar";
 import { Suspense } from "react";
 import AvatarSkeleton from "../../avatar/AvatarSkeleton";
-import getServerUser from "@/helpers/auth/getServerUser";
+import { DBUser } from "@/interfaces/database/DBUser";
 
-type Props = {};
+type Props = {
+  user: DBUser;
+};
 
-async function AddReviewSection({}: Props) {
-  const userResult = await getServerUser();
-
-  if (userResult.isErr()) {
-    return <></>;
-  }
-
+function AddReviewSection({ user }: Props) {
   return (
     <section
-      className="flex gap-x-2 rounded-md bg-white p-3 shadow-sm"
+      className="flex gap-x-2 rounded-md bg-white p-3 shadow"
       aria-label="Write a review"
     >
       <Link href="/profile">
@@ -26,7 +22,7 @@ async function AddReviewSection({}: Props) {
         </Suspense>
       </Link>
       <div className="flex-1">
-        <ReviewModal userDisplayName={userResult.value.displayName} />
+        <ReviewModal userDisplayName={user.displayName} />
       </div>
     </section>
   );

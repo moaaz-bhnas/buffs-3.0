@@ -28,7 +28,7 @@ function MovieResultItem({ movie, onClick }: Props) {
         />
       </button>
 
-      <p className="text-sm">
+      <p className="text-xs sm:text-sm">
         {movie.title} ({DateTime.fromISO(movie.release_date).year})
       </p>
     </div>

@@ -13,6 +13,7 @@ import errorMessages from "@/utils/messages/errorMessages";
 import successMessages from "@/utils/messages/successMessages";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import * as NProgress from "nprogress";
 import Link from "next/link";
 
 type Props = {};
@@ -46,6 +47,7 @@ function SignupForm({}: Props) {
     Cookies.set("token", result.value.token, {
       expires: Number(process.env.NEXT_PUBLIC_JWT_EXPIRE),
     });
+    NProgress.start();
     router.push("/");
   });
 

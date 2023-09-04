@@ -6,8 +6,8 @@ import {
   ArrowLeftOnRectangleIcon,
   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import { useRouter } from "next/navigation";
+import * as NProgress from "nprogress";
 import { useAsyncFn } from "react-use";
 import Notification from "../notification/Notification";
 import { useState } from "react";
@@ -32,6 +32,7 @@ function SettingsPopover({}: Props) {
       throw new Error(result.error.errorMessage);
     }
 
+    NProgress.start();
     router.push("/signin");
   });
 

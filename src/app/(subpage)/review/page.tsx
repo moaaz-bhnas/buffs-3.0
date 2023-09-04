@@ -7,7 +7,7 @@ import { Metadata } from "next/types";
 type Props = {};
 
 export const metadata: Metadata = {
-  title: "Buffs - Add Review",
+  title: "Add Review | Buffs",
   description: taglineMessages.default,
 };
 

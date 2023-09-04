@@ -15,13 +15,11 @@ async function DesktopNavigation({}: Props) {
   return (
     <div className="flex items-center gap-x-3">
       {/* Search bar */}
-      <div className="flex-1">
-        <SearchForm />
-      </div>
+      <div className="flex-1">{/* <SearchForm /> */}</div>
 
       <ul className="-me-2.5 flex gap-x-1">
         {/* Notifications */}
-        <li>
+        {/* <li>
           <button
             className="flex h-12 w-12 items-center justify-center rounded-full duration-75 hover:bg-gray-200 focus:bg-gray-200"
             type="button"
@@ -29,10 +27,10 @@ async function DesktopNavigation({}: Props) {
           >
             <BellIcon className="w-7" />
           </button>
-        </li>
+        </li> */}
 
         {/* Inbox */}
-        <li>
+        {/* <li>
           <button
             className="flex h-12 w-12 items-center justify-center rounded-full duration-75 hover:bg-gray-200 focus:bg-gray-200"
             type="button"
@@ -40,7 +38,7 @@ async function DesktopNavigation({}: Props) {
           >
             <PaperAirplaneIcon className="w-7" />
           </button>
-        </li>
+        </li> */}
 
         {/* Profile */}
         <li>

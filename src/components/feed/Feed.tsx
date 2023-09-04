@@ -68,7 +68,7 @@ function Feed({ user, reviews: serverReviews }: Props) {
   }, []);
 
   return (
-    <section>
+    <section aria-label="Feed">
       {/* divide-y */}
       <ul className="space-y-8">
         {reviews.map((review) => (

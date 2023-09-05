@@ -2,6 +2,7 @@ import { Popover, Transition } from "@headlessui/react";
 import {
   EllipsisHorizontalIcon,
   PencilIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
 import { Fragment, useState } from "react";
 import { DBReview } from "@/interfaces/database/DBReview";
@@ -21,6 +22,12 @@ function PopoverReviewActions({ isAuthor, review }: Props) {
       Icon: PencilIcon,
       visible: isAuthor,
       handleClick: () => setIsEditModalVisible(true),
+    },
+    {
+      label: "Remove review",
+      Icon: TrashIcon,
+      visible: isAuthor,
+      handleClick: () => {},
     },
   ];
 

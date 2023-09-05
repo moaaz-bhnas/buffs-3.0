@@ -67,6 +67,13 @@ function Feed({ user, reviews: serverReviews }: Props) {
     };
   }, []);
 
+  /**
+   * Filter out soft-deleted reviews
+   * Normally, reviews are passed without soft-deleted
+   * but this is just for real-time functionality
+   */
+  const filteredReviews = reviews.filter((review) => !review.isDeleted);
+
   return (
     <section aria-label="Feed">
       {/* divide-y */}

@@ -144,7 +144,7 @@ export class ServerApiClient {
     const config = token ? { headers: { Cookie: `token=${token}` } } : {};
 
     const result = await this.serverApiClient.get<GetReviewsResponse>(
-      `${this.apiBaseUrl}/v${this.apiVersion}/reviews?sort=-_id`,
+      `${this.apiBaseUrl}/v${this.apiVersion}/reviews?isDeleted=false&sort=-_id`,
       config
     );
 
@@ -174,7 +174,7 @@ export class ServerApiClient {
     const config = token ? { headers: { Cookie: `token=${token}` } } : {};
 
     const result = await this.serverApiClient.get<GetReviewsResponse>(
-      `${this.apiBaseUrl}/v${this.apiVersion}/reviews?username=${username}&sort=-_id`,
+      `${this.apiBaseUrl}/v${this.apiVersion}/reviews?username=${username}&isDeleted=false&sort=-_id`,
       config
     );
 

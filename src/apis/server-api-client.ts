@@ -14,6 +14,7 @@ import { GetReviewsResponse } from "@/interfaces/server/GetReviewsResponse";
 import isServer from "@/helpers/environment/isServer";
 import { UpdateReviewRequest } from "@/interfaces/server/UpdateReviewRequest";
 import { UpdateReviewResponse } from "@/interfaces/server/UpdateReviewResponse";
+import { DeleteReviewResponse } from "@/interfaces/server/DeleteReviewResponse";
 
 export class ServerApiClient {
   private readonly apiBaseUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api`;
@@ -144,7 +145,7 @@ export class ServerApiClient {
     const config = token ? { headers: { Cookie: `token=${token}` } } : {};
 
     const result = await this.serverApiClient.get<GetReviewsResponse>(
-      `${this.apiBaseUrl}/v${this.apiVersion}/reviews?sort=-_id`,
+      `${this.apiBaseUrl}/v${this.apiVersion}/reviews?isDeleted=false&sort=-_id`,
       config
     );
 
@@ -174,7 +175,7 @@ export class ServerApiClient {
     const config = token ? { headers: { Cookie: `token=${token}` } } : {};
 
     const result = await this.serverApiClient.get<GetReviewsResponse>(
-      `${this.apiBaseUrl}/v${this.apiVersion}/reviews?username=${username}&sort=-_id`,
+      `${this.apiBaseUrl}/v${this.apiVersion}/reviews?username=${username}&isDeleted=false&sort=-_id`,
       config
     );
 
@@ -211,6 +212,19 @@ export class ServerApiClient {
     >(
       `${this.apiBaseUrl}/v${this.apiVersion}/reviews/${reviewId}`,
       updatedFields
+    );
+
+    if (result.isErr()) {
+      console.error(result.error.errorMessage, { error: result.error });
+      return err(result.error);
+    }
+
+    return ok(result.value.data);
+  }
+
+  async deleteReview(reviewId: string): Promise<Result<DBReview, ApiError>> {
+    const result = await this.serverApiClient.delete<DeleteReviewResponse>(
+      `${this.apiBaseUrl}/v${this.apiVersion}/reviews/${reviewId}`
     );
 
     if (result.isErr()) {

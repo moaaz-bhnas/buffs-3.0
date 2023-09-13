@@ -29,4 +29,5 @@ export interface DBReview {
   comments: any[];
   createdAt: string;
   updatedAt: string;
+  isDeleted: boolean;
 }

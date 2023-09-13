@@ -28,7 +28,7 @@ export default async function Home() {
       <Container>
         <div className="flex justify-center">
           {/* Column 1: add review + reviews */}
-          <div className="max-w-md space-y-8">
+          <div className="w-full max-w-md space-y-8">
             <div className="hidden sm:block">
               <AddReviewSection user={userResult.value} />
             </div>

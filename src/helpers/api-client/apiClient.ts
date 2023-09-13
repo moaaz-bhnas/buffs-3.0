@@ -80,4 +80,16 @@ export default class ApiClient {
       return handleApiError<TResponse>(error);
     }
   }
+
+  async delete<TResponse>(
+    path: string,
+    config: AxiosRequestConfig<any> = { headers: {} }
+  ): Promise<Result<TResponse, ApiError>> {
+    try {
+      const response = await this.client.delete<TResponse>(path, config);
+      return ok(response.data);
+    } catch (error) {
+      return handleApiError<TResponse>(error);
+    }
+  }
 }

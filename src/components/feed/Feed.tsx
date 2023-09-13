@@ -78,7 +78,7 @@ function Feed({ user, reviews: serverReviews }: Props) {
     <section aria-label="Feed">
       {/* divide-y */}
       <ul className="space-y-8">
-        {reviews.map((review) => (
+        {filteredReviews.map((review) => (
           <Review key={review._id} review={review} user={user} />
         ))}
       </ul>

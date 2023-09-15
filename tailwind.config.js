@@ -11,9 +11,13 @@ module.exports = {
         load: {
           "50%": { backgroundColor: "#eee" },
         },
+        pop: {
+          "50%": { transform: "scale(1.3)" },
+        },
       },
       animation: {
         load: "load 2s linear infinite",
+        pop: "pop 0.3s",
       },
       fontFamily: {
         open: ["var(--font-open-sans)"],

@@ -9,6 +9,7 @@ import { StarIcon } from "@heroicons/react/24/outline";
 import MDEditor from "@uiw/react-md-editor";
 import { DBUser } from "@/interfaces/database/DBUser";
 import PopoverReviewActions from "./ReviewActionsPopover";
+import ReviewInteractions from "./ReviewInteractions";
 
 type Props = {
   review: DBReview;
@@ -81,6 +82,9 @@ function Review({ review, user }: Props) {
           />
         </div>
       </div>
+
+      {/* Review like / comment / share */}
+      <ReviewInteractions user={user} review={review} />
     </li>
   );
 }

@@ -8,13 +8,11 @@ import { SigninRequest } from "@/interfaces/server/SigninRequest";
 import { GetUserByTokenResponse } from "@/interfaces/server/GetUserByTokenResponse";
 import { RegisteringReview } from "@/interfaces/database/RegisteringReview";
 import { DBReview } from "@/interfaces/database/DBReview";
-import { CreateReviewResponse } from "@/interfaces/server/CreateReviewResponse";
 import { SignoutResponse } from "@/interfaces/server/SignoutResponse";
 import { GetReviewsResponse } from "@/interfaces/server/GetReviewsResponse";
 import isServer from "@/helpers/environment/isServer";
 import { UpdateReviewRequest } from "@/interfaces/server/UpdateReviewRequest";
-import { UpdateReviewResponse } from "@/interfaces/server/UpdateReviewResponse";
-import { DeleteReviewResponse } from "@/interfaces/server/DeleteReviewResponse";
+import { ReviewResponse } from "@/interfaces/server/ReviewResponse";
 
 export class ServerApiClient {
   private readonly apiBaseUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api`;
@@ -191,7 +189,7 @@ export class ServerApiClient {
   ): Promise<Result<DBReview, ApiError>> {
     const result = await this.serverApiClient.post<
       RegisteringReview,
-      CreateReviewResponse
+      ReviewResponse
     >(`${this.apiBaseUrl}/v${this.apiVersion}/reviews`, review);
 
     if (result.isErr()) {
@@ -208,7 +206,7 @@ export class ServerApiClient {
   ): Promise<Result<DBReview, ApiError>> {
     const result = await this.serverApiClient.put<
       UpdateReviewRequest,
-      UpdateReviewResponse
+      ReviewResponse
     >(
       `${this.apiBaseUrl}/v${this.apiVersion}/reviews/${reviewId}`,
       updatedFields
@@ -223,8 +221,22 @@ export class ServerApiClient {
   }
 
   async deleteReview(reviewId: string): Promise<Result<DBReview, ApiError>> {
-    const result = await this.serverApiClient.delete<DeleteReviewResponse>(
+    const result = await this.serverApiClient.delete<ReviewResponse>(
       `${this.apiBaseUrl}/v${this.apiVersion}/reviews/${reviewId}`
+    );
+
+    if (result.isErr()) {
+      console.error(result.error.errorMessage, { error: result.error });
+      return err(result.error);
+    }
+
+    return ok(result.value.data);
+  }
+
+  async likeReview(reviewId: string): Promise<Result<DBReview, ApiError>> {
+    const result = await this.serverApiClient.put<{}, ReviewResponse>(
+      `${this.apiBaseUrl}/v${this.apiVersion}/reviews/${reviewId}/like`,
+      {}
     );
 
     if (result.isErr()) {

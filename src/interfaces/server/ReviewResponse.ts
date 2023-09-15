@@ -1,6 +1,6 @@
 import { DBReview } from "../database/DBReview";
 
-export interface DeleteReviewResponse {
+export interface ReviewResponse {
   success: boolean;
   data: DBReview;
 }

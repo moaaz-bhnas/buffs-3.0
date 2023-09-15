@@ -16,4 +16,7 @@ export interface DBUser {
   avatar: string;
   createdAt: Date;
   updatedAt: Date;
+  following: string[];
+  followers: string[];
+  likes: string[];
 }

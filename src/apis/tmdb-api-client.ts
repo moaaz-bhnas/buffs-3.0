@@ -137,7 +137,7 @@ export class TmdbApiClient {
 
   private async mapCompleteImagePaths(
     movies: TmdbDemoMovie[],
-    TmdbImageSize: TmdbImageSize
+    tmdbImageSize: TmdbImageSize
   ): Promise<Result<TmdbDemoMovie[], ApiError>> {
     const configuration = await this.getTmdbConfiguration();
 
@@ -149,12 +149,12 @@ export class TmdbApiClient {
       configuration.value.images;
 
     // If passed image size > largest available size from the API, get the largest size
-    let backdropSize = TmdbImageSize;
-    let posterSize = TmdbImageSize;
-    if (TmdbImageSize > backdrop_sizes.length - 1) {
+    let backdropSize = tmdbImageSize;
+    let posterSize = tmdbImageSize;
+    if (tmdbImageSize > backdrop_sizes.length - 1) {
       backdropSize = backdrop_sizes.length - 1;
     }
-    if (TmdbImageSize > poster_sizes.length - 1) {
+    if (tmdbImageSize > poster_sizes.length - 1) {
       posterSize = poster_sizes.length - 1;
     }
 

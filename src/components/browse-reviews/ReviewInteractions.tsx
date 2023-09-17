@@ -6,7 +6,8 @@ import { ServerApiClient } from "@/apis/server-api-client";
 import { DBReview } from "@/interfaces/database/DBReview";
 import { DBUser } from "@/interfaces/database/DBUser";
 import classNames from "@/helpers/style/classNames";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import ModalContainer from "../modal/ModalContainer";
 
 type Props = {
   user: DBUser;
@@ -16,15 +17,36 @@ type Props = {
 const serverApiClient = new ServerApiClient();
 
 function ReviewInteractions({ user, review }: Props) {
-  // Like functionality
-  const [isLiked, setIsLiked] = useState(review.likers.includes(user._id));
+  /**
+   * Like functionality
+   */
+  const [likers, setLikers] = useState(review.likers);
+  const isLiked = likers.includes(user._id);
   const [isLikesModalVisible, setIsLikesModalVisible] = useState(false);
-  const [handleLikeState, handleLike] = useAsyncFn(async () => {
-    const result = await serverApiClient.likeReview(review._id);
-    if (result.isErr()) {
-      throw new Error(result.error.errorMessage);
+  const [handleLikeState, handleLike] = useAsyncFn(
+    async (
+      userId: string,
+      reviewId: string,
+      setLikers: Dispatch<SetStateAction<string[]>>
+    ) => {
+      // 1. update local state till the updated data comes from Socket.io
+      setLikers((prevLikers) => {
+        let newLikers;
+        if (prevLikers.includes(userId)) {
+          newLikers = prevLikers.filter((liker) => liker !== userId);
+        } else {
+          newLikers = prevLikers.concat([userId]);
+        }
+        return newLikers;
+      });
+
+      // 2. send a like request to the server
+      const result = await serverApiClient.likeReview(reviewId);
+      if (result.isErr()) {
+        throw new Error(result.error.errorMessage);
+      }
     }
-  });
+  );
 
   return (
     <div>
@@ -38,10 +60,7 @@ function ReviewInteractions({ user, review }: Props) {
               !isLiked && !handleLikeState.loading ? "hover:opacity-60" : ""
             )}
             type="button"
-            onClick={() => {
-              setIsLiked((prevState) => !prevState);
-              handleLike();
-            }}
+            onClick={() => handleLike(user._id, review._id, setLikers)}
             disabled={handleLikeState.loading}
           >
             <HeartIcon
@@ -55,11 +74,23 @@ function ReviewInteractions({ user, review }: Props) {
       </ul>
 
       {/* likes panel */}
-      {review.likers.length > 0 && (
-        <button className="font-semibold" type="button">
-          {review.likers.length} {review.likers.length === 1 ? "like" : "likes"}
+      {likers.length > 0 && (
+        <button
+          className="font-semibold"
+          type="button"
+          onClick={() => setIsLikesModalVisible(true)}
+        >
+          {likers.length} {likers.length === 1 ? "like" : "likes"}
         </button>
       )}
+      <ModalContainer
+        title="Likes"
+        isOpen={isLikesModalVisible}
+        close={() => setIsLikesModalVisible(false)}
+        panelClassName="max-w-sm"
+      >
+        Likes Modal
+      </ModalContainer>
     </div>
   );
 }

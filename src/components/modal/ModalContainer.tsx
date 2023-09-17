@@ -46,12 +46,12 @@ function ModalContainer({
             >
               <Dialog.Panel
                 className={classNames(
-                  "relative w-full max-w-xl transform space-y-4 overflow-auto rounded-md bg-white p-4 pt-2 text-left align-middle shadow-xl transition-all",
+                  "relative w-full max-w-xl transform space-y-2 overflow-auto rounded-md bg-white p-4 pt-2 text-left align-middle shadow-xl transition-all",
                   panelClassName
                 )}
               >
                 {/* header */}
-                <div className="flex items-center justify-between border-b">
+                <div className="fixed left-0 right-0 top-0 flex items-center justify-between border-b bg-white px-4 pt-2">
                   <h2 className="font-semibold">{title}</h2>
                   <button
                     className="bg-gray-20 flex h-10 w-10 rounded-full transition hover:bg-gray-300 focus:bg-gray-300"

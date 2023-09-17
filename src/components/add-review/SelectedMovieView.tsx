@@ -5,9 +5,9 @@ import { DateTime } from "luxon";
 import Image from "next/image";
 import RatingStars from "../rating-stars/RatingStars";
 import { Dispatch, SetStateAction } from "react";
-import MDEditor from "@uiw/react-md-editor";
-import "@uiw/react-md-editor/markdown-editor.css";
-import rehypeSanitize from "rehype-sanitize";
+// import MDEditor from "@uiw/react-md-editor";
+// import "@uiw/react-md-editor/markdown-editor.css";
+// import rehypeSanitize from "rehype-sanitize";
 
 type Props = {
   movie: TmdbDemoMovie;
@@ -65,7 +65,7 @@ function SelectedMovieView({
             />
           </div>
           <div className="container">
-            <MDEditor
+            {/* <MDEditor
               value={reviewText}
               onChange={(review) => setReviewText(review || "")}
               preview="edit"
@@ -81,7 +81,7 @@ function SelectedMovieView({
                   : cmd
               }
               height={175}
-            />
+            /> */}
           </div>
         </div>
       </div>

@@ -1,3 +1,7 @@
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: false,
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
@@ -22,6 +26,14 @@ const nextConfig = {
       },
     ],
   },
+  modularizeImports: {
+    "usehooks-ts": {
+      transform: "usehooks-ts/dist/esm/{{member}}/{{member}}",
+    },
+    "react-use": {
+      transform: "react-use/esm/{{member}}",
+    },
+  },
   webpack: (config) => {
     config.externals.push({
       "utf-8-validate": "commonjs utf-8-validate",
@@ -32,4 +44,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = withBundleAnalyzer(nextConfig);

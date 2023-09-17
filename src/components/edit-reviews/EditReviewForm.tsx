@@ -5,8 +5,8 @@ import { DBReview } from "@/interfaces/database/DBReview";
 import { FormEvent, useState } from "react";
 import { DateTime } from "luxon";
 import RatingStars from "../rating-stars/RatingStars";
-import MDEditor from "@uiw/react-md-editor";
-import rehypeSanitize from "rehype-sanitize";
+// import MDEditor from "@uiw/react-md-editor";
+// import rehypeSanitize from "rehype-sanitize";
 import ThemeButton from "../theme-button/ThemeButton";
 import { useAsyncFn } from "react-use";
 import { ServerApiClient } from "@/apis/server-api-client";
@@ -76,7 +76,7 @@ function EditReviewForm({ review, onSuccess = () => {} }: Props) {
       <div className="space-y-3">
         <RatingStars starsCount={10} rating={rating} setRating={setRating} />
 
-        <MDEditor
+        {/* <MDEditor
           value={reviewText}
           onChange={(review) => setReviewText(review || "")}
           preview="edit"
@@ -92,7 +92,7 @@ function EditReviewForm({ review, onSuccess = () => {} }: Props) {
               : cmd
           }
           height={175}
-        />
+        /> */}
       </div>
 
       <ThemeButton

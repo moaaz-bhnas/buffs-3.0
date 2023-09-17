@@ -74,7 +74,7 @@ function ReviewInteractions({ user, review }: Props) {
       </ul>
 
       {/* likes panel */}
-      {likers.length > 0 && (
+      {/* {likers.length > 0 && (
         <button
           className="font-semibold"
           type="button"
@@ -90,7 +90,7 @@ function ReviewInteractions({ user, review }: Props) {
         panelClassName="max-w-sm"
       >
         Likes Modal
-      </ModalContainer>
+      </ModalContainer> */}
     </div>
   );
 }

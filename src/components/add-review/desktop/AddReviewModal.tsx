@@ -41,9 +41,11 @@ function AddReviewModal({ userDisplayName }: Props) {
         title="Write a review"
         isOpen={isOpen}
         close={closeModal}
-        panelClassName="h-[calc(100vh-2rem)] max-h-[37rem] max-w-2xl"
+        panelClassName="max-w-2xl"
       >
-        <AddReviewForm onSuccess={handleSuccess} />
+        <div className="h-[calc(100vh-2rem)] max-h-[37rem]">
+          <AddReviewForm onSuccess={handleSuccess} />
+        </div>
       </ModalContainer>
 
       <Notification visible={isSuccess} setIsVisible={setIsSuccess}>

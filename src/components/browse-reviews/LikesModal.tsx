@@ -38,9 +38,9 @@ function LikesModal({ isOpen, close, likers }: Props) {
       title="Likes"
       isOpen={isOpen}
       close={close}
-      panelClassName="!max-w-sm max-h-96"
+      panelClassName="max-w-sm"
     >
-      <ul className="space-y-2">
+      <ul className="max-h-96 space-y-2">
         {users.map((user) => (
           <li key={user._id} className="max-h flex items-center gap-2">
             <Link href={`/${user.username}`}>

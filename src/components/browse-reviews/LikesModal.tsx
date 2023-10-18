@@ -7,6 +7,7 @@ import { DBUser } from "@/interfaces/database/DBUser";
 import { useAsyncFn } from "react-use";
 import Link from "next/link";
 import Avatar from "../avatar/Avatar";
+import LikersSkeleton from "./LikersSkeleton";
 
 type Props = {
   isOpen: boolean;
@@ -40,18 +41,22 @@ function LikesModal({ isOpen, close, likers }: Props) {
       close={close}
       panelClassName="max-w-sm"
     >
-      <ul className="max-h-96 space-y-2">
-        {users.map((user) => (
-          <li key={user._id} className="max-h flex items-center gap-2">
-            <Link href={`/${user.username}`}>
-              <Avatar avatarUrl={user.avatar} size={40} />
-            </Link>
-            <Link href={`/${user.username}`}>
-              <p className="font-medium">{user.displayName}</p>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {getUsersState.loading ? (
+        <LikersSkeleton />
+      ) : (
+        <ul className="max-h-96 space-y-3">
+          {users.map((user) => (
+            <li key={user._id} className="flex items-center gap-2">
+              <Link href={`/${user.username}`}>
+                <Avatar avatarUrl={user.avatar} size={40} />
+              </Link>
+              <Link href={`/${user.username}`}>
+                <p className="font-medium">{user.displayName}</p>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </ModalContainer>
   );
 }

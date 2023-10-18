@@ -8,7 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { Fragment, useState } from "react";
 import { DBReview } from "@/interfaces/database/DBReview";
-import EditReviewModal from "./desktop/EditReviewModal";
+import EditReviewModal from "./EditReviewModal";
 import { ServerApiClient } from "@/apis/server-api-client";
 import { useAsyncFn } from "react-use";
 import AnimatedSpinner from "../spinner/AnimatedSpinner";

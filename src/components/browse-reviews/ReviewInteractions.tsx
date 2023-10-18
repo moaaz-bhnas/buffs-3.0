@@ -8,6 +8,7 @@ import { DBUser } from "@/interfaces/database/DBUser";
 import classNames from "@/helpers/style/classNames";
 import { Dispatch, SetStateAction, useState } from "react";
 import ModalContainer from "../modal/ModalContainer";
+import LikesModal from "./LikesModal";
 
 type Props = {
   user: DBUser;
@@ -74,7 +75,7 @@ function ReviewInteractions({ user, review }: Props) {
       </ul>
 
       {/* likes panel */}
-      {/* {likers.length > 0 && (
+      {likers.length > 0 && (
         <button
           className="font-semibold"
           type="button"
@@ -83,14 +84,11 @@ function ReviewInteractions({ user, review }: Props) {
           {likers.length} {likers.length === 1 ? "like" : "likes"}
         </button>
       )}
-      <ModalContainer
-        title="Likes"
+      <LikesModal
         isOpen={isLikesModalVisible}
         close={() => setIsLikesModalVisible(false)}
-        panelClassName="max-w-sm"
-      >
-        Likes Modal
-      </ModalContainer> */}
+        likers={likers}
+      />
     </div>
   );
 }

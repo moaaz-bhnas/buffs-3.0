@@ -25,23 +25,25 @@ function Review({ review, user }: Props) {
       {/* username and avatar */}
       <header className="flex items-center gap-x-4">
         <div className="flex items-center gap-x-1">
-          <Link href={`/${review.userDetails.username}`}>
-            <Avatar size={32} avatarUrl={review.userDetails.avatar} />
+          <Link className="shrink-0" href={`/${review.userDetails.username}`}>
+            <Avatar size={40} avatarUrl={review.userDetails.avatar} />
           </Link>
-          <Link
-            href={`/${review.userDetails.username}`}
-            className="font-semibold"
-          >
-            {review.userDetails.displayName}
-          </Link>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-x-4">
+            <Link
+              href={`/${review.userDetails.username}`}
+              className="font-semibold"
+            >
+              {review.userDetails.displayName}
+            </Link>
+            <time
+              className="text-sm text-gray-600"
+              dateTime={review.createdAt}
+              suppressHydrationWarning={true}
+            >
+              {DateTime.fromISO(review.createdAt).toRelative()}
+            </time>
+          </div>
         </div>
-        <time
-          className="text-sm text-gray-600"
-          dateTime={review.createdAt}
-          suppressHydrationWarning={true}
-        >
-          {DateTime.fromISO(review.createdAt).toRelative()}
-        </time>
         <div className="ms-auto">
           <PopoverReviewActions isAuthor={isAuthor} review={review} />
         </div>

@@ -5,9 +5,7 @@ import { DateTime } from "luxon";
 import Image from "next/image";
 import RatingStars from "../rating-stars/RatingStars";
 import { Dispatch, SetStateAction } from "react";
-// import MDEditor from "@uiw/react-md-editor";
-// import "@uiw/react-md-editor/markdown-editor.css";
-// import rehypeSanitize from "rehype-sanitize";
+import getFirstWord from "@/helpers/string/getFirstWord";
 
 type Props = {
   movie: TmdbDemoMovie;
@@ -15,6 +13,7 @@ type Props = {
   setRating: Dispatch<SetStateAction<number>>;
   reviewText: string;
   setReviewText: Dispatch<SetStateAction<string>>;
+  userDisplayName: string;
 };
 
 function SelectedMovieView({
@@ -23,13 +22,14 @@ function SelectedMovieView({
   setRating,
   reviewText,
   setReviewText,
+  userDisplayName,
 }: Props) {
   return (
     <div className="space-y-2">
       <div className="flex items-start gap-x-4">
         {/* Poster */}
         <Image
-          className="aspect-[185/278] w-40 animate-load rounded-sm bg-gray-300 sm:w-24"
+          className="aspect-[185/278] w-28 animate-load rounded-sm bg-gray-300"
           src={
             movie.complete_poster_path ||
             "images/placeholders/backdrop-placeholder.svg"
@@ -65,23 +65,14 @@ function SelectedMovieView({
             />
           </div>
           <div className="container">
-            {/* <MDEditor
+            <textarea
+              className="h-28 w-full rounded-md border p-2"
+              placeholder={`How do you feel about this movie, ${getFirstWord(
+                userDisplayName
+              )}?`}
               value={reviewText}
-              onChange={(review) => setReviewText(review || "")}
-              preview="edit"
-              previewOptions={{
-                rehypePlugins: [[rehypeSanitize]],
-              }}
-              commandsFilter={(cmd) =>
-                cmd.name &&
-                /(code|comment|image|strikethrough|title|link|divider)/.test(
-                  cmd.name
-                )
-                  ? false
-                  : cmd
-              }
-              height={175}
-            /> */}
+              onChange={(event) => setReviewText(event.target.value)}
+            />
           </div>
         </div>
       </div>

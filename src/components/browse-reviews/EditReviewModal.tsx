@@ -10,12 +10,14 @@ type Props = {
   review: DBReview;
   isEditModalVisible: boolean;
   setIsEditModalVisible: Dispatch<SetStateAction<boolean>>;
+  userDisplayName: string;
 };
 
 function EditReviewModal({
   review,
   isEditModalVisible,
   setIsEditModalVisible,
+  userDisplayName,
 }: Props) {
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -31,7 +33,11 @@ function EditReviewModal({
         isOpen={isEditModalVisible}
         close={() => setIsEditModalVisible(false)}
       >
-        <EditReviewForm review={review} onSuccess={handleSuccess} />
+        <EditReviewForm
+          review={review}
+          onSuccess={handleSuccess}
+          userDisplayName={userDisplayName}
+        />
       </ModalContainer>
 
       <Notification visible={isSuccess} setIsVisible={setIsSuccess}>

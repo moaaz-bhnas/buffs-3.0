@@ -1,6 +1,7 @@
 import AddReviewFormContainer from "@/components/add-review/mobile/AddReviewFormContainer";
 import Container from "@/components/container/Container";
 import SubpageHeader from "@/components/header/SubpageHeader";
+import getServerUser from "@/helpers/auth/getServerUser";
 import taglineMessages from "@/utils/messages/taglineMessages";
 import { Metadata } from "next/types";
 
@@ -11,14 +12,22 @@ export const metadata: Metadata = {
   description: taglineMessages.default,
 };
 
-function ReveiwPage({}: Props) {
+async function ReveiwPage({}: Props) {
+  const userResult = await getServerUser();
+
+  if (userResult.isErr()) {
+    return <></>;
+  }
+
   return (
     <>
       <SubpageHeader title="Add Review" />
 
       <main>
         <Container>
-          <AddReviewFormContainer />
+          <AddReviewFormContainer
+            userDisplayName={userResult.value.displayName}
+          />
         </Container>
       </main>
     </>

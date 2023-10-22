@@ -39,7 +39,7 @@ function LikesModal({ isOpen, close, likers }: Props) {
       title="Likes"
       isOpen={isOpen}
       close={close}
-      panelClassName="max-w-sm"
+      panelClassName="!max-w-sm"
     >
       {getUsersState.loading ? (
         <LikersSkeleton />

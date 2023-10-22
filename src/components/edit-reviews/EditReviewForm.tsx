@@ -52,7 +52,7 @@ function EditReviewForm({ review, onSuccess = () => {} }: Props) {
       <div className="flex items-start gap-x-4">
         {/* Poster */}
         <Image
-          className="aspect-[185/278] w-40 animate-load rounded-sm bg-gray-300 sm:w-24"
+          className="aspect-[185/278] w-28 animate-load rounded-sm bg-gray-300 sm:w-40"
           src={review.movieDetails.posterPath}
           alt={""}
           width={0}
@@ -62,7 +62,7 @@ function EditReviewForm({ review, onSuccess = () => {} }: Props) {
 
         {/* Movie title and genre */}
         <div>
-          <p className="text-lg font-light leading-6">
+          <p className="font-light leading-6 sm:text-lg">
             {review.movieDetails.title} (
             {DateTime.fromISO(review.movieDetails.releaseDate).year})
           </p>

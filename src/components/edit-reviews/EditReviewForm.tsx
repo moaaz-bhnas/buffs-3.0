@@ -5,25 +5,31 @@ import { DBReview } from "@/interfaces/database/DBReview";
 import { FormEvent, useState } from "react";
 import { DateTime } from "luxon";
 import RatingStars from "../rating-stars/RatingStars";
-// import MDEditor from "@uiw/react-md-editor";
-// import rehypeSanitize from "rehype-sanitize";
 import ThemeButton from "../theme-button/ThemeButton";
 import { useAsyncFn } from "react-use";
 import { ServerApiClient } from "@/apis/server-api-client";
 import errorMessages from "@/utils/messages/errorMessages";
+import getFirstWord from "@/helpers/string/getFirstWord";
 
 type Props = {
   review: DBReview;
   onSuccess?: Function;
+  userDisplayName: string;
 };
 
 type TOnSubmit = (event: FormEvent<HTMLFormElement>) => Promise<void>;
 
 const serverApiClient = new ServerApiClient();
 
-function EditReviewForm({ review, onSuccess = () => {} }: Props) {
+function EditReviewForm({
+  review,
+  userDisplayName,
+  onSuccess = () => {},
+}: Props) {
   const [rating, setRating] = useState(review.rating);
   const [reviewText, setReviewText] = useState(review.review);
+
+  console.log("🎃", { reviewText });
 
   // submit
   const [handleSubmitState, handleSubmit] = useAsyncFn<TOnSubmit>(
@@ -76,23 +82,14 @@ function EditReviewForm({ review, onSuccess = () => {} }: Props) {
       <div className="space-y-3">
         <RatingStars starsCount={10} rating={rating} setRating={setRating} />
 
-        {/* <MDEditor
+        <textarea
+          className="h-28 w-full rounded-md border p-2"
+          placeholder={`How do you feel about this movie, ${getFirstWord(
+            userDisplayName
+          )}?`}
           value={reviewText}
-          onChange={(review) => setReviewText(review || "")}
-          preview="edit"
-          previewOptions={{
-            rehypePlugins: [[rehypeSanitize]],
-          }}
-          commandsFilter={(cmd) =>
-            cmd.name &&
-            /(code|comment|image|strikethrough|title|link|divider)/.test(
-              cmd.name
-            )
-              ? false
-              : cmd
-          }
-          height={175}
-        /> */}
+          onChange={(event) => setReviewText(event.target.value)}
+        />
       </div>
 
       <ThemeButton

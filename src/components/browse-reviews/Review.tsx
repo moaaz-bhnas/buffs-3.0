@@ -1,12 +1,9 @@
-// "use client";
-
 import { DBReview } from "@/interfaces/database/DBReview";
 import Avatar from "../avatar/Avatar";
 import Link from "next/link";
 import Image from "next/image";
 import { DateTime } from "luxon";
 import { StarIcon } from "@heroicons/react/24/outline";
-// import MDEditor from "@uiw/react-md-editor";
 import { DBUser } from "@/interfaces/database/DBUser";
 import PopoverReviewActions from "./ReviewActionsPopover";
 import ReviewInteractions from "./ReviewInteractions";
@@ -45,7 +42,11 @@ function Review({ review, user }: Props) {
           </div>
         </div>
         <div className="ms-auto">
-          <PopoverReviewActions isAuthor={isAuthor} review={review} />
+          <PopoverReviewActions
+            isAuthor={isAuthor}
+            userDisplayName={user.displayName}
+            review={review}
+          />
         </div>
       </header>
 
@@ -75,13 +76,7 @@ function Review({ review, user }: Props) {
             <StarIcon className="w-4 fill-yellow-600 stroke-none" />
             <span className="text-base font-semibold">{review.rating}</span>
           </p>
-          {/* <MDEditor.Markdown
-            source={review.review}
-            style={{
-              fontFamily:
-                'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
-            }}
-          /> */}
+          <p className="font-serif">{review.review}</p>
         </div>
       </div>
 

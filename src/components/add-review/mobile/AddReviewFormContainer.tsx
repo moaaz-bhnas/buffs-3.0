@@ -3,12 +3,19 @@
 import { useRouter } from "next/navigation";
 import AddReviewForm from "../AddReviewForm";
 
-type Props = {};
+type Props = {
+  userDisplayName: string;
+};
 
-function AddReviewFormContainer({}: Props) {
+function AddReviewFormContainer({ userDisplayName }: Props) {
   const router = useRouter();
 
-  return <AddReviewForm onSuccess={() => router.push("/")} />;
+  return (
+    <AddReviewForm
+      userDisplayName={userDisplayName}
+      onSuccess={() => router.push("/")}
+    />
+  );
 }
 
 export default AddReviewFormContainer;

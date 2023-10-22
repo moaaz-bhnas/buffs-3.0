@@ -16,11 +16,12 @@ import AnimatedSpinner from "../spinner/AnimatedSpinner";
 type Props = {
   isAuthor: boolean;
   review: DBReview;
+  userDisplayName: string;
 };
 
 const serverApiClient = new ServerApiClient();
 
-function PopoverReviewActions({ isAuthor, review }: Props) {
+function PopoverReviewActions({ isAuthor, review, userDisplayName }: Props) {
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
   const [handleDeleteReviewState, handleDeleteReview] = useAsyncFn(
@@ -102,6 +103,7 @@ function PopoverReviewActions({ isAuthor, review }: Props) {
         review={review}
         isEditModalVisible={isEditModalVisible}
         setIsEditModalVisible={setIsEditModalVisible}
+        userDisplayName={userDisplayName}
       />
     </>
   );

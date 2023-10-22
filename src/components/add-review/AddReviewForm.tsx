@@ -23,6 +23,7 @@ enum AddReviewStep {
 }
 
 type Props = {
+  userDisplayName: string;
   onSuccess?: Function;
 };
 
@@ -31,7 +32,7 @@ const serverApiClient = new ServerApiClient();
 
 type TOnSubmit = (event: FormEvent<HTMLFormElement>) => Promise<void>;
 
-function AddReviewForm({ onSuccess = () => {} }: Props) {
+function AddReviewForm({ userDisplayName, onSuccess = () => {} }: Props) {
   // refs
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -157,10 +158,7 @@ function AddReviewForm({ onSuccess = () => {} }: Props) {
   ];
 
   return (
-    <form
-      className={classNames("flex flex-col gap-y-4")}
-      onSubmit={handleSubmit}
-    >
+    <form className="flex h-full flex-col gap-y-4" onSubmit={handleSubmit}>
       {/* Progress steps */}
       <ProgressSteps steps={steps} />
 
@@ -186,6 +184,7 @@ function AddReviewForm({ onSuccess = () => {} }: Props) {
               setRating={setRating}
               reviewText={reviewText}
               setReviewText={setReviewText}
+              userDisplayName={userDisplayName}
             />
           </motion.div>
 

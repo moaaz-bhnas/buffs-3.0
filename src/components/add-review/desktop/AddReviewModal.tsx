@@ -43,8 +43,11 @@ function AddReviewModal({ userDisplayName }: Props) {
         close={closeModal}
         panelClassName="max-w-2xl"
       >
-        <div className="h-[calc(100vh-2rem)] max-h-[37rem]">
-          <AddReviewForm onSuccess={handleSuccess} />
+        <div className="h-[calc(100vh-7rem)] max-h-[30rem]">
+          <AddReviewForm
+            onSuccess={handleSuccess}
+            userDisplayName={userDisplayName}
+          />
         </div>
       </ModalContainer>
 

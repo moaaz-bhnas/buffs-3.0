@@ -29,8 +29,6 @@ function EditReviewForm({
   const [rating, setRating] = useState(review.rating);
   const [reviewText, setReviewText] = useState(review.review);
 
-  console.log("🎃", { reviewText });
-
   // submit
   const [handleSubmitState, handleSubmit] = useAsyncFn<TOnSubmit>(
     async (event) => {

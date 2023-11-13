@@ -46,6 +46,7 @@ function Feed({ user, reviews: serverReviews }: Props) {
 
   useEffect(function establishSocketConnection() {
     socket.on("connect", () => {
+      console.log("🍩 Joining feed room");
       // Join feed room
       socket.emit(SocketEvent.SUBSCRIBED_TO_FEED);
     });

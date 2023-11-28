@@ -13,6 +13,7 @@ import classNames from "@/helpers/style/classNames";
 import { Dispatch, SetStateAction, useState } from "react";
 import ModalContainer from "../modal/ModalContainer";
 import LikesModal from "./LikesModal";
+import CommentModal from "./CommentModal";
 
 type Props = {
   user: DBUser;
@@ -53,6 +54,11 @@ function ReviewInteractions({ user, review }: Props) {
     }
   );
 
+  /**
+   * Comment functionality
+   */
+  const [isCommentModalVisible, setIsCommentModalVisible] = useState(false);
+
   const interactions = [
     {
       label: "Like",
@@ -66,15 +72,15 @@ function ReviewInteractions({ user, review }: Props) {
     {
       label: "Comment",
       iconClassName: "",
-      buttonClassName: "",
+      buttonClassName: "hover:opacity-60",
       IconCompomemt: ChatBubbleOvalLeftIcon,
-      onClick: () => {},
+      onClick: () => setIsCommentModalVisible(true),
       disabled: false,
     },
     {
       label: "Send",
       iconClassName: "",
-      buttonClassName: "",
+      buttonClassName: "hover:opacity-60",
       IconCompomemt: PaperAirplaneIcon,
       onClick: () => {},
       disabled: false,
@@ -82,7 +88,25 @@ function ReviewInteractions({ user, review }: Props) {
   ];
 
   return (
-    <div>
+    <div className="space-y-2">
+      {/* likes panel */}
+      {likers.length > 0 && (
+        <button
+          className="font-semibold"
+          type="button"
+          onClick={() => setIsLikesModalVisible(true)}
+        >
+          {likers.length} {likers.length === 1 ? "like" : "likes"}
+        </button>
+      )}
+      <LikesModal
+        isOpen={isLikesModalVisible}
+        close={() => setIsLikesModalVisible(false)}
+        likers={likers}
+      />
+
+      <hr />
+
       {/* Interactions list */}
       <ul className="flex justify-between">
         {/* Like */}
@@ -109,21 +133,12 @@ function ReviewInteractions({ user, review }: Props) {
         ))}
       </ul>
 
-      {/* likes panel */}
-      {/* {likers.length > 0 && (
-        <button
-          className="font-semibold"
-          type="button"
-          onClick={() => setIsLikesModalVisible(true)}
-        >
-          {likers.length} {likers.length === 1 ? "like" : "likes"}
-        </button>
-      )}
-      <LikesModal
-        isOpen={isLikesModalVisible}
-        close={() => setIsLikesModalVisible(false)}
-        likers={likers}
-      /> */}
+      {/* Comment Modal */}
+      <CommentModal
+        isOpen={isCommentModalVisible}
+        close={() => setIsCommentModalVisible(false)}
+        review={review}
+      />
     </div>
   );
 }

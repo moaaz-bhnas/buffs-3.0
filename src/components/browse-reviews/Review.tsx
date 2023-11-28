@@ -3,7 +3,7 @@ import Avatar from "../avatar/Avatar";
 import Link from "next/link";
 import Image from "next/image";
 import { DateTime } from "luxon";
-import { StarIcon } from "@heroicons/react/24/outline";
+import { HeartIcon, StarIcon } from "@heroicons/react/24/outline";
 import { DBUser } from "@/interfaces/database/DBUser";
 import PopoverReviewActions from "./ReviewActionsPopover";
 import ReviewInteractions from "./ReviewInteractions";
@@ -79,6 +79,8 @@ function Review({ review, user }: Props) {
           <p className="font-serif">{review.review}</p>
         </div>
       </div>
+
+      <hr />
 
       {/* Review like / comment / share */}
       <ReviewInteractions user={user} review={review} />

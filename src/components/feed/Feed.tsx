@@ -45,11 +45,11 @@ function Feed({ user, reviews: serverReviews }: Props) {
   const [reviews, setReveiws] = useState<DBReview[]>(serverReviews);
 
   useEffect(function establishSocketConnection() {
-    socket.on("connect", () => {
-      console.log("🍩 Joining feed room");
-      // Join feed room
-      socket.emit(SocketEvent.SUBSCRIBED_TO_FEED);
-    });
+    // socket.on("connect", () => {
+    //   console.log("🍩 Joining feed room");
+    // Join feed room
+    socket.emit(SocketEvent.SUBSCRIBED_TO_FEED);
+    // });
 
     // Listen to reviews update
     socket.on(SocketEvent.REVIEW_UPDATED, (updatedReview: DBReview) => {

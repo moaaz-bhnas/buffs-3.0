@@ -1,6 +1,10 @@
 "use client";
 
-import { HeartIcon } from "@heroicons/react/24/outline";
+import {
+  ChatBubbleOvalLeftIcon,
+  HeartIcon,
+  PaperAirplaneIcon,
+} from "@heroicons/react/24/outline";
 import { useAsyncFn } from "react-use";
 import { ServerApiClient } from "@/apis/server-api-client";
 import { DBReview } from "@/interfaces/database/DBReview";
@@ -49,33 +53,64 @@ function ReviewInteractions({ user, review }: Props) {
     }
   );
 
+  const interactions = [
+    {
+      label: "Like",
+      iconClassName: isLiked ? "animate-pop fill-red-600 stroke-red-600" : "",
+      buttonClassName:
+        !isLiked && !handleLikeState.loading ? "hover:opacity-60" : "",
+      IconCompomemt: HeartIcon,
+      onClick: () => handleLike(user._id, review._id, setLikers),
+      disabled: handleLikeState.loading,
+    },
+    {
+      label: "Comment",
+      iconClassName: "",
+      buttonClassName: "",
+      IconCompomemt: ChatBubbleOvalLeftIcon,
+      onClick: () => {},
+      disabled: false,
+    },
+    {
+      label: "Send",
+      iconClassName: "",
+      buttonClassName: "",
+      IconCompomemt: PaperAirplaneIcon,
+      onClick: () => {},
+      disabled: false,
+    },
+  ];
+
   return (
     <div>
       {/* Interactions list */}
-      <ul>
+      <ul className="flex justify-between">
         {/* Like */}
-        <li>
-          <button
-            className={classNames(
-              "-ms-2 flex h-10 w-10 items-center justify-center p-0 transition-opacity",
-              !isLiked && !handleLikeState.loading ? "hover:opacity-60" : ""
-            )}
-            type="button"
-            onClick={() => handleLike(user._id, review._id, setLikers)}
-            disabled={handleLikeState.loading}
-          >
-            <HeartIcon
+        {interactions.map((interaction) => (
+          <li>
+            <button
               className={classNames(
-                "h-6 w-6 transition-all",
-                isLiked ? "animate-pop fill-red-600 stroke-red-600" : ""
+                "flex items-center justify-center gap-x-1.5 p-0 transition-opacity",
+                interaction.buttonClassName
               )}
-            />
-          </button>
-        </li>
+              type="button"
+              onClick={interaction.onClick}
+              disabled={interaction.disabled}
+            >
+              <interaction.IconCompomemt
+                className={classNames(
+                  "h-auto w-6 transition-all",
+                  interaction.iconClassName
+                )}
+              />
+              {interaction.label}
+            </button>
+          </li>
+        ))}
       </ul>
 
       {/* likes panel */}
-      {likers.length > 0 && (
+      {/* {likers.length > 0 && (
         <button
           className="font-semibold"
           type="button"
@@ -88,7 +123,7 @@ function ReviewInteractions({ user, review }: Props) {
         isOpen={isLikesModalVisible}
         close={() => setIsLikesModalVisible(false)}
         likers={likers}
-      />
+      /> */}
     </div>
   );
 }

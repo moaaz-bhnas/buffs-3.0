@@ -93,9 +93,9 @@ export class ServerApiClient {
 
   async getUsersByIds(usersIds: string[]): Promise<Result<DBUser[], ApiError>> {
     const result = await this.serverApiClient.get<GetUsersResponse>(
-      `${this.apiBaseUrl}/v${this.apiVersion}/users?${usersIds
-        .map((id) => `_id[in]=${id}`)
-        .join("&")}`
+      `${this.apiBaseUrl}/v${this.apiVersion}/users?_id[in]=${usersIds
+        .map((id) => id)
+        .join(",")}`
     );
 
     if (result.isErr()) {

@@ -18,5 +18,4 @@ export interface DBUser {
   updatedAt: Date;
   following: string[];
   followers: string[];
-  likes: string[];
 }

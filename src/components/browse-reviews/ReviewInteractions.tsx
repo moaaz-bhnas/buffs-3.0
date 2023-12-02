@@ -111,7 +111,7 @@ function ReviewInteractions({ user, review }: Props) {
       <ul className="flex justify-between">
         {/* Like */}
         {interactions.map((interaction) => (
-          <li>
+          <li key={interaction.label}>
             <button
               className={classNames(
                 "flex items-center justify-center gap-x-1.5 p-0 transition-opacity",

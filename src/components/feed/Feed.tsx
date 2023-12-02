@@ -2,11 +2,11 @@
 
 import Review from "../browse-reviews/Review";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import socket from "@/socket";
 import { DBReview } from "@/interfaces/database/DBReview";
 import { SocketEvent } from "@/interfaces/socket/SocketEvent";
 import structuredClone from "@ungap/structured-clone";
 import { DBUser } from "@/interfaces/database/DBUser";
+import initializeSocketIo from "@/socket";
 
 function handleReviewUpdate(
   updatedReview: DBReview,
@@ -45,6 +45,8 @@ function Feed({ user, reviews: serverReviews }: Props) {
   const [reviews, setReveiws] = useState<DBReview[]>(serverReviews);
 
   useEffect(function establishSocketConnection() {
+    const socket = initializeSocketIo();
+
     socket.on("connect", () => {
       console.log("🍩 Joining feed room");
       // Join feed room

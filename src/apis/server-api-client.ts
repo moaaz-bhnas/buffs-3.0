@@ -19,9 +19,7 @@ export class ServerApiClient {
   private readonly apiVersion = 1;
   private readonly serverApiClient = new ApiClient({ withCredentials: true });
 
-  async signin(
-    credenials: SigninRequest
-  ): Promise<Result<AuthResponse, ApiError>> {
+  async signin(credenials: SigninRequest): Promise<Result<AuthResponse, ApiError>> {
     const result = await this.serverApiClient.post<SigninRequest, AuthResponse>(
       `${this.apiBaseUrl}/v${this.apiVersion}/auth/login`,
       credenials
@@ -35,13 +33,11 @@ export class ServerApiClient {
     return ok(result.value);
   }
 
-  async signup(
-    user: RegisteringDBUser
-  ): Promise<Result<AuthResponse, ApiError>> {
-    const result = await this.serverApiClient.post<
-      RegisteringDBUser,
-      AuthResponse
-    >(`${this.apiBaseUrl}/v${this.apiVersion}/auth/register`, user);
+  async signup(user: RegisteringDBUser): Promise<Result<AuthResponse, ApiError>> {
+    const result = await this.serverApiClient.post<RegisteringDBUser, AuthResponse>(
+      `${this.apiBaseUrl}/v${this.apiVersion}/auth/register`,
+      user
+    );
 
     if (result.isErr()) {
       console.error(result.error.errorMessage, { error: result.error });
@@ -71,8 +67,7 @@ export class ServerApiClient {
   async getUserByToken(token?: string): Promise<Result<DBUser, ApiError>> {
     if (isServer() && !token) {
       return err({
-        errorMessage:
-          "Dear developer, you need to pass the auth token if the function is run in the server",
+        errorMessage: "Dear developer, you need to pass the auth token if the function is run in the server",
       });
     }
 
@@ -93,9 +88,7 @@ export class ServerApiClient {
 
   async getUsersByIds(usersIds: string[]): Promise<Result<DBUser[], ApiError>> {
     const result = await this.serverApiClient.get<GetUsersResponse>(
-      `${this.apiBaseUrl}/v${this.apiVersion}/users?_id[in]=${usersIds
-        .map((id) => id)
-        .join(",")}`
+      `${this.apiBaseUrl}/v${this.apiVersion}/users?_id[in]=${usersIds.map((id) => id).join(",")}`
     );
 
     if (result.isErr()) {
@@ -150,8 +143,7 @@ export class ServerApiClient {
   async getReviews(token?: string): Promise<Result<DBReview[], ApiError>> {
     if (isServer() && !token) {
       return err({
-        errorMessage:
-          "Dear developer, you need to pass the auth token if the function is run in the server",
+        errorMessage: "Dear developer, you need to pass the auth token if the function is run in the server",
       });
     }
 
@@ -174,14 +166,10 @@ export class ServerApiClient {
    * @param {string} token required only in server code
    * as in the client (browser) all cookies are sent with each request
    */
-  async getReviewsByUsername(
-    username: string,
-    token?: string
-  ): Promise<Result<DBReview[], ApiError>> {
+  async getReviewsByUsername(username: string, token?: string): Promise<Result<DBReview[], ApiError>> {
     if (isServer() && !token) {
       return err({
-        errorMessage:
-          "Dear developer, you need to pass the auth token if the function is run in the server",
+        errorMessage: "Dear developer, you need to pass the auth token if the function is run in the server",
       });
     }
 
@@ -199,13 +187,11 @@ export class ServerApiClient {
     return ok(result.value.data);
   }
 
-  async createReview(
-    review: RegisteringReview
-  ): Promise<Result<DBReview, ApiError>> {
-    const result = await this.serverApiClient.post<
-      RegisteringReview,
-      ReviewResponse
-    >(`${this.apiBaseUrl}/v${this.apiVersion}/reviews`, review);
+  async createReview(review: RegisteringReview): Promise<Result<DBReview, ApiError>> {
+    const result = await this.serverApiClient.post<RegisteringReview, ReviewResponse>(
+      `${this.apiBaseUrl}/v${this.apiVersion}/reviews`,
+      review
+    );
 
     if (result.isErr()) {
       console.error(result.error.errorMessage, { error: result.error });
@@ -215,14 +201,8 @@ export class ServerApiClient {
     return ok(result.value.data);
   }
 
-  async updateReview(
-    reviewId: string,
-    updatedFields: UpdateReviewRequest
-  ): Promise<Result<DBReview, ApiError>> {
-    const result = await this.serverApiClient.put<
-      UpdateReviewRequest,
-      ReviewResponse
-    >(
+  async updateReview(reviewId: string, updatedFields: UpdateReviewRequest): Promise<Result<DBReview, ApiError>> {
+    const result = await this.serverApiClient.put<UpdateReviewRequest, ReviewResponse>(
       `${this.apiBaseUrl}/v${this.apiVersion}/reviews/${reviewId}`,
       updatedFields
     );

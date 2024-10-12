@@ -69,10 +69,7 @@ export default class ApiClient {
     }
   }
 
-  async put<TRequest, TResponse>(
-    path: string,
-    payload: TRequest
-  ): Promise<Result<TResponse, ApiError>> {
+  async put<TRequest, TResponse>(path: string, payload: TRequest): Promise<Result<TResponse, ApiError>> {
     try {
       const response = await this.client.put<TResponse>(path, payload);
       return ok(response.data);

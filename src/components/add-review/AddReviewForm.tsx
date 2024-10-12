@@ -46,9 +46,7 @@ function AddReviewForm({ userDisplayName, onSuccess = () => {} }: Props) {
   // Search logic
   const [_, startTransition] = useTransition();
   const [searchResults, setSearchResults] = useState<TmdbDemoMovie[]>([]);
-  const [selectedMovie, setSelectedMovie] = useState<TmdbDemoMovie | null>(
-    null
-  );
+  const [selectedMovie, setSelectedMovie] = useState<TmdbDemoMovie | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoadingResults, setIsLoadingResults] = useState(false);
 
@@ -112,9 +110,7 @@ function AddReviewForm({ userDisplayName, onSuccess = () => {} }: Props) {
         return;
       }
       // 2. Add director data to the selected movie
-      const movieWithDirector = await tmdbApiClient.mapDirectorsToMovies([
-        selectedMovie,
-      ]);
+      const movieWithDirector = await tmdbApiClient.mapDirectorsToMovies([selectedMovie]);
 
       // 3. collect review data
       const movieDetailsResult = mapTmdbMovieToDBMovie(movieWithDirector[0]);
@@ -193,9 +189,7 @@ function AddReviewForm({ userDisplayName, onSuccess = () => {} }: Props) {
               type="submit"
               className="w-full"
               loading={handleSubmitState.loading}
-              errorMessage={
-                handleSubmitState.error && errorMessages.somthingWentWrong
-              }
+              errorMessage={handleSubmitState.error && errorMessages.somthingWentWrong}
               disabled={rating === 0}
             >
               Post
